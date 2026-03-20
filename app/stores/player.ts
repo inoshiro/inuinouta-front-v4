@@ -1,23 +1,15 @@
-export interface Track {
-  id: string
-  title: string
-  artist: string
-  videoId: string
-  startSeconds?: number
-  endSeconds?: number
-  thumbnailUrl?: string
-}
+import type { Song } from '~/types'
 
 export const usePlayerStore = defineStore('player', () => {
-  const currentTrack = ref<Track | null>(null)
+  const currentSong = ref<Song | null>(null)
   const isPlaying = ref(false)
   const currentTime = ref(0)
   const duration = ref(0)
   const volume = ref(100)
   const isMuted = ref(false)
 
-  function play(track: Track) {
-    currentTrack.value = track
+  function play(song: Song) {
+    currentSong.value = song
     isPlaying.value = true
   }
 
@@ -32,6 +24,7 @@ export const usePlayerStore = defineStore('player', () => {
   function stop() {
     isPlaying.value = false
     currentTime.value = 0
+    currentSong.value = null
   }
 
   function setVolume(value: number) {
@@ -51,7 +44,7 @@ export const usePlayerStore = defineStore('player', () => {
   }
 
   return {
-    currentTrack,
+    currentSong,
     isPlaying,
     currentTime,
     duration,

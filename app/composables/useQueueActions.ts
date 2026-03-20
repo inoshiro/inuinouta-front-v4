@@ -1,0 +1,31 @@
+import type { Song } from '~/types'
+
+export function useQueueActions() {
+  const player = usePlayerStore()
+  const queue = useQueueStore()
+
+  /** Replace queue and play from a specific index */
+  function playAll(songs: Song[], startIndex = 0) {
+    queue.setSongs(songs, startIndex)
+    const current = queue.currentSong
+    if (current) player.play(current)
+  }
+
+  /** Replace queue with a single song and play it */
+  function playSong(song: Song) {
+    queue.setSongs([song], 0)
+    player.play(song)
+  }
+
+  /** Insert as next in queue */
+  function playNext(song: Song) {
+    queue.addSongNext(song)
+  }
+
+  /** Add to end of queue */
+  function addToQueue(song: Song) {
+    queue.addSong(song)
+  }
+
+  return { playAll, playSong, playNext, addToQueue }
+}
