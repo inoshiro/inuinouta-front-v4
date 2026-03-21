@@ -10,6 +10,7 @@ export function useSongs(options?: { perPage?: number }) {
     const params = new URLSearchParams()
     params.set('per_page', String(perPage))
     params.set('page', String(page.value))
+    params.set('sort[]', '-video.published_at')
     if (search.value) {
       params.set('filter{title.icontains}', search.value)
     }
