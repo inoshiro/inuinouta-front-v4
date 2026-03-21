@@ -5,6 +5,8 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "dev:django": "cd ../inuinouta/inuinouta && ../env/bin/python manage.py runserver",
+    "dev:all": "concurrently --names \"NUXT,DJANGO\" -c \"bgCyan.bold,bgMagenta.bold\" \"pnpm dev\" \"pnpm dev:django\"",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -31,6 +33,7 @@
     "@playwright/test": "^1.58.2",
     "@tailwindcss/vite": "^4.2.2",
     "@vue/test-utils": "^2.4.6",
+    "concurrently": "^9.2.1",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
