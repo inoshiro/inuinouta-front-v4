@@ -13,3 +13,7 @@ applyTo: '**/*.vue'
 - レスポンシブはモバイルファーストで `lg:` ブレークポイントを基準にする（サイドバー表示切替など）
 - ブラウザ専用 API や YouTube IFrame など SSR 非対応の要素は `<ClientOnly>` で囲む
 - 角丸（`rounded-*`）は使わない。セマンティックカラートークン（`surface-base`, `accent` 等）を優先する
+- ダークモード専用のため、`bg-surface-base`（gray-950）や `bg-surface-raised`（gray-900）上に配置するテキストには**必ず明示的な色クラスを付ける**。色未指定のままにすると暗い背景で読めなくなる
+  - 通常テキスト: `text-gray-50`
+  - 補助テキスト: `text-gray-400`
+  - アクセント: `text-emerald-400`

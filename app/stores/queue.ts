@@ -96,6 +96,28 @@ export const useQueueStore = defineStore('queue', () => {
     repeatMode.value = modes[(idx + 1) % modes.length]
   }
 
+  function moveSong(from: number, to: number) {
+    if (from === to) return
+    songs.value.splice(to, 0, songs.value.splice(from, 1)[0])
+    if (currentIndex.value === from) {
+      currentIndex.value = to
+    } else if (from < to && currentIndex.value > from && currentIndex.value <= to) {
+      currentIndex.value--
+    } else if (from > to && currentIndex.value >= to && currentIndex.value < from) {
+      currentIndex.value++
+    }
+  }
+
+  const totalDuration = computed(() => {
+    const totalSeconds = songs.value.reduce((sum, song) => {
+      return sum + Math.max(0, song.end_at - song.start_at)
+    }, 0)
+    const hours = Math.floor(totalSeconds / 3600)
+    const minutes = Math.floor((totalSeconds % 3600) / 60)
+    if (hours > 0) return `${hours}時間${minutes}分`
+    return `${minutes}分`
+  })
+
   function toggleOpen() {
     isOpen.value = !isOpen.value
   }
@@ -109,10 +131,12 @@ export const useQueueStore = defineStore('queue', () => {
     currentSong,
     hasNext,
     hasPrevious,
+    totalDuration,
     setSongs,
     addSong,
     addSongNext,
     removeSong,
+    moveSong,
     clear,
     next,
     previous,
