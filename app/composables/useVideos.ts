@@ -30,8 +30,12 @@ export function useVideos(options?: { perPage?: number }) {
     page.value = 1
   })
 
-  // Fetch on first use
-  callOnce('library-videos', () => library.fetchVideos())
+  // Fetch on first use (SSR + client)
+  onServerPrefetch(() => callOnce('library-videos', () => library.fetchVideos()))
+
+  if (import.meta.client) {
+    void callOnce('library-videos', () => library.fetchVideos())
+  }
 
   function refresh() {
     return library.fetchVideos(true)
