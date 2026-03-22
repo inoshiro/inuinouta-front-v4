@@ -28,8 +28,12 @@ export function useSongs(options?: { perPage?: number }) {
     page.value = 1
   })
 
-  // Fetch on first use
-  callOnce('library-songs', () => library.fetchSongs())
+  // Fetch on first use (SSR + client)
+  onServerPrefetch(() => callOnce('library-songs', () => library.fetchSongs()))
+
+  if (import.meta.client) {
+    void callOnce('library-songs', () => library.fetchSongs())
+  }
 
   function refresh() {
     return library.fetchSongs(true)

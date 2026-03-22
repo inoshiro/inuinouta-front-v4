@@ -47,10 +47,15 @@
 </template>
 
 <script setup lang="ts">
+import type { SongsResponse } from '~/types'
+
 useHead({ title: 'inuinouta' })
 
 const { songs: randomSongs, status: randomStatus, refresh: randomRefresh } = useRandomSongs(10)
 
-const { songs: recentSongs, status: recentStatus } = useSongs({ perPage: 10 })
-// totalItems, page, perPage are unused here — only the first page slice is needed
+const { useApiFetch } = useApi()
+const { data: recentResponse, status: recentStatus } = await useApiFetch<SongsResponse>('/api/songs/', {
+  query: { page: 1, per_page: 10 },
+})
+const recentSongs = computed(() => recentResponse.value?.songs ?? [])
 </script>
