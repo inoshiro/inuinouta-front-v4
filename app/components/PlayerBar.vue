@@ -164,19 +164,27 @@
         />
 
         <!-- Queue toggle -->
-        <button
-          :class="queue.isOpen ? 'text-emerald-400' : 'text-gray-400 hover:text-white'"
-          @click="queue.toggleOpen()"
-        >
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 10h16M4 14h10"
-            />
-          </svg>
-        </button>
+        <div class="relative">
+          <button
+            :class="queue.isOpen ? 'text-emerald-400' : 'text-gray-400 hover:text-white'"
+            @click="queue.toggleOpen()"
+          >
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 10h16M4 14h10"
+              />
+            </svg>
+          </button>
+          <span
+            v-if="queue.songs.length > 0"
+            class="pointer-events-none absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center bg-emerald-500 px-1 text-[10px] font-bold leading-none text-white"
+          >
+            {{ queue.songs.length > 99 ? '99+' : queue.songs.length }}
+          </span>
+        </div>
       </div>
     </div>
   </div>
