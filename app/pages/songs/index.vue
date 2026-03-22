@@ -23,7 +23,12 @@
 
     <!-- Pagination -->
     <div class="mt-6">
-      <AppPagination :meta="meta" @update:page="page = $event" />
+      <AppPagination
+        :total-items="totalItems"
+        :items-per-page="perPage"
+        :current-page="page"
+        @update:page="page = $event"
+      />
     </div>
   </div>
 </template>
@@ -31,6 +36,6 @@
 <script setup lang="ts">
 useHead({ title: '楽曲一覧 | inuinouta' })
 
-const { songs, meta, page, status } = useSongs({ perPage: 50 })
+const { songs, totalItems, page, perPage, status } = useSongs({ perPage: 50 })
 const queueActions = useQueueActions()
 </script>

@@ -52,4 +52,5 @@ useHead({ title: 'inuinouta' })
 const { songs: randomSongs, status: randomStatus, refresh: randomRefresh } = useRandomSongs(10)
 
 const { songs: recentSongs, status: recentStatus } = useSongs({ perPage: 10 })
+// totalItems, page, perPage are unused here — only the first page slice is needed
 </script>

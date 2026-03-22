@@ -1,10 +1,10 @@
 <template>
-  <div v-if="meta && meta.total_pages > 1" class="flex items-center justify-center gap-1">
+  <div v-if="totalPages > 1" class="flex items-center justify-center gap-1">
     <!-- Previous -->
     <button
       class="px-3 py-1.5 text-sm text-gray-400 transition-colors hover:text-white disabled:opacity-30"
-      :disabled="meta.page <= 1"
-      @click="emit('update:page', meta.page - 1)"
+      :disabled="currentPage <= 1"
+      @click="emit('update:page', currentPage - 1)"
     >
       前へ
     </button>
@@ -16,7 +16,7 @@
         v-else
         class="min-w-[2rem] px-2 py-1.5 text-sm transition-colors"
         :class="
-          p === meta.page
+          p === currentPage
             ? 'bg-emerald-500 font-medium text-white'
             : 'text-gray-400 hover:bg-surface-overlay hover:text-white'
         "
@@ -29,8 +29,8 @@
     <!-- Next -->
     <button
       class="px-3 py-1.5 text-sm text-gray-400 transition-colors hover:text-white disabled:opacity-30"
-      :disabled="meta.page >= meta.total_pages"
-      @click="emit('update:page', meta.page + 1)"
+      :disabled="currentPage >= totalPages"
+      @click="emit('update:page', currentPage + 1)"
     >
       次へ
     </button>
@@ -38,18 +38,22 @@
 </template>
 
 <script setup lang="ts">
-import type { PaginationMeta } from '~/types'
-
-const props = defineProps<{ meta: PaginationMeta | undefined }>()
+const props = defineProps<{
+  totalItems: number
+  itemsPerPage: number
+  currentPage: number
+}>()
 const emit = defineEmits<{ 'update:page': [value: number] }>()
 
+const totalPages = computed(() => Math.ceil(props.totalItems / props.itemsPerPage))
+
 const visiblePages = computed(() => {
-  if (!props.meta) return []
-  const { page, total_pages } = props.meta
+  const page = props.currentPage
+  const total = totalPages.value
   const pages: (number | string)[] = []
 
-  if (total_pages <= 7) {
-    for (let i = 1; i <= total_pages; i++) pages.push(i)
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) pages.push(i)
     return pages
   }
 
@@ -57,11 +61,11 @@ const visiblePages = computed(() => {
   if (page > 3) pages.push('...')
 
   const start = Math.max(2, page - 1)
-  const end = Math.min(total_pages - 1, page + 1)
+  const end = Math.min(total - 1, page + 1)
   for (let i = start; i <= end; i++) pages.push(i)
 
-  if (page < total_pages - 2) pages.push('...')
-  pages.push(total_pages)
+  if (page < total - 2) pages.push('...')
+  pages.push(total)
 
   return pages
 })
