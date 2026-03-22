@@ -1,26 +1,43 @@
-import type { SongsResponse } from '~/types'
+import type { Song } from '~/types'
 
 export function useSongs(options?: { perPage?: number }) {
-  const { useApiFetch } = useApi()
+  const library = useLibraryStore()
   const page = ref(1)
   const perPage = options?.perPage ?? 30
   const search = ref('')
 
-  const query = computed(() => {
-    const params = new URLSearchParams()
-    params.set('per_page', String(perPage))
-    params.set('page', String(page.value))
-    params.set('sort[]', '-video.published_at')
-    if (search.value) {
-      params.set('filter{title.icontains}', search.value)
-    }
-    return `/api/songs/?${params.toString()}`
+  const status = computed(() => (library.songsStatus === 'idle' ? 'pending' : library.songsStatus))
+  const error = computed(() => library.songsError)
+
+  const filtered = computed<Song[]>(() => {
+    const all = library.allSongs
+    if (!search.value) return all
+    const q = search.value.toLowerCase()
+    return all.filter((s) => s.title.toLowerCase().includes(q))
   })
 
-  const { data: raw, status, error, refresh } = useApiFetch<SongsResponse>(query)
+  const totalItems = computed(() => filtered.value.length)
 
-  const songs = computed(() => raw.value?.songs ?? [])
-  const meta = computed(() => raw.value?.meta)
+  const songs = computed(() => {
+    const start = (page.value - 1) * perPage
+    return filtered.value.slice(start, start + perPage)
+  })
 
-  return { songs, meta, page, search, status, error, refresh }
+  // Reset page when search changes
+  watch(search, () => {
+    page.value = 1
+  })
+
+  // Fetch on first use (SSR + client)
+  onServerPrefetch(() => callOnce('library-songs', () => library.fetchSongs()))
+
+  if (import.meta.client) {
+    void callOnce('library-songs', () => library.fetchSongs())
+  }
+
+  function refresh() {
+    return library.fetchSongs(true)
+  }
+
+  return { songs, totalItems, page, perPage, search, status, error, refresh }
 }

@@ -14,7 +14,12 @@
 
     <!-- Pagination -->
     <div class="mt-6">
-      <AppPagination :meta="meta" @update:page="page = $event" />
+      <AppPagination
+        :total-items="totalItems"
+        :items-per-page="perPage"
+        :current-page="page"
+        @update:page="page = $event"
+      />
     </div>
   </div>
 </template>
@@ -22,5 +27,5 @@
 <script setup lang="ts">
 useHead({ title: '動画一覧 | inuinouta' })
 
-const { videos, meta, page, status } = useVideos({ perPage: 30 })
+const { videos, totalItems, page, perPage, status } = useVideos({ perPage: 30 })
 </script>

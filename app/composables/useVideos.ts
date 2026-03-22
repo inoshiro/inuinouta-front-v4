@@ -1,25 +1,45 @@
-import type { VideosResponse } from '~/types'
+import type { VideoList } from '~/types'
 
 export function useVideos(options?: { perPage?: number }) {
-  const { useApiFetch } = useApi()
+  const library = useLibraryStore()
   const page = ref(1)
   const perPage = options?.perPage ?? 30
   const search = ref('')
 
-  const query = computed(() => {
-    const params = new URLSearchParams()
-    params.set('per_page', String(perPage))
-    params.set('page', String(page.value))
-    if (search.value) {
-      params.set('filter{title.icontains}', search.value)
-    }
-    return `/api/videos/?${params.toString()}`
+  const status = computed(() =>
+    library.videosStatus === 'idle' ? 'pending' : library.videosStatus,
+  )
+  const error = computed(() => library.videosError)
+
+  const filtered = computed<VideoList[]>(() => {
+    const all = library.allVideos
+    if (!search.value) return all
+    const q = search.value.toLowerCase()
+    return all.filter((v) => v.title.toLowerCase().includes(q))
   })
 
-  const { data: raw, status, error, refresh } = useApiFetch<VideosResponse>(query)
+  const totalItems = computed(() => filtered.value.length)
 
-  const videos = computed(() => raw.value?.videos ?? [])
-  const meta = computed(() => raw.value?.meta)
+  const videos = computed(() => {
+    const start = (page.value - 1) * perPage
+    return filtered.value.slice(start, start + perPage)
+  })
 
-  return { videos, meta, page, search, status, error, refresh }
+  // Reset page when search changes
+  watch(search, () => {
+    page.value = 1
+  })
+
+  // Fetch on first use (SSR + client)
+  onServerPrefetch(() => callOnce('library-videos', () => library.fetchVideos()))
+
+  if (import.meta.client) {
+    void callOnce('library-videos', () => library.fetchVideos())
+  }
+
+  function refresh() {
+    return library.fetchVideos(true)
+  }
+
+  return { videos, totalItems, page, perPage, search, status, error, refresh }
 }
