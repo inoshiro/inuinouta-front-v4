@@ -202,9 +202,7 @@
                   <p
                     class="truncate text-sm"
                     :class="
-                      index === queue.currentIndex
-                        ? 'font-medium text-emerald-400'
-                        : 'text-gray-50'
+                      index === queue.currentIndex ? 'font-medium text-emerald-400' : 'text-gray-50'
                     "
                   >
                     {{ song.title }}
