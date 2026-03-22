@@ -21,25 +21,30 @@
       <!-- Sidebar -->
       <SideNav v-model:open="sideNavOpen" />
 
-      <!-- Main area -->
-      <div class="flex flex-1 flex-col overflow-hidden">
-        <!-- Desktop header -->
-        <header class="hidden items-center gap-4 border-b border-border-default px-6 py-3 lg:flex">
-          <SearchBar class="max-w-md flex-1" />
-        </header>
+      <!-- Main area + Queue panel -->
+      <div class="flex flex-1 overflow-hidden">
+        <!-- Main content -->
+        <div class="flex flex-1 flex-col overflow-hidden">
+          <!-- Desktop header -->
+          <header
+            class="hidden items-center gap-4 border-b border-border-default px-6 py-3 lg:flex"
+          >
+            <SearchBar class="max-w-md flex-1" />
+          </header>
 
-        <!-- Page content -->
-        <main class="flex-1 overflow-y-auto px-4 py-6 lg:px-6">
-          <slot />
-        </main>
+          <!-- Page content -->
+          <main class="flex-1 overflow-y-auto px-4 py-6 lg:px-6">
+            <slot />
+          </main>
+        </div>
+
+        <!-- Queue panel (lg+: inline right panel / mobile: Teleport overlay) -->
+        <QueueDrawer />
       </div>
     </div>
 
     <!-- Player bar -->
     <PlayerBar />
-
-    <!-- Queue drawer -->
-    <QueueDrawer />
   </div>
 </template>
 
