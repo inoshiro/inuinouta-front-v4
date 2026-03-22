@@ -55,7 +55,7 @@ const { songs: randomSongs, status: randomStatus, refresh: randomRefresh } = use
 
 const { useApiFetch } = useApi()
 const { data: recentResponse, status: recentStatus } = await useApiFetch<SongsResponse>('/api/songs/', {
-  query: { page: 1, per_page: 10 },
+  query: { page: 1, per_page: 10, 'sort[]': '-video.published_at' },
 })
 const recentSongs = computed(() => recentResponse.value?.songs ?? [])
 </script>
