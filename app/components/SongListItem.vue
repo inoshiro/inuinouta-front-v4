@@ -39,7 +39,9 @@
     </span>
 
     <!-- Actions -->
-    <div class="flex shrink-0 gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+    <div
+      class="flex shrink-0 gap-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
+    >
       <button
         class="p-1 text-gray-400 hover:text-white"
         title="次に再生"
@@ -50,7 +52,7 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
           />
         </svg>
       </button>
@@ -64,7 +66,7 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M4 6h16M4 10h16M4 14h10"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
           />
         </svg>
       </button>

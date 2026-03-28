@@ -1,22 +1,49 @@
 <template>
   <div v-if="player.currentSong" class="border-t border-border-default bg-surface-raised">
     <!-- Mobile: compact player -->
-    <div class="flex items-center gap-3 px-3 py-2 lg:hidden">
-      <img
-        :src="player.currentSong.video.thumbnail_path"
-        :alt="player.currentSong.title"
-        class="h-10 w-10 object-cover"
-      />
-      <div class="min-w-0 flex-1">
-        <p class="truncate text-sm font-medium">{{ player.currentSong.title }}</p>
-        <p class="truncate text-xs text-gray-400">{{ player.currentSong.artist }}</p>
+    <div class="lg:hidden">
+      <div class="flex items-center gap-3 px-3 py-2">
+        <img
+          :src="player.currentSong.video.thumbnail_path"
+          :alt="player.currentSong.title"
+          class="h-10 w-10 object-cover"
+        />
+        <div class="min-w-0 flex-1">
+          <p class="truncate text-sm font-medium">{{ player.currentSong.title }}</p>
+          <p class="truncate text-xs text-gray-400">{{ player.currentSong.artist }}</p>
+        </div>
+        <button
+          class="text-gray-400 hover:text-white disabled:opacity-30"
+          :disabled="!queue.hasPrevious"
+          @click="playback.previousSong()"
+        >
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
+          </svg>
+        </button>
+        <button class="text-gray-400 hover:text-white" @click="playback.togglePlay()">
+          <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+            <path v-if="player.isPlaying" d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+            <path v-else d="M8 5v14l11-7z" />
+          </svg>
+        </button>
+        <button
+          class="text-gray-400 hover:text-white disabled:opacity-30"
+          :disabled="!queue.hasNext"
+          @click="playback.nextSong()"
+        >
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16 6h2v12h-2V6zm-3.5 6L4 6v12l8.5-6z" />
+          </svg>
+        </button>
       </div>
-      <button class="text-gray-400 hover:text-white" @click="playback.togglePlay()">
-        <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
-          <path v-if="player.isPlaying" d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-          <path v-else d="M8 5v14l11-7z" />
-        </svg>
-      </button>
+      <!-- Mobile progress bar -->
+      <div class="relative h-0.5 w-full bg-gray-700">
+        <div
+          class="absolute inset-y-0 left-0 bg-emerald-500"
+          :style="{ width: progressPercent + '%' }"
+        />
+      </div>
     </div>
 
     <!-- Desktop: full player -->
@@ -70,7 +97,7 @@
 
           <!-- Play/Pause -->
           <button
-            class="flex h-9 w-9 items-center justify-center bg-white text-black hover:bg-gray-200"
+            class="flex h-9 w-9 items-center justify-center bg-emerald-500 text-white hover:bg-emerald-400"
             @click="playback.togglePlay()"
           >
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -92,6 +119,7 @@
 
           <!-- Repeat -->
           <button
+            class="relative"
             :class="
               queue.repeatMode !== 'off' ? 'text-emerald-400' : 'text-gray-400 hover:text-white'
             "
@@ -113,7 +141,7 @@
             </svg>
             <span
               v-if="queue.repeatMode === 'one'"
-              class="absolute -top-1 -right-1 text-[8px] font-bold"
+              class="absolute -top-1 -right-1 text-[10px] font-bold"
             >
               1
             </span>
@@ -122,8 +150,13 @@
 
         <!-- Progress bar -->
         <div class="flex w-full max-w-lg items-center gap-2 text-xs text-gray-400">
-          <span>{{ formatTime(player.currentTime) }}</span>
-          <div class="relative h-1 flex-1 cursor-pointer bg-gray-700" @click="handleSeek">
+          <span>{{
+            formatTime(Math.max(0, player.currentTime - player.currentSong.start_at))
+          }}</span>
+          <div
+            class="group/bar relative h-1 flex-1 cursor-pointer bg-gray-700 transition-all hover:h-1.5"
+            @click="handleSeek"
+          >
             <div
               class="absolute inset-y-0 left-0 bg-emerald-500"
               :style="{ width: progressPercent + '%' }"
