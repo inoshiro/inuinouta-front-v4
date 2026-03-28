@@ -30,9 +30,11 @@
     </div>
 
     <!-- Info -->
-    <div class="p-3">
-      <p class="line-clamp-2 text-sm font-medium" :title="video.title">{{ video.title }}</p>
-      <p class="mt-1 text-xs text-gray-500">
+    <div class="p-2 sm:p-3">
+      <p class="line-clamp-2 text-xs font-medium sm:text-sm" :title="video.title">
+        {{ video.title }}
+      </p>
+      <p class="mt-0.5 text-xs text-gray-500 sm:mt-1">
         {{ formatDate(video.published_at) }}
       </p>
     </div>
