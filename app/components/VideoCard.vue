@@ -11,6 +11,18 @@
         class="h-full w-full object-cover"
         loading="lazy"
       />
+      <div
+        class="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/40"
+      >
+        <svg
+          class="h-8 w-8 text-white opacity-0 transition-opacity group-hover:opacity-100"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </div>
       <!-- Song count badge -->
       <span class="absolute bottom-1 right-1 bg-black/80 px-1.5 py-0.5 text-xs text-gray-200">
         {{ video.songs_count }}曲

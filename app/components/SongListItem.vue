@@ -50,7 +50,7 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
           />
         </svg>
       </button>
@@ -64,7 +64,7 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M4 6h16M4 10h16M4 14h10"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
           />
         </svg>
       </button>

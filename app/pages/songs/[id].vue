@@ -43,7 +43,7 @@
 
     <!-- Video info -->
     <section class="border-t border-border-default pt-4">
-      <h2 class="mb-2 text-sm font-bold text-gray-400">収録動画</h2>
+      <h2 class="mb-2 text-sm font-bold text-gray-50">収録動画</h2>
       <NuxtLink
         :to="`/videos/${song.video.id}`"
         class="block border border-border-default bg-surface-raised p-3 transition-colors hover:border-emerald-500/40"
