@@ -274,7 +274,7 @@ const player = usePlayerStore()
 const queue = useQueueStore()
 const playback = usePlayback()
 const { formatTime, songDuration } = useFormatTime()
-const { seekTo, retryPlay } = useYouTubePlayer()
+const { seekTo, retryPlay, requestPlay, loadedVideoId } = useYouTubePlayer()
 
 const progressPercent = computed(() => {
   const song = player.currentSong
@@ -285,14 +285,31 @@ const progressPercent = computed(() => {
   return Math.min(100, Math.max(0, (elapsed / duration) * 100))
 })
 
+/**
+ * Handle play button from a user gesture.
+ * If the current song has not been loaded into the iframe yet (e.g. restored from
+ * LocalStorage after a page reload), call requestPlay() so the video is loaded first.
+ * This also keeps us within the iOS user-gesture chain for scripted playback.
+ */
+function handlePlay() {
+  const song = player.currentSong
+  if (player.isBlocked) {
+    retryPlay()
+  } else if (!player.isPlaying && song && loadedVideoId.value !== song.video.id) {
+    // Video not yet loaded in the iframe — must use requestPlay (load + play)
+    player.play(song)
+    requestPlay(song)
+  } else {
+    playback.togglePlay()
+  }
+}
+
 function handleMobilePlay() {
-  if (player.isBlocked) retryPlay()
-  else playback.togglePlay()
+  handlePlay()
 }
 
 function handleDesktopPlay() {
-  if (player.isBlocked) retryPlay()
-  else playback.togglePlay()
+  handlePlay()
 }
 
 function handleSeek(e: MouseEvent) {

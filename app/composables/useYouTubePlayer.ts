@@ -11,6 +11,9 @@ let ytPlayer: YT.Player | null = null
 /** True once the IFrame API + player element are fully ready. */
 const ready = ref(false)
 
+/** Video ID currently loaded in the iframe (null when nothing has been loaded yet). */
+const loadedVideoId = ref<string | null>(null)
+
 /** Play request queued before the player was ready. */
 let pendingRequest: { videoId: string; startSeconds: number; endSeconds?: number } | null = null
 
@@ -68,6 +71,10 @@ export function useYouTubePlayer() {
 
   function handleReady() {
     ready.value = true
+    // Apply any volume/mute state that was restored from LocalStorage before the player was ready.
+    ytPlayer?.setVolume(player.volume)
+    if (player.isMuted) ytPlayer?.mute()
+    else ytPlayer?.unMute()
     // If a play request arrived while the player was still initialising,
     // fulfil it now (note: this is not within the original user gesture, so
     // iOS may still block it — the UI will show a retry button in that case).
@@ -106,6 +113,8 @@ export function useYouTubePlayer() {
 
   function _loadAndPlay(config: { videoId: string; startSeconds: number; endSeconds?: number }) {
     if (!ytPlayer) return
+    // Track the video ID so we know whether a video is currently loaded.
+    loadedVideoId.value = config.videoId
     // loadVideoById triggers autoplay on desktop; on iOS it may be blocked.
     ytPlayer.loadVideoById(config)
     startTimeTracking()
@@ -192,6 +201,7 @@ export function useYouTubePlayer() {
     ytPlayer?.destroy()
     ytPlayer = null
     ready.value = false
+    loadedVideoId.value = null
     pendingRequest = null
   }
 
@@ -215,6 +225,7 @@ export function useYouTubePlayer() {
 
   return {
     ready: readonly(ready),
+    loadedVideoId: readonly(loadedVideoId),
     initPlayer,
     requestPlay,
     resumePlay,

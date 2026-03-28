@@ -44,7 +44,9 @@
     </div>
 
     <!-- Player bar -->
-    <PlayerBar />
+    <ClientOnly>
+      <PlayerBar />
+    </ClientOnly>
   </div>
 </template>
 
