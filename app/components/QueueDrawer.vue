@@ -104,19 +104,6 @@
         </div>
       </div>
 
-      <!-- Save confirmation -->
-      <div v-if="saveMessage" class="border-b border-border-default px-4 py-2 text-xs">
-        <span class="text-emerald-400">{{ saveMessage }}</span>
-        <NuxtLink
-          v-if="savedPlaylistId"
-          :to="`/playlists/${savedPlaylistId}`"
-          class="ml-2 text-emerald-400 underline hover:text-emerald-300"
-          @click="queue.toggleOpen()"
-        >
-          開く
-        </NuxtLink>
-      </div>
-
       <!-- Queue list -->
       <div class="flex-1 overflow-y-auto">
         <div v-if="queue.songs.length === 0" class="px-4 py-8 text-center text-sm text-gray-400">
@@ -307,19 +294,6 @@
           </div>
         </div>
 
-        <!-- Save confirmation (mobile) -->
-        <div v-if="saveMessage" class="border-b border-border-default px-4 py-2 text-xs">
-          <span class="text-emerald-400">{{ saveMessage }}</span>
-          <NuxtLink
-            v-if="savedPlaylistId"
-            :to="`/playlists/${savedPlaylistId}`"
-            class="ml-2 text-emerald-400 underline hover:text-emerald-300"
-            @click="queue.toggleOpen()"
-          >
-            開く
-          </NuxtLink>
-        </div>
-
         <!-- Queue list -->
         <div class="flex-1 overflow-y-auto">
           <div v-if="queue.songs.length === 0" class="px-4 py-8 text-center text-sm text-gray-500">
@@ -416,7 +390,7 @@
 
 <script setup lang="ts">
 import { VueDraggableNext } from 'vue-draggable-next'
-import type { Song, LocalPlaylist } from '~/types'
+import type { Song } from '~/types'
 
 const queue = useQueueStore()
 const player = usePlayerStore()
@@ -446,11 +420,10 @@ function jumpTo(index: number) {
 }
 
 // Save as playlist
+const { success } = useNotifications()
 const isSaving = ref(false)
 const saveMode = ref<'new' | 'existing'>('new')
 const saveName = ref('')
-const saveMessage = ref('')
-const savedPlaylistId = ref<string | null>(null)
 const saveInputDesktop = ref<HTMLInputElement | null>(null)
 const saveInputMobile = ref<HTMLInputElement | null>(null)
 
@@ -479,26 +452,19 @@ function handleSaveAsPlaylist() {
   if (!name || queue.songs.length === 0) return
   const songIds = queue.songs.map((s) => s.id)
   const created = playlistsStore.createPlaylist(name, '', songIds)
-  savedPlaylistId.value = created.id
   saveName.value = ''
   isSaving.value = false
-  saveMessage.value = `「${name}」を保存しました`
-  setTimeout(() => {
-    saveMessage.value = ''
-    savedPlaylistId.value = null
-  }, 5000)
+  success(
+    `プレイリスト「${name}」を作成しました（${songIds.length}曲）`,
+    `/playlists/${created.id}`,
+  )
 }
 
-function handleAddToExistingPlaylist(pl: LocalPlaylist) {
+function handleAddToExistingPlaylist(pl: { id: string; name: string }) {
   const songIds = queue.songs.map((s) => s.id)
   playlistsStore.addSongs(pl.id, songIds)
   isSaving.value = false
-  savedPlaylistId.value = pl.id
-  saveMessage.value = `「${pl.name}」に${songIds.length}曲を追加しました`
-  setTimeout(() => {
-    saveMessage.value = ''
-    savedPlaylistId.value = null
-  }, 5000)
+  success(`「${pl.name}」に${songIds.length}曲を追加しました`, `/playlists/${pl.id}`)
 }
 
 function cancelSave() {

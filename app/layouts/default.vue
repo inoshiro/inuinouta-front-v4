@@ -47,6 +47,9 @@
     <ClientOnly>
       <PlayerBar />
     </ClientOnly>
+
+    <!-- Toast notifications (Teleport to body is handled inside) -->
+    <AppToastRegion />
   </div>
 </template>
 
