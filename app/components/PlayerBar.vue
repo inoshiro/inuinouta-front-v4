@@ -21,8 +21,23 @@
             <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
           </svg>
         </button>
-        <button class="text-gray-400 hover:text-white" @click="playback.togglePlay()">
-          <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+        <button
+          class="text-gray-400 hover:text-white"
+          :title="player.isBlocked ? '再生がブロックされました。タップして再試行' : undefined"
+          @click="handleMobilePlay"
+        >
+          <!-- Blocked: show retry icon -->
+          <svg
+            v-if="player.isBlocked"
+            class="h-8 w-8 text-emerald-400"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
+            />
+          </svg>
+          <svg v-else class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
             <path v-if="player.isPlaying" d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
             <path v-else d="M8 5v14l11-7z" />
           </svg>
@@ -98,9 +113,16 @@
           <!-- Play/Pause -->
           <button
             class="flex h-9 w-9 items-center justify-center bg-emerald-500 text-white hover:bg-emerald-400"
-            @click="playback.togglePlay()"
+            :title="player.isBlocked ? '再生がブロックされました。タップして再試行' : undefined"
+            @click="handleDesktopPlay"
           >
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <!-- Blocked: show retry icon -->
+            <svg v-if="player.isBlocked" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
+              />
+            </svg>
+            <svg v-else class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
               <path v-if="player.isPlaying" d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
               <path v-else d="M8 5v14l11-7z" />
             </svg>
@@ -228,6 +250,7 @@ const player = usePlayerStore()
 const queue = useQueueStore()
 const playback = usePlayback()
 const { formatTime, songDuration } = useFormatTime()
+const { seekTo, retryPlay } = useYouTubePlayer()
 
 const progressPercent = computed(() => {
   const song = player.currentSong
@@ -238,6 +261,16 @@ const progressPercent = computed(() => {
   return Math.min(100, Math.max(0, (elapsed / duration) * 100))
 })
 
+function handleMobilePlay() {
+  if (player.isBlocked) retryPlay()
+  else playback.togglePlay()
+}
+
+function handleDesktopPlay() {
+  if (player.isBlocked) retryPlay()
+  else playback.togglePlay()
+}
+
 function handleSeek(e: MouseEvent) {
   const song = player.currentSong
   if (!song) return
@@ -246,7 +279,6 @@ function handleSeek(e: MouseEvent) {
   const percent = (e.clientX - rect.left) / rect.width
   const duration = song.end_at - song.start_at
   const seekTime = song.start_at + duration * percent
-  const { seekTo } = useYouTubePlayer()
   seekTo(seekTime)
 }
 </script>
