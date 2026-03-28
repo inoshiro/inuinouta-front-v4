@@ -12,10 +12,28 @@
           <p class="truncate text-sm font-medium">{{ player.currentSong.title }}</p>
           <p class="truncate text-xs text-gray-400">{{ player.currentSong.artist }}</p>
         </div>
+        <button
+          class="text-gray-400 hover:text-white disabled:opacity-30"
+          :disabled="!queue.hasPrevious"
+          @click="playback.previousSong()"
+        >
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
+          </svg>
+        </button>
         <button class="text-gray-400 hover:text-white" @click="playback.togglePlay()">
           <svg class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
             <path v-if="player.isPlaying" d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
             <path v-else d="M8 5v14l11-7z" />
+          </svg>
+        </button>
+        <button
+          class="text-gray-400 hover:text-white disabled:opacity-30"
+          :disabled="!queue.hasNext"
+          @click="playback.nextSong()"
+        >
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16 6h2v12h-2V6zm-3.5 6L4 6v12l8.5-6z" />
           </svg>
         </button>
       </div>
@@ -123,7 +141,7 @@
             </svg>
             <span
               v-if="queue.repeatMode === 'one'"
-              class="absolute -top-1 -right-1 text-[8px] font-bold"
+              class="absolute -top-1 -right-1 text-[10px] font-bold"
             >
               1
             </span>
@@ -135,7 +153,10 @@
           <span>{{
             formatTime(Math.max(0, player.currentTime - player.currentSong.start_at))
           }}</span>
-          <div class="relative h-1 flex-1 cursor-pointer bg-gray-700" @click="handleSeek">
+          <div
+            class="group/bar relative h-1 flex-1 cursor-pointer bg-gray-700 transition-all hover:h-1.5"
+            @click="handleSeek"
+          >
             <div
               class="absolute inset-y-0 left-0 bg-emerald-500"
               :style="{ width: progressPercent + '%' }"

@@ -35,8 +35,9 @@
 
       <!-- Queue list -->
       <div class="flex-1 overflow-y-auto">
-        <div v-if="queue.songs.length === 0" class="px-4 py-8 text-center text-sm text-gray-500">
+        <div v-if="queue.songs.length === 0" class="px-4 py-8 text-center text-sm text-gray-400">
           キューに曲がありません
+          <p class="mt-1 text-xs text-gray-500">楽曲ページから曲を追加してみましょう</p>
         </div>
         <ClientOnly v-else>
           <VueDraggableNext
