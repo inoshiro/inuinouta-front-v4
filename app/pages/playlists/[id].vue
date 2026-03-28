@@ -165,6 +165,7 @@ const playlistId = route.params.id as string
 
 const playlistsStore = usePlaylistsStore()
 const queueActions = useQueueActions()
+const { success } = useNotifications()
 
 onMounted(() => {
   playlistsStore.loadFromStorage()
@@ -243,7 +244,9 @@ function cancelEdit() {
 // Delete
 function handleDelete() {
   if (!confirm(`「${playlist.value?.name}」を削除しますか？`)) return
+  const name = playlist.value?.name ?? 'プレイリスト'
   playlistsStore.deletePlaylist(playlistId)
+  success(`「${name}」を削除しました`)
   navigateTo('/playlists')
 }
 </script>

@@ -4,6 +4,7 @@ export function useQueueActions() {
   const player = usePlayerStore()
   const queue = useQueueStore()
   const { requestPlay } = useYouTubePlayer()
+  const { success } = useNotifications()
 
   /** Replace queue and play from a specific index */
   function playAll(songs: Song[], startIndex = 0) {
@@ -26,11 +27,13 @@ export function useQueueActions() {
   /** Insert as next in queue */
   function playNext(song: Song) {
     queue.addSongNext(song)
+    success(`「${song.title}」を次に再生します`)
   }
 
   /** Add to end of queue */
   function addToQueue(song: Song) {
     queue.addSong(song)
+    success(`「${song.title}」をキューに追加しました`)
   }
 
   return { playAll, playSong, playNext, addToQueue }
