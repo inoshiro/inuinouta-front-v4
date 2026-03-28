@@ -36,5 +36,12 @@ export function useQueueActions() {
     success(`「${song.title}」をキューに追加しました`)
   }
 
-  return { playAll, playSong, playNext, addToQueue }
+  /** Add multiple songs to end of queue with a single toast */
+  function addAllToQueue(songs: Song[]) {
+    if (songs.length === 0) return
+    songs.forEach((song) => queue.addSong(song))
+    success(`${songs.length}曲をキューに追加しました`)
+  }
+
+  return { playAll, playSong, playNext, addToQueue, addAllToQueue }
 }

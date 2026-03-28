@@ -206,7 +206,7 @@ function handlePlayAll() {
 }
 
 function handleAddAllToQueue() {
-  songs.value.forEach((song) => queueActions.addToQueue(song))
+  queueActions.addAllToQueue([...songs.value])
 }
 
 function handleRemoveSong(index: number) {
