@@ -51,6 +51,30 @@
             <path d="M16 6h2v12h-2V6zm-3.5 6L4 6v12l8.5-6z" />
           </svg>
         </button>
+
+        <!-- Queue toggle -->
+        <div class="relative flex items-center">
+          <button
+            class="p-1"
+            :class="queue.isOpen ? 'text-emerald-400' : 'text-gray-400 hover:text-white'"
+            @click="queue.toggleOpen()"
+          >
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 10h16M4 14h10"
+              />
+            </svg>
+          </button>
+          <span
+            v-if="queue.songs.length > 0"
+            class="pointer-events-none absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center bg-emerald-500 px-1 text-[10px] font-bold leading-none text-white"
+          >
+            {{ queue.songs.length > 99 ? '99+' : queue.songs.length }}
+          </span>
+        </div>
       </div>
       <!-- Mobile progress bar -->
       <div class="relative h-0.5 w-full bg-gray-700">
