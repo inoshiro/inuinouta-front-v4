@@ -17,6 +17,13 @@
           </span>
         </div>
         <div class="flex items-center gap-2">
+          <button
+            v-if="queue.songs.length > 0"
+            class="text-xs text-gray-400 hover:text-white"
+            @click="isSaving = true"
+          >
+            保存
+          </button>
           <button class="text-xs text-gray-400 hover:text-white" @click="queue.clear()">
             クリア
           </button>
@@ -31,6 +38,83 @@
             </svg>
           </button>
         </div>
+      </div>
+
+      <!-- Save as playlist panel -->
+      <div v-if="isSaving" class="border-b border-border-default">
+        <!-- Tab header -->
+        <div class="flex items-center gap-4 border-b border-border-default px-4 py-2">
+          <button
+            class="text-xs"
+            :class="
+              saveMode === 'new' ? 'font-medium text-gray-50' : 'text-gray-400 hover:text-white'
+            "
+            @click="saveMode = 'new'"
+          >
+            新規作成
+          </button>
+          <button
+            class="text-xs"
+            :class="
+              saveMode === 'existing'
+                ? 'font-medium text-gray-50'
+                : 'text-gray-400 hover:text-white'
+            "
+            @click="saveMode = 'existing'"
+          >
+            既存に追加
+          </button>
+          <button class="ml-auto text-xs text-gray-400 hover:text-white" @click="cancelSave">
+            ✕
+          </button>
+        </div>
+        <!-- New: name input -->
+        <div v-if="saveMode === 'new'" class="flex items-center gap-2 px-4 py-2">
+          <input
+            ref="saveInputDesktop"
+            v-model="saveName"
+            class="flex-1 border border-border-default bg-surface-overlay px-2 py-1 text-sm text-gray-50 focus:border-accent focus:outline-none"
+            placeholder="プレイリスト名"
+            maxlength="100"
+            @keydown.enter="handleSaveAsPlaylist"
+            @keydown.escape="cancelSave"
+          />
+          <button
+            class="text-xs text-emerald-400 hover:text-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
+            :disabled="!saveName.trim()"
+            @click="handleSaveAsPlaylist"
+          >
+            保存
+          </button>
+        </div>
+        <!-- Existing: playlist list -->
+        <div v-else class="max-h-44 overflow-y-auto">
+          <div v-if="playlistsStore.playlists.length === 0" class="px-4 py-3 text-xs text-gray-400">
+            まだプレイリストがありません
+          </div>
+          <button
+            v-for="pl in playlistsStore.playlists"
+            :key="pl.id"
+            class="flex w-full items-center gap-2 px-4 py-2 text-left text-xs hover:bg-surface-overlay"
+            @click="handleAddToExistingPlaylist(pl)"
+          >
+            <span class="flex-1 truncate text-gray-50">{{ pl.name }}</span>
+            <span class="text-gray-500">{{ pl.items.length }}曲</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Save confirmation -->
+      <div v-if="saveMessage" class="border-b border-border-default px-4 py-2 text-xs">
+        <span class="text-emerald-400">{{ saveMessage }}</span>
+        <NuxtLink
+          v-if="savedPlaylistId"
+          :to="`/playlists/${savedPlaylistId}`"
+          class="ml-2 text-emerald-400 underline hover:text-emerald-300"
+          @click="queue.toggleOpen()"
+        >
+          開く
+        </NuxtLink>
       </div>
 
       <!-- Queue list -->
@@ -133,6 +217,13 @@
             </span>
           </div>
           <div class="flex items-center gap-2">
+            <button
+              v-if="queue.songs.length > 0"
+              class="text-xs text-gray-400 hover:text-white"
+              @click="isSaving = true"
+            >
+              保存
+            </button>
             <button class="text-xs text-gray-400 hover:text-white" @click="queue.clear()">
               クリア
             </button>
@@ -147,6 +238,86 @@
               </svg>
             </button>
           </div>
+        </div>
+
+        <!-- Save as playlist panel (mobile) -->
+        <div v-if="isSaving" class="border-b border-border-default">
+          <!-- Tab header -->
+          <div class="flex items-center gap-4 border-b border-border-default px-4 py-2">
+            <button
+              class="text-xs"
+              :class="
+                saveMode === 'new' ? 'font-medium text-gray-50' : 'text-gray-400 hover:text-white'
+              "
+              @click="saveMode = 'new'"
+            >
+              新規作成
+            </button>
+            <button
+              class="text-xs"
+              :class="
+                saveMode === 'existing'
+                  ? 'font-medium text-gray-50'
+                  : 'text-gray-400 hover:text-white'
+              "
+              @click="saveMode = 'existing'"
+            >
+              既存に追加
+            </button>
+            <button class="ml-auto text-xs text-gray-400 hover:text-white" @click="cancelSave">
+              ✕
+            </button>
+          </div>
+          <!-- New: name input -->
+          <div v-if="saveMode === 'new'" class="flex items-center gap-2 px-4 py-2">
+            <input
+              ref="saveInputMobile"
+              v-model="saveName"
+              class="flex-1 border border-border-default bg-surface-overlay px-2 py-1 text-sm text-gray-50 focus:border-accent focus:outline-none"
+              placeholder="プレイリスト名"
+              maxlength="100"
+              @keydown.enter="handleSaveAsPlaylist"
+              @keydown.escape="cancelSave"
+            />
+            <button
+              class="text-xs text-emerald-400 hover:text-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
+              :disabled="!saveName.trim()"
+              @click="handleSaveAsPlaylist"
+            >
+              保存
+            </button>
+          </div>
+          <!-- Existing: playlist list -->
+          <div v-else class="max-h-44 overflow-y-auto">
+            <div
+              v-if="playlistsStore.playlists.length === 0"
+              class="px-4 py-3 text-xs text-gray-400"
+            >
+              まだプレイリストがありません
+            </div>
+            <button
+              v-for="pl in playlistsStore.playlists"
+              :key="pl.id"
+              class="flex w-full items-center gap-2 px-4 py-2 text-left text-xs hover:bg-surface-overlay"
+              @click="handleAddToExistingPlaylist(pl)"
+            >
+              <span class="flex-1 truncate text-gray-50">{{ pl.name }}</span>
+              <span class="text-gray-500">{{ pl.items.length }}曲</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Save confirmation (mobile) -->
+        <div v-if="saveMessage" class="border-b border-border-default px-4 py-2 text-xs">
+          <span class="text-emerald-400">{{ saveMessage }}</span>
+          <NuxtLink
+            v-if="savedPlaylistId"
+            :to="`/playlists/${savedPlaylistId}`"
+            class="ml-2 text-emerald-400 underline hover:text-emerald-300"
+            @click="queue.toggleOpen()"
+          >
+            開く
+          </NuxtLink>
         </div>
 
         <!-- Queue list -->
@@ -245,10 +416,11 @@
 
 <script setup lang="ts">
 import { VueDraggableNext } from 'vue-draggable-next'
-import type { Song } from '~/types'
+import type { Song, LocalPlaylist } from '~/types'
 
 const queue = useQueueStore()
 const player = usePlayerStore()
+const playlistsStore = usePlaylistsStore()
 
 const draggableQueue = ref<Song[]>([])
 
@@ -271,6 +443,67 @@ function jumpTo(index: number) {
   player.play(song)
   const { requestPlay } = useYouTubePlayer()
   requestPlay(song)
+}
+
+// Save as playlist
+const isSaving = ref(false)
+const saveMode = ref<'new' | 'existing'>('new')
+const saveName = ref('')
+const saveMessage = ref('')
+const savedPlaylistId = ref<string | null>(null)
+const saveInputDesktop = ref<HTMLInputElement | null>(null)
+const saveInputMobile = ref<HTMLInputElement | null>(null)
+
+watch(isSaving, (val) => {
+  if (val) {
+    saveMode.value = 'new'
+    playlistsStore.loadFromStorage()
+    nextTick(() => {
+      saveInputDesktop.value?.focus()
+      saveInputMobile.value?.focus()
+    })
+  }
+})
+
+watch(saveMode, (mode) => {
+  if (mode === 'new') {
+    nextTick(() => {
+      saveInputDesktop.value?.focus()
+      saveInputMobile.value?.focus()
+    })
+  }
+})
+
+function handleSaveAsPlaylist() {
+  const name = saveName.value.trim()
+  if (!name || queue.songs.length === 0) return
+  const songIds = queue.songs.map((s) => s.id)
+  const created = playlistsStore.createPlaylist(name, '', songIds)
+  savedPlaylistId.value = created.id
+  saveName.value = ''
+  isSaving.value = false
+  saveMessage.value = `「${name}」を保存しました`
+  setTimeout(() => {
+    saveMessage.value = ''
+    savedPlaylistId.value = null
+  }, 5000)
+}
+
+function handleAddToExistingPlaylist(pl: LocalPlaylist) {
+  const songIds = queue.songs.map((s) => s.id)
+  playlistsStore.addSongs(pl.id, songIds)
+  isSaving.value = false
+  savedPlaylistId.value = pl.id
+  saveMessage.value = `「${pl.name}」に${songIds.length}曲を追加しました`
+  setTimeout(() => {
+    saveMessage.value = ''
+    savedPlaylistId.value = null
+  }, 5000)
+}
+
+function cancelSave() {
+  saveName.value = ''
+  isSaving.value = false
 }
 </script>
 

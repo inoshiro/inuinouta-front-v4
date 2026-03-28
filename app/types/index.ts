@@ -35,7 +35,7 @@ export interface Song extends SongBasic {
   video: VideoBasic
 }
 
-// --- Playlist ---
+// --- Playlist (API) ---
 
 export interface PlaylistItem {
   id: number
@@ -49,6 +49,23 @@ export interface Playlist {
   description: string
   created_at: string
   items: PlaylistItem[]
+}
+
+// --- Playlist (Local-first / localStorage) ---
+
+export interface LocalPlaylistItem {
+  id: string // UUID
+  song_id: number
+  order: number
+}
+
+export interface LocalPlaylist {
+  id: string // UUID
+  name: string
+  description: string
+  items: LocalPlaylistItem[]
+  created_at: string // ISO 8601
+  updated_at: string // ISO 8601
 }
 
 // --- API Response Wrappers (dynamic-rest format) ---
