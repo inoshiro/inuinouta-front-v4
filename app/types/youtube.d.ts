@@ -8,6 +8,8 @@ declare namespace YT {
       onReady?: (event: { target: Player }) => void
       onStateChange?: (event: OnStateChangeEvent) => void
       onError?: (event: { data: number }) => void
+      /** Fired when the browser blocks autoplay / scripted playback (iOS / desktop policy). */
+      onAutoplayBlocked?: () => void
     }
   }
 

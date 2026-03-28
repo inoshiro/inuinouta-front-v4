@@ -3,18 +3,24 @@ import type { Song } from '~/types'
 export function useQueueActions() {
   const player = usePlayerStore()
   const queue = useQueueStore()
+  const { requestPlay } = useYouTubePlayer()
 
   /** Replace queue and play from a specific index */
   function playAll(songs: Song[], startIndex = 0) {
     queue.setSongs(songs, startIndex)
     const current = queue.currentSong
-    if (current) player.play(current)
+    if (!current) return
+    player.play(current)
+    // Call requestPlay synchronously within the user-gesture chain.
+    requestPlay(current)
   }
 
   /** Replace queue with a single song and play it */
   function playSong(song: Song) {
     queue.setSongs([song], 0)
     player.play(song)
+    // Call requestPlay synchronously within the user-gesture chain.
+    requestPlay(song)
   }
 
   /** Insert as next in queue */

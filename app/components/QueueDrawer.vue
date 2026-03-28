@@ -267,7 +267,10 @@ function handleDragEnd(event: { oldIndex: number; newIndex: number }) {
 function jumpTo(index: number) {
   queue.currentIndex = index
   const song = queue.currentSong
-  if (song) player.play(song)
+  if (!song) return
+  player.play(song)
+  const { requestPlay } = useYouTubePlayer()
+  requestPlay(song)
 }
 </script>
 
