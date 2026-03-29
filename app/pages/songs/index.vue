@@ -65,7 +65,13 @@
 
       <!-- Song list -->
       <div v-else>
-        <SongListItem v-for="(song, index) in songs" :key="song.id" :song="song" :index="index" />
+        <SongListItem
+          v-for="(song, index) in songs"
+          :key="song.id"
+          :song="song"
+          :index="index"
+          :show-index="false"
+        />
       </div>
     </template>
 
