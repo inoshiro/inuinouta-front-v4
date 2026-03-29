@@ -28,9 +28,15 @@ export function useQueueActions() {
     queue.addSongNext(song)
   }
 
-  /** Add to end of queue */
+  /** Add to end of queue. If the queue was empty, start playback immediately. */
   function addToQueue(song: Song) {
+    const wasEmpty = queue.songs.length === 0
     queue.addSong(song)
+    if (wasEmpty) {
+      player.play(song)
+      // Call requestPlay synchronously within the user-gesture chain.
+      requestPlay(song)
+    }
   }
 
   return { playAll, playSong, playNext, addToQueue }
