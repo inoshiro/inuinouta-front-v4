@@ -50,8 +50,8 @@
       <p class="truncate text-xs text-gray-500">{{ song.artist ?? '不明' }}</p>
     </div>
 
-    <!-- Duration -->
-    <span class="shrink-0 text-xs text-gray-500">
+    <!-- Duration (hidden on mobile to give more room for song title) -->
+    <span class="hidden shrink-0 text-xs text-gray-500 sm:inline">
       {{ songDuration(song.start_at, song.end_at) }}
     </span>
 
