@@ -1,19 +1,34 @@
 import type { Song } from '~/types'
 
+export type SongTypeFilter = '' | 'original' | 'cover'
+export type VideoTypeFilter = '' | 'music_video' | 'stream'
+
 export function useSongs(options?: { perPage?: number }) {
   const library = useLibraryStore()
+  const route = useRoute()
   const page = ref(1)
   const perPage = options?.perPage ?? 30
   const search = ref('')
+  const songType = ref<SongTypeFilter>('')
+  const videoType = ref<VideoTypeFilter>('')
 
   const status = computed(() => (library.songsStatus === 'idle' ? 'pending' : library.songsStatus))
   const error = computed(() => library.songsError)
 
   const filtered = computed<Song[]>(() => {
     const all = library.allSongs
-    if (!search.value) return all
     const q = search.value.toLowerCase()
-    return all.filter((s) => s.title.toLowerCase().includes(q))
+    const st = songType.value
+    const vt = videoType.value
+    return all.filter((s) => {
+      const matchText =
+        !q ||
+        s.title.toLowerCase().includes(q) ||
+        (s.artist != null && s.artist.toLowerCase().includes(q))
+      const matchSongType = st === '' || (st === 'original' ? s.is_original : !s.is_original)
+      const matchVideoType = vt === '' || (vt === 'stream' ? s.video.is_stream : !s.video.is_stream)
+      return matchText && matchSongType && matchVideoType
+    })
   })
 
   const totalItems = computed(() => filtered.value.length)
@@ -23,10 +38,19 @@ export function useSongs(options?: { perPage?: number }) {
     return filtered.value.slice(start, start + perPage)
   })
 
-  // Reset page when search changes
-  watch(search, () => {
+  // Reset page when any filter changes
+  watch([search, songType, videoType], () => {
     page.value = 1
   })
+
+  // Sync search from URL query ?q=
+  watch(
+    () => route.query.q,
+    (q) => {
+      search.value = typeof q === 'string' ? q : ''
+    },
+    { immediate: true },
+  )
 
   // Fetch on first use (SSR + client)
   onServerPrefetch(() => callOnce('library-songs', () => library.fetchSongs()))
@@ -39,5 +63,5 @@ export function useSongs(options?: { perPage?: number }) {
     return library.fetchSongs(true)
   }
 
-  return { songs, totalItems, page, perPage, search, status, error, refresh }
+  return { songs, totalItems, page, perPage, search, songType, videoType, status, error, refresh }
 }
