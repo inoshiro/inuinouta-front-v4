@@ -30,10 +30,13 @@ export function useVideos(options?: { perPage?: number }) {
     page.value = 1
   })
 
-  // Fetch on first use (SSR + client)
+  // SSR prefetch: when directly loading a page that uses this composable
   onServerPrefetch(() => callOnce('library-videos', () => library.fetchVideos()))
 
-  if (import.meta.client) {
+  // Client-side preload is handled by default.vue layout (runs on every page).
+  // This fallback ensures data is available if the composable is used
+  // outside a context where the layout has already triggered the preload.
+  if (import.meta.client && library.videosStatus === 'idle') {
     void callOnce('library-videos', () => library.fetchVideos())
   }
 
