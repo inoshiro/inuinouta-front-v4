@@ -3,7 +3,7 @@
     <!-- Random picks -->
     <section>
       <div class="mb-4 flex items-center justify-between">
-        <h2 class="text-lg font-bold">ピックアップ</h2>
+        <h2 class="text-lg font-bold">ランダムピックアップ</h2>
         <button
           class="text-sm text-gray-400 transition-colors hover:text-emerald-400"
           @click="randomRefresh()"
