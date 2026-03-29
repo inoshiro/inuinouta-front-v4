@@ -19,9 +19,11 @@
         <button
           v-for="t in songTypeOptions"
           :key="t.value"
-          class="border border-r-0 border-border-default px-3 py-1.5 text-sm transition-colors last:border-r"
+          class="relative ml-[-1px] border border-border-default px-3 py-1.5 text-sm transition-colors first:ml-0"
           :class="
-            songType === t.value ? 'bg-emerald-500 text-white' : 'text-gray-400 hover:text-gray-50'
+            songType === t.value
+              ? 'z-10 border-emerald-500 bg-emerald-500/10 text-emerald-400'
+              : 'text-gray-400 hover:text-gray-50'
           "
           @click="songType = t.value"
         >
@@ -34,9 +36,11 @@
         <button
           v-for="t in videoTypeOptions"
           :key="t.value"
-          class="border border-r-0 border-border-default px-3 py-1.5 text-sm transition-colors last:border-r"
+          class="relative ml-[-1px] border border-border-default px-3 py-1.5 text-sm transition-colors first:ml-0"
           :class="
-            videoType === t.value ? 'bg-emerald-500 text-white' : 'text-gray-400 hover:text-gray-50'
+            videoType === t.value
+              ? 'z-10 border-emerald-500 bg-emerald-500/10 text-emerald-400'
+              : 'text-gray-400 hover:text-gray-50'
           "
           @click="videoType = t.value"
         >
