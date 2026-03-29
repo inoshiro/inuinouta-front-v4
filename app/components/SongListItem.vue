@@ -4,9 +4,9 @@
     :class="isActive ? 'bg-surface-overlay' : ''"
     @click="queueActions.playSong(song)"
   >
-    <!-- Play indicator / index: always reserves the column width to prevent layout shift.
-         showIndex=true → number (or play icon when active); showIndex=false → play icon only (or nothing) -->
+    <!-- Play indicator / index: only rendered when showIndex=true (e.g. playlists with ordering) -->
     <span
+      v-if="showIndex"
       class="w-8 shrink-0 text-center text-xs"
       :class="isActive ? 'text-emerald-400' : 'text-gray-500'"
     >
@@ -18,17 +18,29 @@
       >
         <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
       </svg>
-      <template v-else-if="showIndex">{{ index + 1 }}</template>
+      <template v-else>{{ index + 1 }}</template>
     </span>
 
-    <!-- Thumbnail (mobile: hidden to save space; aspect-video for correct 16:9 ratio) -->
-    <img
-      :src="song.video.thumbnail_path"
-      :alt="song.title"
-      class="hidden h-10 shrink-0 object-cover sm:block"
-      style="aspect-ratio: 16/9"
-      loading="lazy"
-    />
+    <!-- Thumbnail: always visible including mobile.
+         When showIndex=false, this is the leftmost element.
+         Play overlay shown on thumbnail when active and playing (only when showIndex=false). -->
+    <div class="relative shrink-0">
+      <img
+        :src="song.video.thumbnail_path"
+        :alt="song.title"
+        class="h-10 object-cover"
+        style="aspect-ratio: 16/9"
+        loading="lazy"
+      />
+      <div
+        v-if="!showIndex && isActive && player.isPlaying"
+        class="absolute inset-0 flex items-center justify-center bg-black/40"
+      >
+        <svg class="h-3.5 w-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
+        </svg>
+      </div>
+    </div>
 
     <!-- Song info -->
     <div class="min-w-0 flex-1">
