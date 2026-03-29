@@ -38,15 +38,26 @@ export function useQueueActions() {
       player.play(song)
       // Call requestPlay synchronously within the user-gesture chain.
       requestPlay(song)
+    } else {
+      success(`「${song.title}」をキューに追加しました`)
     }
-    success(`「${song.title}」をキューに追加しました`)
   }
 
   /** Add multiple songs to end of queue with a single toast */
   function addAllToQueue(songs: Song[]) {
     if (songs.length === 0) return
+    const wasEmpty = queue.songs.length === 0
     songs.forEach((song) => queue.addSong(song))
-    success(`${songs.length}曲をキューに追加しました`)
+    if (wasEmpty) {
+      const first = queue.currentSong
+      if (first) {
+        player.play(first)
+        // Call requestPlay synchronously within the user-gesture chain.
+        requestPlay(first)
+      }
+    } else {
+      success(`${songs.length}曲をキューに追加しました`)
+    }
   }
 
   return { playAll, playSong, playNext, addToQueue, addAllToQueue }
