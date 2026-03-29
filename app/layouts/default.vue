@@ -55,4 +55,12 @@
 
 <script setup lang="ts">
 const sideNavOpen = ref(false)
+
+// Background preload for songs/videos on every page so data is warm
+// before the user navigates to /songs, /videos or /search
+const library = useLibraryStore()
+if (import.meta.client) {
+  void callOnce('library-songs', () => library.fetchSongs())
+  void callOnce('library-videos', () => library.fetchVideos())
+}
 </script>
