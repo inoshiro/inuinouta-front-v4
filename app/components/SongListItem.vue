@@ -60,7 +60,7 @@
       class="flex shrink-0 gap-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:[&:has(.dropdown-open)]:opacity-100"
     >
       <slot name="extra-actions" />
-      <AddToPlaylistDropdown :song-id="song.id" :song-title="song.title" />
+      <AddToPlaylistDropdown v-if="showAddToPlaylist" :song-id="song.id" :song-title="song.title" />
       <button
         class="p-1 text-gray-400 hover:text-white"
         title="次に再生"
@@ -101,8 +101,9 @@ const props = withDefaults(
     song: Song
     index: number
     showIndex?: boolean
+    showAddToPlaylist?: boolean
   }>(),
-  { showIndex: true },
+  { showIndex: true, showAddToPlaylist: true },
 )
 
 const player = usePlayerStore()
