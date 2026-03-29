@@ -59,26 +59,7 @@
           class="flex w-full items-center gap-2 px-3 py-2 text-left text-xs hover:bg-surface-overlay"
           @click="addTo(pl.id)"
         >
-          <span
-            class="flex-1 truncate"
-            :class="addedId === pl.id ? 'text-emerald-400' : 'text-gray-50'"
-          >
-            {{ pl.name }}
-          </span>
-          <svg
-            v-if="addedId === pl.id"
-            class="h-3.5 w-3.5 shrink-0 text-emerald-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2.5"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
+          <span class="flex-1 truncate text-gray-50">{{ pl.name }}</span>
         </button>
         <div class="border-t border-border-default">
           <button
@@ -102,13 +83,13 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ songId: number }>()
+const props = defineProps<{ songId: number; songTitle: string }>()
 
 const playlistsStore = usePlaylistsStore()
+const { success } = useNotifications()
 const open = ref(false)
 const isCreating = ref(false)
 const newName = ref('')
-const addedId = ref<string | null>(null)
 const createInput = ref<HTMLInputElement | null>(null)
 
 const playlists = computed(() => playlistsStore.playlists)
@@ -122,25 +103,21 @@ function toggle() {
 }
 
 function addTo(playlistId: string) {
+  const pl = playlistsStore.getById(playlistId)
+  if (!pl) return
   playlistsStore.addSong(playlistId, props.songId)
-  addedId.value = playlistId
-  setTimeout(() => {
-    open.value = false
-    addedId.value = null
-  }, 1000)
+  success(`「${props.songTitle}」を「${pl.name}」に追加しました`, `/playlists/${playlistId}`)
+  open.value = false
 }
 
 function handleCreate() {
   const name = newName.value.trim()
   if (!name) return
   const created = playlistsStore.createPlaylist(name, '', [props.songId])
-  addedId.value = created.id
+  success(`プレイリスト「${name}」を作成して追加しました`, `/playlists/${created.id}`)
   isCreating.value = false
   newName.value = ''
-  setTimeout(() => {
-    open.value = false
-    addedId.value = null
-  }, 1000)
+  open.value = false
 }
 
 watch(isCreating, (val) => {
