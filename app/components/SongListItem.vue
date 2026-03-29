@@ -4,8 +4,12 @@
     :class="isActive ? 'bg-surface-overlay' : ''"
     @click="queueActions.playSong(song)"
   >
-    <!-- Play indicator / index -->
-    <span class="w-8 text-center text-xs" :class="isActive ? 'text-emerald-400' : 'text-gray-500'">
+    <!-- Play indicator / index: always reserves the column width to prevent layout shift.
+         showIndex=true → number (or play icon when active); showIndex=false → play icon only (or nothing) -->
+    <span
+      class="w-8 shrink-0 text-center text-xs"
+      :class="isActive ? 'text-emerald-400' : 'text-gray-500'"
+    >
       <svg
         v-if="isActive && player.isPlaying"
         class="mx-auto h-3.5 w-3.5"
@@ -14,14 +18,15 @@
       >
         <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
       </svg>
-      <template v-else>{{ index + 1 }}</template>
+      <template v-else-if="showIndex">{{ index + 1 }}</template>
     </span>
 
-    <!-- Thumbnail (mobile: hidden to save space) -->
+    <!-- Thumbnail (mobile: hidden to save space; aspect-video for correct 16:9 ratio) -->
     <img
       :src="song.video.thumbnail_path"
       :alt="song.title"
-      class="hidden h-10 w-10 shrink-0 object-cover sm:block"
+      class="hidden h-10 shrink-0 object-cover sm:block"
+      style="aspect-ratio: 16/9"
       loading="lazy"
     />
 
@@ -79,10 +84,14 @@
 <script setup lang="ts">
 import type { Song } from '~/types'
 
-const props = defineProps<{
-  song: Song
-  index: number
-}>()
+const props = withDefaults(
+  defineProps<{
+    song: Song
+    index: number
+    showIndex?: boolean
+  }>(),
+  { showIndex: true },
+)
 
 const player = usePlayerStore()
 const queueActions = useQueueActions()
