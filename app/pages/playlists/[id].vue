@@ -128,7 +128,7 @@
               <SongListItem :song="song" :index="index" :show-index="false" :show-add-to-playlist="false">
                 <template #extra-actions>
                   <button
-                    class="p-1 text-gray-400 hover:text-red-400"
+                    class="p-1 text-red-400/60 hover:text-red-400"
                     title="プレイリストから削除"
                     @click.stop="handleRemoveSong(index)"
                   >

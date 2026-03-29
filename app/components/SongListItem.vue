@@ -34,9 +34,9 @@
       />
       <div
         v-if="!showIndex && isActive && player.isPlaying"
-        class="absolute inset-0 flex items-center justify-center bg-black/40"
+        class="absolute inset-0 flex items-center justify-center bg-black/60"
       >
-        <svg class="h-3.5 w-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+        <svg class="h-4 w-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
         </svg>
       </div>
@@ -57,7 +57,7 @@
 
     <!-- Actions -->
     <div
-      class="flex shrink-0 gap-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:[&:has(.dropdown-open)]:opacity-100"
+      class="flex shrink-0 gap-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:[&:has(.dropdown-open)]:opacity-100"
     >
       <slot name="extra-actions" />
       <AddToPlaylistDropdown v-if="showAddToPlaylist" :song-id="song.id" :song-title="song.title" />
