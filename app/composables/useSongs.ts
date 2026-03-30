@@ -3,14 +3,21 @@ import type { Song } from '~/types'
 export type SongTypeFilter = '' | 'original' | 'cover'
 export type VideoTypeFilter = '' | 'music_video' | 'stream'
 
+export interface ArtistWithCount {
+  name: string
+  count: number
+}
+
 export function useSongs(options?: { perPage?: number }) {
   const library = useLibraryStore()
   const route = useRoute()
+  const router = useRouter()
   const page = ref(1)
   const perPage = options?.perPage ?? 30
   const search = ref('')
   const songType = ref<SongTypeFilter>('')
   const videoType = ref<VideoTypeFilter>('')
+  const selectedArtist = ref('')
 
   const status = computed(() => (library.songsStatus === 'idle' ? 'pending' : library.songsStatus))
   const error = computed(() => library.songsError)
@@ -20,6 +27,7 @@ export function useSongs(options?: { perPage?: number }) {
     const q = search.value.toLowerCase()
     const st = songType.value
     const vt = videoType.value
+    const artist = selectedArtist.value
     return all.filter((s) => {
       const matchText =
         !q ||
@@ -27,8 +35,20 @@ export function useSongs(options?: { perPage?: number }) {
         (s.artist != null && s.artist.toLowerCase().includes(q))
       const matchSongType = st === '' || (st === 'original' ? s.is_original : !s.is_original)
       const matchVideoType = vt === '' || (vt === 'stream' ? s.video.is_stream : !s.video.is_stream)
-      return matchText && matchSongType && matchVideoType
+      const matchArtist = !artist || s.artist === artist
+      return matchText && matchSongType && matchVideoType && matchArtist
     })
+  })
+
+  // Artist list with counts, derived from all songs (not filtered), sorted by count desc
+  const artistsWithCount = computed<ArtistWithCount[]>(() => {
+    const counts: Record<string, number> = {}
+    library.allSongs.forEach((s) => {
+      if (s.artist) counts[s.artist] = (counts[s.artist] ?? 0) + 1
+    })
+    return Object.entries(counts)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
   })
 
   const totalItems = computed(() => filtered.value.length)
@@ -39,7 +59,7 @@ export function useSongs(options?: { perPage?: number }) {
   })
 
   // Reset page when any filter changes
-  watch([search, songType, videoType], () => {
+  watch([search, songType, videoType, selectedArtist], () => {
     page.value = 1
   })
 
@@ -51,6 +71,20 @@ export function useSongs(options?: { perPage?: number }) {
     },
     { immediate: true },
   )
+
+  // Sync selectedArtist from URL query ?artist=
+  watch(
+    () => route.query.artist,
+    (a) => {
+      selectedArtist.value = typeof a === 'string' ? a : ''
+    },
+    { immediate: true },
+  )
+
+  function selectArtist(name: string) {
+    selectedArtist.value = name
+    router.replace({ query: { ...route.query, artist: name || undefined } })
+  }
 
   // SSR prefetch: when directly loading a page that uses this composable
   onServerPrefetch(() => callOnce('library-songs', () => library.fetchSongs()))
@@ -66,5 +100,19 @@ export function useSongs(options?: { perPage?: number }) {
     return library.fetchSongs(true)
   }
 
-  return { songs, totalItems, page, perPage, search, songType, videoType, status, error, refresh }
+  return {
+    songs,
+    totalItems,
+    page,
+    perPage,
+    search,
+    songType,
+    videoType,
+    selectedArtist,
+    artistsWithCount,
+    selectArtist,
+    status,
+    error,
+    refresh,
+  }
 }

@@ -19,7 +19,7 @@
         <button
           v-for="t in songTypeOptions"
           :key="t.value"
-          class="relative ml-[-1px] border border-border-default px-3 py-1.5 text-sm transition-colors first:ml-0"
+          class="relative -ml-px border border-border-default px-3 py-1.5 text-sm transition-colors first:ml-0"
           :class="
             songType === t.value
               ? 'z-10 border-emerald-500 bg-emerald-500/10 text-emerald-400'
@@ -36,7 +36,7 @@
         <button
           v-for="t in videoTypeOptions"
           :key="t.value"
-          class="relative ml-[-1px] border border-border-default px-3 py-1.5 text-sm transition-colors first:ml-0"
+          class="relative -ml-px border border-border-default px-3 py-1.5 text-sm transition-colors first:ml-0"
           :class="
             videoType === t.value
               ? 'z-10 border-emerald-500 bg-emerald-500/10 text-emerald-400'
@@ -47,7 +47,29 @@
           {{ t.label }}
         </button>
       </div>
+
+      <!-- Artist filter button -->
+      <button
+        class="border px-3 py-1.5 text-sm transition-colors"
+        :class="
+          selectedArtist
+            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
+            : 'border-border-default text-gray-400 hover:text-gray-50'
+        "
+        @click="artistModalOpen = true"
+      >
+        {{ selectedArtist || '全アーティスト' }} ▼
+      </button>
     </div>
+
+    <!-- Artist cloud modal -->
+    <ArtistCloudModal
+      :is-open="artistModalOpen"
+      :selected-artist="selectedArtist"
+      :artists="artistsWithCount"
+      @close="artistModalOpen = false"
+      @select="onSelectArtist"
+    />
 
     <!-- Result count -->
     <p class="mb-4 text-sm text-gray-400">{{ totalItems }} 曲見つかりました</p>
@@ -92,8 +114,26 @@ import type { SongTypeFilter, VideoTypeFilter } from '~/composables/useSongs'
 
 useHead({ title: '楽曲一覧 | inuinouta' })
 
-const { songs, totalItems, page, perPage, songType, videoType, status } = useSongs({ perPage: 50 })
+const {
+  songs,
+  totalItems,
+  page,
+  perPage,
+  songType,
+  videoType,
+  selectedArtist,
+  artistsWithCount,
+  selectArtist,
+  status,
+} = useSongs({ perPage: 50 })
 const queueActions = useQueueActions()
+
+const artistModalOpen = ref(false)
+
+function onSelectArtist(name: string) {
+  selectArtist(name)
+  artistModalOpen.value = false
+}
 
 const songTypeOptions: { value: SongTypeFilter; label: string }[] = [
   { value: '', label: 'すべて' },
