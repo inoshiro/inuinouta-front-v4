@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h1 class="mb-6 text-xl font-bold">動画一覧</h1>
+    <h1 class="mb-6 text-xl font-bold text-gray-50">動画一覧</h1>
+
+    <!-- Result count -->
+    <p class="mb-4 text-sm text-gray-400">{{ totalItems }} 件見つかりました</p>
 
     <!-- Loading -->
     <div v-if="status === 'pending'" class="grid grid-cols-2 gap-3 lg:grid-cols-3">
@@ -13,10 +16,17 @@
       </div>
     </div>
 
-    <!-- Video grid -->
-    <div v-else class="grid grid-cols-2 gap-3 lg:grid-cols-3">
-      <VideoCard v-for="video in videos" :key="video.id" :video="video" />
-    </div>
+    <template v-else>
+      <!-- Empty state -->
+      <div v-if="videos.length === 0" class="py-12 text-center text-gray-400">
+        動画が見つかりませんでした
+      </div>
+
+      <!-- Video grid -->
+      <div v-else class="grid grid-cols-2 gap-3 lg:grid-cols-3">
+        <VideoCard v-for="video in videos" :key="video.id" :video="video" />
+      </div>
+    </template>
 
     <!-- Pagination -->
     <div class="mt-6">
