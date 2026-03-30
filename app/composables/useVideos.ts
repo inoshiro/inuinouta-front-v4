@@ -2,6 +2,7 @@ import type { VideoList } from '~/types'
 
 export function useVideos(options?: { perPage?: number }) {
   const library = useLibraryStore()
+  const route = useRoute()
   const page = ref(1)
   const perPage = options?.perPage ?? 30
   const search = ref('')
@@ -29,6 +30,15 @@ export function useVideos(options?: { perPage?: number }) {
   watch(search, () => {
     page.value = 1
   })
+
+  // Sync search from URL query ?q=
+  watch(
+    () => route.query.q,
+    (q) => {
+      search.value = typeof q === 'string' ? q : ''
+    },
+    { immediate: true },
+  )
 
   // SSR prefetch: when directly loading a page that uses this composable
   onServerPrefetch(() => callOnce('library-videos', () => library.fetchVideos()))
