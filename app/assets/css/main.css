@@ -7,7 +7,24 @@
   --color-surface-raised: var(--color-gray-900);
   --color-surface-overlay: var(--color-gray-800);
   --color-border-default: var(--color-gray-800);
+
+  /* 後方互換のため残す */
   --color-accent: var(--color-emerald-500);
   --color-accent-hover: var(--color-emerald-400);
   --color-accent-muted: var(--color-emerald-600);
+
+  /* アクション（クリックで何かを実行するボタン・CTA） */
+  --color-action-primary: var(--color-emerald-500);
+  --color-action-primary-hover: var(--color-emerald-400);
+
+  /* 選択・状態（絞り込み選択中・アクティブ状態の表示） */
+  --color-selected-border: var(--color-emerald-500);
+  --color-selected-text: var(--color-emerald-400);
+  --color-selected-bg: var(--color-emerald-500);
+
+  /* 強調テキスト・バッジ（注目させたい数値・ラベル） */
+  --color-emphasis: var(--color-emerald-600);
+
+  /* 再生位置バー（状態表示） */
+  --color-progress: var(--color-emerald-600);
 }

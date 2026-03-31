@@ -5,7 +5,7 @@
       <div class="mb-4 flex items-center justify-between">
         <h2 class="text-lg font-bold">ランダムピックアップ</h2>
         <button
-          class="text-sm text-gray-400 transition-colors hover:text-emerald-400"
+          class="text-sm text-gray-400 transition-colors hover:text-selected-text"
           @click="randomRefresh()"
         >
           シャッフル
@@ -28,7 +28,7 @@
         <h2 class="text-lg font-bold">最新の楽曲</h2>
         <NuxtLink
           to="/songs"
-          class="text-sm text-gray-400 transition-colors hover:text-emerald-400"
+          class="text-sm text-gray-400 transition-colors hover:text-selected-text"
         >
           すべて見る →
         </NuxtLink>

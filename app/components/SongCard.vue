@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group cursor-pointer border border-border-default bg-surface-raised transition-colors hover:border-emerald-500/40"
+    class="group cursor-pointer border border-border-default bg-surface-raised transition-colors hover:border-action-primary/40"
     @click="queueActions.playSong(song)"
   >
     <!-- Thumbnail -->

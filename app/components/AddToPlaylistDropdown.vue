@@ -38,7 +38,7 @@
               キャンセル
             </button>
             <button
-              class="text-xs text-emerald-400 hover:text-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
+              class="text-xs text-selected-text hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="!newName.trim()"
               @click="handleCreate"
             >

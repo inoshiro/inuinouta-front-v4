@@ -44,7 +44,7 @@
                 class="border px-3 py-1.5 text-sm transition-colors"
                 :class="
                   selectedArtist === ''
-                    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
+                    ? 'border-selected-border bg-selected-bg/10 text-selected-text'
                     : 'border-border-default text-gray-400 hover:text-gray-50'
                 "
                 @click="$emit('select', '')"
@@ -59,7 +59,7 @@
                 class="border px-3 py-1.5 text-sm transition-colors"
                 :class="
                   selectedArtist === artist.name
-                    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
+                    ? 'border-selected-border bg-selected-bg/10 text-selected-text'
                     : 'border-border-default text-gray-400 hover:text-gray-50'
                 "
                 @click="$emit('select', artist.name)"

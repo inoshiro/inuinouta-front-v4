@@ -17,7 +17,7 @@
       :value="query"
       type="text"
       placeholder="楽曲・動画を検索…"
-      class="w-full border border-border-default bg-surface-raised py-2 pl-9 pr-8 text-sm text-gray-50 placeholder-gray-500 transition-colors focus:border-emerald-500 focus:outline-none"
+      class="w-full border border-border-default bg-surface-raised py-2 pl-9 pr-8 text-sm text-gray-50 placeholder-gray-500 transition-colors focus:border-selected-border focus:outline-none"
       @input="search(($event.target as HTMLInputElement).value)"
     />
     <button

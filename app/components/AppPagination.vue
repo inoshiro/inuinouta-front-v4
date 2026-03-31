@@ -17,7 +17,7 @@
         class="min-w-[2rem] px-2 py-1.5 text-sm transition-colors"
         :class="
           p === currentPage
-            ? 'bg-emerald-500 font-medium text-white'
+            ? 'border border-selected-border font-bold text-selected-text'
             : 'text-gray-400 hover:bg-surface-overlay hover:text-white'
         "
         @click="emit('update:page', p as number)"

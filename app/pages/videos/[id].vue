@@ -27,7 +27,7 @@
         <div class="mt-4 flex flex-wrap gap-2">
           <button
             v-if="video.songs.length > 0"
-            class="bg-emerald-500 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-400"
+            class="bg-action-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-action-primary-hover"
             @click="playVideoSongs"
           >
             すべて再生
