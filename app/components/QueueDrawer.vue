@@ -80,7 +80,7 @@
             @keydown.escape="cancelSave"
           />
           <button
-            class="text-xs text-emerald-400 hover:text-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
+            class="text-xs text-selected-text hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
             :disabled="!saveName.trim()"
             @click="handleSaveAsPlaylist"
           >
@@ -141,7 +141,7 @@
               <!-- Index / playing icon -->
               <span
                 class="w-5 shrink-0 text-center text-xs"
-                :class="index === queue.currentIndex ? 'text-emerald-400' : 'text-gray-500'"
+                :class="index === queue.currentIndex ? 'text-selected-text' : 'text-gray-500'"
               >
                 <svg
                   v-if="index === queue.currentIndex && player.isPlaying"
@@ -159,7 +159,7 @@
                 <p
                   class="truncate text-sm"
                   :class="
-                    index === queue.currentIndex ? 'font-medium text-emerald-400' : 'text-gray-50'
+                    index === queue.currentIndex ? 'font-medium text-selected-text' : 'text-gray-50'
                   "
                 >
                   {{ song.title }}
@@ -267,7 +267,7 @@
               @keydown.escape="cancelSave"
             />
             <button
-              class="text-xs text-emerald-400 hover:text-emerald-300 disabled:cursor-not-allowed disabled:opacity-50"
+              class="text-xs text-selected-text hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="!saveName.trim()"
               @click="handleSaveAsPlaylist"
             >
@@ -330,7 +330,7 @@
                 <!-- Index / playing icon -->
                 <span
                   class="w-5 shrink-0 text-center text-xs"
-                  :class="index === queue.currentIndex ? 'text-emerald-400' : 'text-gray-500'"
+                  :class="index === queue.currentIndex ? 'text-selected-text' : 'text-gray-500'"
                 >
                   <svg
                     v-if="index === queue.currentIndex && player.isPlaying"
@@ -348,7 +348,9 @@
                   <p
                     class="truncate text-sm"
                     :class="
-                      index === queue.currentIndex ? 'font-medium text-emerald-400' : 'text-gray-50'
+                      index === queue.currentIndex
+                        ? 'font-medium text-selected-text'
+                        : 'text-gray-50'
                     "
                   >
                     {{ song.title }}

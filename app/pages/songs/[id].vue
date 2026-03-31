@@ -20,7 +20,7 @@
         </p>
         <div class="mt-4 flex flex-wrap gap-2">
           <button
-            class="bg-emerald-500 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-400"
+            class="bg-action-primary px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-action-primary-hover"
             @click="queueActions.playSong(song)"
           >
             再生
@@ -46,7 +46,7 @@
       <h2 class="mb-2 text-sm font-bold text-gray-50">収録動画</h2>
       <NuxtLink
         :to="`/videos/${song.video.id}`"
-        class="block border border-border-default bg-surface-raised p-3 transition-colors hover:border-emerald-500/40"
+        class="block border border-border-default bg-surface-raised p-3 transition-colors hover:border-action-primary/40"
       >
         <p class="text-sm font-medium">{{ song.video.title }}</p>
         <p class="mt-1 text-xs text-gray-500">

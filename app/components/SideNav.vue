@@ -41,7 +41,7 @@
         :key="item.to"
         :to="item.to"
         class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-400 transition-colors hover:bg-surface-overlay hover:text-white"
-        active-class="!bg-surface-overlay !text-emerald-400"
+        active-class="!bg-surface-overlay !text-selected-text"
         @click="close"
       >
         <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">

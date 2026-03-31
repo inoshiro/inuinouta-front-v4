@@ -3,7 +3,7 @@
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <h1 class="text-xl font-bold">プレイリスト</h1>
       <button
-        class="self-start bg-emerald-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-400"
+        class="self-start bg-action-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-action-primary-hover"
         @click="isCreating = true"
       >
         新規作成
@@ -25,7 +25,7 @@
         @keydown.escape="cancelCreate"
       />
       <button
-        class="bg-emerald-500 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50"
+        class="bg-action-primary px-4 py-2 text-sm font-medium text-white hover:bg-action-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
         :disabled="!newName.trim()"
         @click="handleCreate"
       >

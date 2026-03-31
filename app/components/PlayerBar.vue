@@ -29,7 +29,7 @@
           <!-- Blocked: show retry icon -->
           <svg
             v-if="player.isBlocked"
-            class="h-8 w-8 text-emerald-400"
+            class="h-8 w-8 text-selected-text"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
@@ -56,7 +56,7 @@
         <div class="relative flex items-center">
           <button
             class="p-1"
-            :class="queue.isOpen ? 'text-emerald-400' : 'text-gray-400 hover:text-white'"
+            :class="queue.isOpen ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
             @click="queue.toggleOpen()"
           >
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,7 +70,7 @@
           </button>
           <span
             v-if="queue.songs.length > 0"
-            class="pointer-events-none absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center bg-emerald-500 px-1 text-[10px] font-bold leading-none text-white"
+            class="pointer-events-none absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center bg-emphasis px-1 text-[10px] font-bold leading-none text-white"
           >
             {{ queue.songs.length > 99 ? '99+' : queue.songs.length }}
           </span>
@@ -79,7 +79,7 @@
       <!-- Mobile progress bar -->
       <div class="relative h-0.5 w-full bg-gray-700">
         <div
-          class="absolute inset-y-0 left-0 bg-emerald-500"
+          class="absolute inset-y-0 left-0 bg-progress"
           :style="{ width: progressPercent + '%' }"
         />
       </div>
@@ -97,7 +97,7 @@
         <div class="min-w-0">
           <NuxtLink
             :to="`/songs/${player.currentSong.id}`"
-            class="block truncate text-sm font-medium hover:text-emerald-400"
+            class="block truncate text-sm font-medium hover:text-selected-text"
           >
             {{ player.currentSong.title }}
           </NuxtLink>
@@ -110,7 +110,7 @@
         <div class="flex items-center gap-4">
           <!-- Shuffle -->
           <button
-            :class="queue.shuffleMode ? 'text-emerald-400' : 'text-gray-400 hover:text-white'"
+            :class="queue.shuffleMode ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
             @click="queue.toggleShuffle()"
           >
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -136,7 +136,7 @@
 
           <!-- Play/Pause -->
           <button
-            class="flex h-9 w-9 items-center justify-center bg-emerald-500 text-white hover:bg-emerald-400"
+            class="flex h-9 w-9 items-center justify-center bg-action-primary text-white hover:bg-action-primary-hover"
             :title="player.isBlocked ? '再生がブロックされました。タップして再試行' : undefined"
             @click="handleDesktopPlay"
           >
@@ -167,7 +167,7 @@
           <button
             class="relative"
             :class="
-              queue.repeatMode !== 'off' ? 'text-emerald-400' : 'text-gray-400 hover:text-white'
+              queue.repeatMode !== 'off' ? 'text-selected-text' : 'text-gray-400 hover:text-white'
             "
             @click="queue.cycleRepeatMode()"
           >
@@ -204,7 +204,7 @@
             @click="handleSeek"
           >
             <div
-              class="absolute inset-y-0 left-0 bg-emerald-500"
+              class="absolute inset-y-0 left-0 bg-progress"
               :style="{ width: progressPercent + '%' }"
             />
           </div>
@@ -238,14 +238,14 @@
           min="0"
           max="100"
           :value="player.volume"
-          class="h-1 w-20 cursor-pointer accent-emerald-500"
+          class="h-1 w-20 cursor-pointer accent-action-primary"
           @input="player.setVolume(Number(($event.target as HTMLInputElement).value))"
         />
 
         <!-- Queue toggle -->
         <div class="relative">
           <button
-            :class="queue.isOpen ? 'text-emerald-400' : 'text-gray-400 hover:text-white'"
+            :class="queue.isOpen ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
             @click="queue.toggleOpen()"
           >
             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -259,7 +259,7 @@
           </button>
           <span
             v-if="queue.songs.length > 0"
-            class="pointer-events-none absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center bg-emerald-500 px-1 text-[10px] font-bold leading-none text-white"
+            class="pointer-events-none absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center bg-emphasis px-1 text-[10px] font-bold leading-none text-white"
           >
             {{ queue.songs.length > 99 ? '99+' : queue.songs.length }}
           </span>

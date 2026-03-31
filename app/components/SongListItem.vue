@@ -8,7 +8,7 @@
     <span
       v-if="showIndex"
       class="w-8 shrink-0 text-center text-xs"
-      :class="isActive ? 'text-emerald-400' : 'text-gray-500'"
+      :class="isActive ? 'text-selected-text' : 'text-gray-500'"
     >
       <svg
         v-if="isActive && player.isPlaying"
@@ -36,7 +36,7 @@
         v-if="!showIndex && isActive && player.isPlaying"
         class="absolute inset-0 flex items-center justify-center bg-black/60"
       >
-        <svg class="h-4 w-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+        <svg class="h-4 w-4 text-selected-text" fill="currentColor" viewBox="0 0 24 24">
           <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
         </svg>
       </div>
@@ -44,7 +44,7 @@
 
     <!-- Song info -->
     <div class="min-w-0 flex-1">
-      <p class="truncate text-sm" :class="isActive ? 'font-medium text-emerald-400' : ''">
+      <p class="truncate text-sm" :class="isActive ? 'font-medium text-selected-text' : ''">
         {{ song.title }}
       </p>
       <p class="truncate text-xs text-gray-500">{{ song.artist ?? '不明' }}</p>

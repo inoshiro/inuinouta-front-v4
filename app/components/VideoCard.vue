@@ -1,7 +1,7 @@
 <template>
   <NuxtLink
     :to="`/videos/${video.id}`"
-    class="group block border border-border-default bg-surface-raised transition-colors hover:border-emerald-500/40"
+    class="group block border border-border-default bg-surface-raised transition-colors hover:border-action-primary/40"
   >
     <!-- Thumbnail -->
     <div class="relative aspect-video overflow-hidden">

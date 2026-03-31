@@ -3,7 +3,7 @@
     <h1 class="text-4xl font-bold">{{ error?.statusCode ?? 'エラー' }}</h1>
     <p class="mt-4 text-gray-400">{{ error?.statusMessage ?? '予期しないエラーが発生しました' }}</p>
     <button
-      class="mt-8 bg-emerald-500 px-6 py-2 font-medium hover:bg-emerald-400"
+      class="mt-8 bg-action-primary px-6 py-2 font-medium hover:bg-action-primary-hover"
       @click="handleError"
     >
       トップページへ戻る

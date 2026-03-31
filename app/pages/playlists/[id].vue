@@ -14,7 +14,10 @@
     <!-- Not found -->
     <div v-if="!playlist" class="px-4 py-16 text-center">
       <p class="text-sm text-gray-400">プレイリストが見つかりません</p>
-      <NuxtLink to="/playlists" class="mt-2 inline-block text-sm text-emerald-400 hover:underline">
+      <NuxtLink
+        to="/playlists"
+        class="mt-2 inline-block text-sm text-selected-text hover:underline"
+      >
         一覧に戻る
       </NuxtLink>
     </div>
@@ -33,7 +36,7 @@
             @keydown.escape="cancelEdit"
           />
           <button
-            class="bg-emerald-500 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50"
+            class="bg-action-primary px-3 py-2 text-sm font-medium text-white hover:bg-action-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             :disabled="!editName.trim()"
             @click="saveEdit"
           >
@@ -70,7 +73,7 @@
           </span>
           <div v-if="songs.length > 0" class="flex gap-2">
             <button
-              class="bg-emerald-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-400"
+              class="bg-action-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-action-primary-hover"
               @click="handlePlayAll"
             >
               すべて再生
@@ -125,7 +128,12 @@
 
             <!-- Song row (reusing SongListItem) -->
             <div class="min-w-0 flex-1">
-              <SongListItem :song="song" :index="index" :show-index="false" :show-add-to-playlist="false">
+              <SongListItem
+                :song="song"
+                :index="index"
+                :show-index="false"
+                :show-add-to-playlist="false"
+              >
                 <template #extra-actions>
                   <button
                     class="p-1 text-red-400/60 hover:text-red-400"

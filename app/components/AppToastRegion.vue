@@ -23,7 +23,7 @@
           <!-- Icon -->
           <svg
             v-if="item.type === 'success'"
-            class="mt-0.5 h-4 w-4 shrink-0 text-emerald-400"
+            class="mt-0.5 h-4 w-4 shrink-0 text-selected-text"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -56,7 +56,7 @@
             <NuxtLink
               v-if="item.link"
               :to="item.link"
-              class="ml-1 underline hover:text-emerald-300"
+              class="ml-1 underline hover:text-white"
               @click="store.dismiss(item.id)"
             >
               開く

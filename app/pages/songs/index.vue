@@ -5,7 +5,7 @@
       <h1 class="text-xl font-bold text-gray-50">楽曲一覧</h1>
       <button
         v-if="songs.length > 0"
-        class="self-start bg-emerald-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-400"
+        class="self-start bg-action-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-action-primary-hover"
         @click="queueActions.playAll(songs)"
       >
         すべて再生
@@ -22,7 +22,7 @@
           class="relative -ml-px border border-border-default px-3 py-1.5 text-sm transition-colors first:ml-0"
           :class="
             songType === t.value
-              ? 'z-10 border-emerald-500 bg-emerald-500/10 text-emerald-400'
+              ? 'z-10 border-selected-border bg-selected-bg/10 text-selected-text'
               : 'text-gray-400 hover:text-gray-50'
           "
           @click="songType = t.value"
@@ -39,7 +39,7 @@
           class="relative -ml-px border border-border-default px-3 py-1.5 text-sm transition-colors first:ml-0"
           :class="
             videoType === t.value
-              ? 'z-10 border-emerald-500 bg-emerald-500/10 text-emerald-400'
+              ? 'z-10 border-selected-border bg-selected-bg/10 text-selected-text'
               : 'text-gray-400 hover:text-gray-50'
           "
           @click="videoType = t.value"
@@ -53,7 +53,7 @@
         class="border px-3 py-1.5 text-sm transition-colors"
         :class="
           selectedArtist
-            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400'
+            ? 'border-selected-border bg-selected-bg/10 text-selected-text'
             : 'border-border-default text-gray-400 hover:text-gray-50'
         "
         @click="artistModalOpen = true"
