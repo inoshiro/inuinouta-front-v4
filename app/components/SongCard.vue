@@ -1,6 +1,7 @@
 <template>
   <div
-    class="group cursor-pointer border border-border-default bg-surface-raised transition-colors hover:border-action-primary/40"
+    class="group cursor-pointer border border-border-default bg-surface-raised transition-[border-color,box-shadow] hover:border-action-primary/40"
+    :class="isCurrentlyPlaying ? 'ring-1 ring-playing-glow-muted/40' : ''"
     @click="queueActions.playSong(song)"
   >
     <!-- Thumbnail -->
@@ -39,7 +40,12 @@
 <script setup lang="ts">
 import type { Song } from '~/types'
 
-defineProps<{ song: Song }>()
+const props = defineProps<{ song: Song }>()
 const queueActions = useQueueActions()
 const { songDuration } = useFormatTime()
+const player = usePlayerStore()
+
+const isCurrentlyPlaying = computed(
+  () => player.currentSong?.id === props.song.id && player.isPlaying,
+)
 </script>

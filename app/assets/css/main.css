@@ -3,28 +3,33 @@
 @theme {
   --font-sans: 'Noto Sans JP', sans-serif;
 
-  --color-surface-base: var(--color-gray-950);
-  --color-surface-raised: var(--color-gray-900);
-  --color-surface-overlay: var(--color-gray-800);
-  --color-border-default: var(--color-gray-800);
+  /* surface — VS Code Dark+ ベース */
+  --color-surface-base: #1e1e1e;
+  --color-surface-raised: #252526;
+  --color-surface-overlay: #303031;
+  --color-border-default: #3e3e3e;
 
   /* 後方互換のため残す */
-  --color-accent: var(--color-emerald-500);
-  --color-accent-hover: var(--color-emerald-400);
-  --color-accent-muted: var(--color-emerald-600);
+  --color-accent: #a3e635;
+  --color-accent-hover: #ecfccb;
+  --color-accent-muted: #65a30d;
 
   /* アクション（クリックで何かを実行するボタン・CTA） */
-  --color-action-primary: var(--color-emerald-500);
-  --color-action-primary-hover: var(--color-emerald-400);
+  --color-action-primary: #4d7c0f;
+  --color-action-primary-hover: #65a30d;
 
   /* 選択・状態（絞り込み選択中・アクティブ状態の表示） */
-  --color-selected-border: var(--color-emerald-500);
-  --color-selected-text: var(--color-emerald-400);
-  --color-selected-bg: var(--color-emerald-500);
+  --color-selected-border: #a3e635;
+  --color-selected-text: #d9f99d;
+  --color-selected-bg: #a3e635;
 
   /* 強調テキスト・バッジ（注目させたい数値・ラベル） */
-  --color-emphasis: var(--color-emerald-600);
+  --color-emphasis: #65a30d;
 
   /* 再生位置バー（状態表示） */
-  --color-progress: var(--color-emerald-600);
+  --color-progress: #a3e635;
+
+  /* 再生中グロー（Now Playing の視覚強調） */
+  --color-playing-glow: #ecfccb;
+  --color-playing-glow-muted: #a3e635;
 }
