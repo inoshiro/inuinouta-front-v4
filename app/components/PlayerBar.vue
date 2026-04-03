@@ -1,5 +1,9 @@
 <template>
-  <div v-if="player.currentSong" class="border-t border-border-default bg-surface-raised">
+  <div
+    v-if="player.currentSong"
+    class="border-t bg-surface-raised transition-[border-color] duration-300 ease-in-out"
+    :class="player.isPlaying ? 'border-playing-glow-muted/30' : 'border-border-default'"
+  >
     <!-- Mobile: compact player -->
     <div class="lg:hidden">
       <div class="flex items-center gap-3 px-3 py-2">
@@ -92,7 +96,8 @@
         <img
           :src="player.currentSong.video.thumbnail_path"
           :alt="player.currentSong.title"
-          class="h-12 w-12 shrink-0 object-cover"
+          class="h-12 w-12 shrink-0 object-cover transition-shadow duration-500 ease-out"
+          :style="player.isPlaying ? 'box-shadow: 0 0 8px var(--color-playing-glow)' : ''"
         />
         <div class="min-w-0">
           <NuxtLink
@@ -204,8 +209,11 @@
             @click="handleSeek"
           >
             <div
-              class="absolute inset-y-0 left-0 bg-progress"
-              :style="{ width: progressPercent + '%' }"
+              class="absolute inset-y-0 left-0 bg-progress transition-shadow duration-300"
+              :style="{
+                width: progressPercent + '%',
+                boxShadow: player.isPlaying ? '0 0 6px var(--color-playing-glow)' : 'none',
+              }"
             />
           </div>
           <span>{{ songDuration(player.currentSong.start_at, player.currentSong.end_at) }}</span>

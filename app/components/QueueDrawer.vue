@@ -120,8 +120,12 @@
             <div
               v-for="(song, index) in draggableQueue"
               :key="`${song.id}-${index}`"
-              class="flex w-full items-center gap-2 px-2 py-2 transition-colors hover:bg-surface-overlay"
-              :class="index === queue.currentIndex ? 'bg-surface-overlay' : ''"
+              class="flex w-full items-center gap-2 border-l-2 px-2 py-2 transition-colors hover:bg-surface-overlay"
+              :class="
+                index === queue.currentIndex
+                  ? 'border-l-playing-glow-muted bg-surface-overlay'
+                  : 'border-l-transparent'
+              "
             >
               <!-- Drag handle -->
               <div
@@ -309,8 +313,12 @@
               <div
                 v-for="(song, index) in draggableQueue"
                 :key="`${song.id}-${index}`"
-                class="flex w-full items-center gap-2 px-2 py-2 transition-colors hover:bg-surface-overlay"
-                :class="index === queue.currentIndex ? 'bg-surface-overlay' : ''"
+                class="flex w-full items-center gap-2 border-l-2 px-2 py-2 transition-colors hover:bg-surface-overlay"
+                :class="
+                  index === queue.currentIndex
+                    ? 'border-l-playing-glow-muted bg-surface-overlay'
+                    : 'border-l-transparent'
+                "
               >
                 <!-- Drag handle -->
                 <div
