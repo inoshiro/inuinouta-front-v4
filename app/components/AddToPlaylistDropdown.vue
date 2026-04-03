@@ -29,6 +29,8 @@
             v-model="newName"
             type="text"
             autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
             class="w-full border border-border-default bg-surface-overlay px-2 py-1 text-xs text-gray-50 focus:border-accent focus:outline-none"
             placeholder="名前を入力"
             maxlength="100"
