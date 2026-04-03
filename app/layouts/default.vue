@@ -2,7 +2,7 @@
   <div class="flex h-dvh flex-col bg-surface-base text-gray-50">
     <!-- Mobile header -->
     <header class="flex items-center gap-3 border-b border-border-default px-4 py-3 lg:hidden">
-      <button class="text-gray-400 hover:text-white" @click="sideNavOpen = true">
+      <button class="hover:text-selected-text text-accent" @click="sideNavOpen = true">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
             stroke-linecap="round"
