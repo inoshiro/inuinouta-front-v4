@@ -18,10 +18,20 @@ export function useSearch() {
     }, 300)
   }
 
+  function submit() {
+    if (!query.value.trim()) return
+    router.push({ path: '/search', query: { q: query.value } })
+  }
+
   function clear() {
     query.value = ''
     router.replace({ query: { ...route.query, q: undefined } })
   }
 
-  return { query, search, clear }
+  function submit() {
+    if (!query.value.trim()) return
+    router.push({ path: '/search', query: { q: query.value } })
+  }
+
+  return { query, search, clear, submit }
 }

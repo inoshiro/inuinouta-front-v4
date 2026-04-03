@@ -16,7 +16,19 @@ export function useVideos(options?: { perPage?: number }) {
     const all = library.allVideos
     if (!search.value) return all
     const q = search.value.toLowerCase()
-    return all.filter((v) => v.title.toLowerCase().includes(q))
+
+    // Collect video IDs where any contained song matches by title or artist
+    const matchedByContent = new Set(
+      library.allSongs
+        .filter(
+          (s) =>
+            s.title.toLowerCase().includes(q) ||
+            (s.artist != null && s.artist.toLowerCase().includes(q)),
+        )
+        .map((s) => s.video.id),
+    )
+
+    return all.filter((v) => v.title.toLowerCase().includes(q) || matchedByContent.has(v.id))
   })
 
   const totalItems = computed(() => filtered.value.length)
