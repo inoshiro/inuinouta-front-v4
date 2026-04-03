@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-dvh flex-col bg-surface-base text-gray-50">
     <!-- Mobile header -->
-    <header class="flex items-center gap-3 border-b border-border-default px-4 py-3 lg:hidden">
+    <header class="flex h-14 items-center gap-3 border-b border-border-default px-4 lg:hidden">
       <button class="hover:text-selected-text text-accent" @click="sideNavOpen = true">
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path
@@ -27,7 +27,7 @@
         <div class="flex flex-1 flex-col overflow-hidden">
           <!-- Desktop header -->
           <header
-            class="hidden items-center gap-4 border-b border-border-default px-6 py-3 lg:flex"
+            class="hidden h-14 items-center gap-4 border-b border-border-default px-6 lg:flex"
           >
             <SearchBar class="max-w-md flex-1" />
           </header>
