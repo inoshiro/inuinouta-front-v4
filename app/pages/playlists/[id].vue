@@ -30,6 +30,10 @@
           <input
             ref="editInput"
             v-model="editName"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
             class="flex-1 border border-border-default bg-surface-overlay px-3 py-2 text-sm text-gray-50 focus:border-accent focus:outline-none"
             maxlength="100"
             @keydown.enter="saveEdit"

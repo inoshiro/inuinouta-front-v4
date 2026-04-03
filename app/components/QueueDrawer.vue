@@ -73,6 +73,10 @@
           <input
             ref="saveInputDesktop"
             v-model="saveName"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
             class="flex-1 border border-border-default bg-surface-overlay px-2 py-1 text-sm text-gray-50 focus:border-accent focus:outline-none"
             placeholder="プレイリスト名"
             maxlength="100"
@@ -264,6 +268,10 @@
             <input
               ref="saveInputMobile"
               v-model="saveName"
+              type="text"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
               class="flex-1 border border-border-default bg-surface-overlay px-2 py-1 text-sm text-gray-50 focus:border-accent focus:outline-none"
               placeholder="プレイリスト名"
               maxlength="100"
