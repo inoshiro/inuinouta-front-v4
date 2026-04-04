@@ -303,8 +303,13 @@ function handlePlay() {
   const song = player.currentSong
   if (player.isBlocked) {
     retryPlay()
-  } else if (!player.isPlaying && song && loadedVideoId.value !== song.video.id) {
-    // Video not yet loaded in the iframe — must use requestPlay (load + play)
+  } else if (
+    !player.isPlaying &&
+    song &&
+    (loadedVideoId.value !== song.video.id || player.isAtEnd)
+  ) {
+    // Video not yet loaded in the iframe, or playback ended naturally —
+    // must use requestPlay to (re)load from start_at.
     player.play(song)
     requestPlay(song)
   } else {
