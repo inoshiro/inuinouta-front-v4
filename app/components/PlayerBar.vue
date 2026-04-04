@@ -21,9 +21,7 @@
           :disabled="!queue.hasPrevious"
           @click="playback.previousSong()"
         >
-          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
-          </svg>
+          <FontAwesomeIcon :icon="['fas', 'backward-step']" class="h-5 w-5" />
         </button>
         <button
           class="text-gray-400 hover:text-white"
@@ -31,29 +29,22 @@
           @click="handleMobilePlay"
         >
           <!-- Blocked: show retry icon -->
-          <svg
+          <FontAwesomeIcon
             v-if="player.isBlocked"
+            :icon="['fas', 'arrow-rotate-right']"
             class="h-8 w-8 text-selected-text"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
-            />
-          </svg>
-          <svg v-else class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
-            <path v-if="player.isPlaying" d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-            <path v-else d="M8 5v14l11-7z" />
-          </svg>
+          />
+          <template v-else>
+            <FontAwesomeIcon v-if="player.isPlaying" :icon="['fas', 'pause']" class="h-8 w-8" />
+            <FontAwesomeIcon v-else :icon="['fas', 'play']" class="h-8 w-8" />
+          </template>
         </button>
         <button
           class="text-gray-400 hover:text-white disabled:opacity-30"
           :disabled="!queue.hasNext"
           @click="playback.nextSong()"
         >
-          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M16 6h2v12h-2V6zm-3.5 6L4 6v12l8.5-6z" />
-          </svg>
+          <FontAwesomeIcon :icon="['fas', 'forward-step']" class="h-5 w-5" />
         </button>
 
         <!-- Queue toggle -->
@@ -63,14 +54,7 @@
             :class="queue.isOpen ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
             @click="queue.toggleOpen()"
           >
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 10h16M4 14h10"
-              />
-            </svg>
+            <FontAwesomeIcon :icon="['fas', 'bars']" class="h-5 w-5" />
           </button>
           <span
             v-if="queue.songs.length > 0"
@@ -118,14 +102,7 @@
             :class="queue.shuffleMode ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
             @click="queue.toggleShuffle()"
           >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 4h4l3 9 3-9h4M4 20h4l3-9 3 9h4"
-              />
-            </svg>
+            <FontAwesomeIcon :icon="['fas', 'shuffle']" class="h-4 w-4" />
           </button>
 
           <!-- Previous -->
@@ -134,9 +111,7 @@
             :disabled="!queue.hasPrevious"
             @click="playback.previousSong()"
           >
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
-            </svg>
+            <FontAwesomeIcon :icon="['fas', 'backward-step']" class="h-5 w-5" />
           </button>
 
           <!-- Play/Pause -->
@@ -146,15 +121,15 @@
             @click="handleDesktopPlay"
           >
             <!-- Blocked: show retry icon -->
-            <svg v-if="player.isBlocked" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"
-              />
-            </svg>
-            <svg v-else class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path v-if="player.isPlaying" d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
-              <path v-else d="M8 5v14l11-7z" />
-            </svg>
+            <FontAwesomeIcon
+              v-if="player.isBlocked"
+              :icon="['fas', 'arrow-rotate-right']"
+              class="h-5 w-5"
+            />
+            <template v-else>
+              <FontAwesomeIcon v-if="player.isPlaying" :icon="['fas', 'pause']" class="h-5 w-5" />
+              <FontAwesomeIcon v-else :icon="['fas', 'play']" class="h-5 w-5" />
+            </template>
           </button>
 
           <!-- Next -->
@@ -163,9 +138,7 @@
             :disabled="!queue.hasNext"
             @click="playback.nextSong()"
           >
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M16 6h2v12h-2V6zm-3.5 6L4 6v12l8.5-6z" />
-            </svg>
+            <FontAwesomeIcon :icon="['fas', 'forward-step']" class="h-5 w-5" />
           </button>
 
           <!-- Repeat -->
@@ -176,20 +149,7 @@
             "
             @click="queue.cycleRepeatMode()"
           >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 4v5h5M20 20v-5h-5"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M20.49 9A9 9 0 005.64 5.64L4 4m16 16l-1.64-1.64A9 9 0 013.51 15"
-              />
-            </svg>
+            <FontAwesomeIcon :icon="['fas', 'repeat']" class="h-4 w-4" />
             <span
               v-if="queue.repeatMode === 'one'"
               class="absolute -top-1 -right-1 text-[10px] font-bold"
@@ -224,22 +184,12 @@
       <div class="flex items-center gap-3" style="width: 200px; justify-content: flex-end">
         <!-- Volume -->
         <button class="text-gray-400 hover:text-white" @click="player.toggleMute()">
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path
-              v-if="player.isMuted || player.volume === 0"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 5.586v12.828a1 1 0 01-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"
-            />
-            <path
-              v-else
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707A1 1 0 0112 5.586v12.828a1 1 0 01-1.707.707L5.586 15z"
-            />
-          </svg>
+          <FontAwesomeIcon
+            v-if="player.isMuted || player.volume === 0"
+            :icon="['fas', 'volume-xmark']"
+            class="h-5 w-5"
+          />
+          <FontAwesomeIcon v-else :icon="['fas', 'volume-high']" class="h-5 w-5" />
         </button>
         <input
           type="range"
@@ -256,14 +206,7 @@
             :class="queue.isOpen ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
             @click="queue.toggleOpen()"
           >
-            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 6h16M4 10h16M4 14h10"
-              />
-            </svg>
+            <FontAwesomeIcon :icon="['fas', 'bars']" class="h-5 w-5" />
           </button>
           <span
             v-if="queue.songs.length > 0"

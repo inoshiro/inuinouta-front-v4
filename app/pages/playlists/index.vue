@@ -49,19 +49,7 @@
         class="group flex items-center gap-4 border-b border-border-default px-3 py-3 transition-colors hover:bg-surface-overlay"
       >
         <!-- List icon -->
-        <svg
-          class="h-5 w-5 shrink-0 text-gray-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 10h16M4 14h10"
-          />
-        </svg>
+        <FontAwesomeIcon :icon="['fas', 'list']" class="h-5 w-5 shrink-0 text-gray-500" />
 
         <!-- Info -->
         <div class="min-w-0 flex-1">
@@ -73,32 +61,16 @@
         <span class="shrink-0 text-xs text-gray-400">{{ pl.items.length }}曲</span>
 
         <!-- Chevron -->
-        <svg
+        <FontAwesomeIcon
+          :icon="['fas', 'chevron-right']"
           class="h-4 w-4 shrink-0 text-gray-600 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
+        />
       </NuxtLink>
     </div>
 
     <!-- Empty state -->
     <div v-else-if="!isCreating" class="px-4 py-16 text-center">
-      <svg
-        class="mx-auto mb-4 h-16 w-16 text-gray-600"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"
-        />
-      </svg>
+      <FontAwesomeIcon :icon="['fas', 'music']" class="mx-auto mb-4 h-16 w-16 text-gray-600" />
       <p class="text-sm text-gray-400">プレイリストがありません</p>
       <p class="mt-1 text-xs text-gray-500">再生キューから保存してみましょう</p>
     </div>
@@ -108,19 +80,10 @@
       v-if="playlistsStore.playlists.length > 0"
       class="mt-6 flex items-start gap-2 border border-border-default px-4 py-3 text-sm text-gray-400"
     >
-      <svg
+      <FontAwesomeIcon
+        :icon="['fas', 'circle-info']"
         class="mt-0.5 h-4 w-4 shrink-0 text-gray-500"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
+      />
       <p>
         プレイリストはこのブラウザに保存されます。別のデバイスやブラウザからはアクセスできません。
       </p>

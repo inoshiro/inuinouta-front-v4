@@ -23,14 +23,7 @@
         inuinouta
       </NuxtLink>
       <button class="ml-auto text-gray-400 hover:text-white lg:hidden" @click="close">
-        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <FontAwesomeIcon :icon="['fas', 'xmark']" class="h-5 w-5" />
       </button>
     </div>
 
@@ -44,9 +37,7 @@
         active-class="!bg-surface-overlay !text-selected-text"
         @click="close"
       >
-        <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="item.icon" />
-        </svg>
+        <FontAwesomeIcon :icon="item.icon" class="h-5 w-5 shrink-0" />
         {{ item.label }}
       </NuxtLink>
     </nav>
@@ -61,37 +52,13 @@ function close() {
   emit('update:open', false)
 }
 
-const navItems = [
-  {
-    to: '/',
-    label: 'ホーム',
-    icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1',
-  },
-  {
-    to: '/songs',
-    label: '楽曲',
-    icon: 'M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z',
-  },
-  {
-    to: '/videos',
-    label: '動画',
-    icon: 'M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z',
-  },
-  {
-    to: '/search',
-    label: '検索',
-    icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
-  },
-  {
-    to: '/playlists',
-    label: 'プレイリスト',
-    icon: 'M4 6h16M4 10h16M4 14h10',
-  },
-  {
-    to: '/about',
-    label: 'このサイトについて',
-    icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-  },
+const navItems: { to: string; label: string; icon: [string, string] }[] = [
+  { to: '/', label: 'ホーム', icon: ['fas', 'house'] },
+  { to: '/songs', label: '楽曲', icon: ['fas', 'music'] },
+  { to: '/videos', label: '動画', icon: ['fas', 'video'] },
+  { to: '/search', label: '検索', icon: ['fas', 'magnifying-glass'] },
+  { to: '/playlists', label: 'プレイリスト', icon: ['fas', 'list'] },
+  { to: '/about', label: 'このサイトについて', icon: ['fas', 'circle-info'] },
 ]
 </script>
 

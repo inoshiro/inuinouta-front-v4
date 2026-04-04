@@ -52,26 +52,16 @@
             class="drag-handle flex self-stretch shrink-0 cursor-grab items-center gap-1 active:cursor-grabbing text-gray-600 hover:text-gray-400"
             title="ドラッグで並び替え"
           >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 8h16M4 16h16"
-              />
-            </svg>
+            <FontAwesomeIcon :icon="['fas', 'grip-vertical']" class="h-4 w-4" />
             <span
               class="w-5 text-center text-xs"
               :class="index === queue.currentIndex ? 'text-selected-text' : 'text-gray-500'"
             >
-              <svg
+              <FontAwesomeIcon
                 v-if="index === queue.currentIndex && player.isPlaying"
+                :icon="['fas', 'volume-high']"
                 class="mx-auto h-3 w-3"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
-              </svg>
+              />
               <template v-else>{{ index + 1 }}</template>
             </span>
           </div>
@@ -94,14 +84,7 @@
             class="shrink-0 text-gray-600 hover:text-white"
             @click="playback.removeSongFromQueue(index)"
           >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <FontAwesomeIcon :icon="['fas', 'xmark']" class="h-4 w-4" />
           </button>
         </div>
       </VueDraggableNext>
