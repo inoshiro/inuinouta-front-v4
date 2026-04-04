@@ -5,6 +5,8 @@ export const usePlayerStore = defineStore('player', () => {
   const isPlaying = ref(false)
   /** True when the browser blocked autoplay / scripted playback */
   const isBlocked = ref(false)
+  /** True when playback stopped at the natural end of a song (ENDED state). */
+  const isAtEnd = ref(false)
   const currentTime = ref(0)
   const duration = ref(0)
   const volume = ref(100)
@@ -15,6 +17,7 @@ export const usePlayerStore = defineStore('player', () => {
     currentSong.value = song
     isPlaying.value = true
     isBlocked.value = false
+    isAtEnd.value = false
   }
 
   function pause() {
@@ -30,6 +33,20 @@ export const usePlayerStore = defineStore('player', () => {
     currentTime.value = 0
     currentSong.value = null
     isBlocked.value = false
+    isAtEnd.value = false
+  }
+
+  /**
+   * Stop playback without clearing the current song.
+   * Used when the queue reaches its end (repeat off) so that PlayerBar
+   * remains visible and the user can restart or navigate.
+   * Sets isAtEnd so the play button knows to reload from start_at.
+   */
+  function stopPlayback() {
+    isPlaying.value = false
+    currentTime.value = 0
+    isBlocked.value = false
+    isAtEnd.value = true
   }
 
   /** Sync isPlaying with the actual YouTube player state. */
@@ -68,6 +85,7 @@ export const usePlayerStore = defineStore('player', () => {
     currentSong,
     isPlaying,
     isBlocked,
+    isAtEnd,
     currentTime,
     duration,
     volume,
@@ -76,6 +94,7 @@ export const usePlayerStore = defineStore('player', () => {
     pause,
     resume,
     stop,
+    stopPlayback,
     setPlaying,
     setBlocked,
     clearBlocked,

@@ -24,7 +24,7 @@
           >
             保存
           </button>
-          <button class="text-xs text-gray-400 hover:text-white" @click="queue.clear()">
+          <button class="text-xs text-gray-400 hover:text-white" @click="playback.clearQueue()">
             クリア
           </button>
           <button class="text-gray-400 hover:text-white" @click="queue.toggleOpen()">
@@ -178,7 +178,7 @@
               <!-- Remove -->
               <button
                 class="shrink-0 text-gray-600 hover:text-white"
-                @click="queue.removeSong(index)"
+                @click="playback.removeSongFromQueue(index)"
               >
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -219,7 +219,7 @@
             >
               保存
             </button>
-            <button class="text-xs text-gray-400 hover:text-white" @click="queue.clear()">
+            <button class="text-xs text-gray-400 hover:text-white" @click="playback.clearQueue()">
               クリア
             </button>
             <button class="text-gray-400 hover:text-white" @click="queue.toggleOpen()">
@@ -377,7 +377,7 @@
                 <!-- Remove -->
                 <button
                   class="shrink-0 text-gray-600 hover:text-white"
-                  @click="queue.removeSong(index)"
+                  @click="playback.removeSongFromQueue(index)"
                 >
                   <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
@@ -413,6 +413,7 @@ import type { Song } from '~/types'
 const queue = useQueueStore()
 const player = usePlayerStore()
 const playlistsStore = usePlaylistsStore()
+const playback = usePlayback()
 
 const draggableQueue = ref<Song[]>([])
 
