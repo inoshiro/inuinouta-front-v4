@@ -19,6 +19,14 @@ let pendingRequest: { videoId: string; startSeconds: number; endSeconds?: number
 
 let intervalId: ReturnType<typeof setInterval> | null = null
 
+/**
+ * True while a song-end transition is in progress.
+ * Prevents duplicate nextSong() calls when the ENDED state event fires
+ * spuriously during loadVideoById (e.g. immediately after loading a new video).
+ * Reset to false when the next video reaches PLAYING state.
+ */
+let isTransitioning = false
+
 // ---------------------------------------------------------------------------
 
 export function useYouTubePlayer() {
@@ -88,6 +96,7 @@ export function useYouTubePlayer() {
   function handleStateChange(event: YT.OnStateChangeEvent) {
     const state = event.data
     if (state === 1 /* PLAYING */) {
+      isTransitioning = false
       player.setPlaying(true)
       startTimeTracking()
     } else if (state === 2 /* PAUSED */) {
@@ -121,6 +130,9 @@ export function useYouTubePlayer() {
   }
 
   function onSongEnd() {
+    if (isTransitioning) return
+    isTransitioning = true
+    stopTimeTracking()
     const { nextSong } = usePlayback()
     nextSong()
   }
