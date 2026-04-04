@@ -10,14 +10,11 @@
       class="w-8 shrink-0 text-center text-xs"
       :class="isActive ? 'text-selected-text' : 'text-gray-500'"
     >
-      <svg
+      <FontAwesomeIcon
         v-if="isActive && player.isPlaying"
+        :icon="['fas', 'volume-high']"
         class="mx-auto h-3.5 w-3.5"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
-      </svg>
+      />
       <template v-else>{{ index + 1 }}</template>
     </span>
 
@@ -36,9 +33,7 @@
         v-if="!showIndex && isActive && player.isPlaying"
         class="absolute inset-0 flex items-center justify-center bg-black/60"
       >
-        <svg class="h-4 w-4 text-selected-text" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
-        </svg>
+        <FontAwesomeIcon :icon="['fas', 'volume-high']" class="h-4 w-4 text-selected-text" />
       </div>
     </div>
 
@@ -66,28 +61,14 @@
         title="次に再生"
         @click.stop="queueActions.playNext(song)"
       >
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
-          />
-        </svg>
+        <FontAwesomeIcon :icon="['fas', 'angles-right']" class="h-4 w-4" />
       </button>
       <button
         class="p-1 text-gray-400 hover:text-white"
         title="キューに追加"
         @click.stop="queueActions.addToQueue(song)"
       >
-        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-          />
-        </svg>
+        <FontAwesomeIcon :icon="['fas', 'plus']" class="h-4 w-4" />
       </button>
     </div>
   </div>

@@ -21,34 +21,16 @@
           "
         >
           <!-- Icon -->
-          <svg
+          <FontAwesomeIcon
             v-if="item.type === 'success'"
+            :icon="['fas', 'check']"
             class="mt-0.5 h-4 w-4 shrink-0 text-selected-text"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2.5"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-          <svg
+          />
+          <FontAwesomeIcon
             v-else
+            :icon="['fas', 'xmark']"
             class="mt-0.5 h-4 w-4 shrink-0 text-red-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          />
 
           <!-- Message -->
           <p class="min-w-0 flex-1 text-sm">
@@ -69,14 +51,7 @@
             aria-label="閉じる"
             @click="store.dismiss(item.id)"
           >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <FontAwesomeIcon :icon="['fas', 'xmark']" class="h-4 w-4" />
           </button>
         </div>
       </TransitionGroup>

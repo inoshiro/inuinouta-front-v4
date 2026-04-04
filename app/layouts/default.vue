@@ -3,14 +3,7 @@
     <!-- Mobile header -->
     <header class="flex h-14 items-center gap-3 border-b border-border-default px-4 lg:hidden">
       <button class="hover:text-selected-text text-accent" @click="sideNavOpen = true">
-        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
+        <FontAwesomeIcon :icon="['fas', 'bars']" class="h-6 w-6" />
       </button>
       <NuxtLink to="/" class="text-lg font-bold">inuinouta</NuxtLink>
       <div class="flex-1" />

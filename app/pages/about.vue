@@ -5,7 +5,8 @@
     <!-- About this site -->
     <section class="mb-8">
       <h2 class="mb-3 border-b border-border-default pb-2 text-base font-bold text-gray-50">
-        🎵 いぬいのうたについて
+        <FontAwesomeIcon :icon="['fas', 'music']" class="mr-2 h-4 w-4 text-gray-400" />
+        いぬいのうたについて
       </h2>
       <div class="space-y-3 text-sm leading-relaxed">
         <p class="text-gray-400">
@@ -30,7 +31,8 @@
     <!-- Features -->
     <section class="mb-8">
       <h2 class="mb-3 border-b border-border-default pb-2 text-base font-bold text-gray-50">
-        ✨ 主な機能
+        <FontAwesomeIcon :icon="['fas', 'star']" class="mr-2 h-4 w-4 text-gray-400" />
+        主な機能
       </h2>
       <ul class="list-inside list-disc space-y-2 text-sm text-gray-400">
         <li>楽曲・歌枠配信の検索と視聴</li>
@@ -43,7 +45,8 @@
     <!-- Tech stack -->
     <section class="mb-8">
       <h2 class="mb-3 border-b border-border-default pb-2 text-base font-bold text-gray-50">
-        ⚙️ 技術スタック
+        <FontAwesomeIcon :icon="['fas', 'gear']" class="mr-2 h-4 w-4 text-gray-400" />
+        技術スタック
       </h2>
       <div class="space-y-2 text-sm">
         <div>
@@ -60,7 +63,8 @@
     <!-- Related links -->
     <section class="mb-8">
       <h2 class="mb-3 border-b border-border-default pb-2 text-base font-bold text-gray-50">
-        🔗 関連リンク
+        <FontAwesomeIcon :icon="['fas', 'link']" class="mr-2 h-4 w-4 text-gray-400" />
+        関連リンク
       </h2>
       <div class="space-y-2 text-sm">
         <a
@@ -69,7 +73,7 @@
           rel="noopener noreferrer"
           class="flex items-center gap-2 text-selected-text hover:underline"
         >
-          <span>📺</span>
+          <FontAwesomeIcon :icon="['fab', 'youtube']" class="h-4 w-4" />
           <span>戌亥とこ YouTubeチャンネル</span>
         </a>
         <a
@@ -78,7 +82,7 @@
           rel="noopener noreferrer"
           class="flex items-center gap-2 text-selected-text hover:underline"
         >
-          <span>🐦</span>
+          <FontAwesomeIcon :icon="['fab', 'x-twitter']" class="h-4 w-4" />
           <span>戌亥とこ Twitter</span>
         </a>
       </div>
@@ -87,7 +91,8 @@
     <!-- Contact -->
     <section class="mb-8">
       <h2 class="mb-3 border-b border-border-default pb-2 text-base font-bold text-gray-50">
-        📧 連絡先
+        <FontAwesomeIcon :icon="['fas', 'envelope']" class="mr-2 h-4 w-4 text-gray-400" />
+        連絡先
       </h2>
       <div class="space-y-2 text-sm">
         <div>

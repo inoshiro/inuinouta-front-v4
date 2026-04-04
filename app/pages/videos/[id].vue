@@ -38,7 +38,8 @@
             rel="noopener noreferrer"
             class="border border-border-default px-5 py-2 text-sm text-gray-300 transition-colors hover:bg-surface-overlay hover:text-white"
           >
-            YouTubeで見る ↗
+            YouTubeで見る
+            <FontAwesomeIcon :icon="['fas', 'arrow-up-right-from-square']" class="ml-1 h-3 w-3" />
           </a>
         </div>
       </div>
