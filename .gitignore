@@ -30,3 +30,4 @@ logs
 playwright-report/
 test-results/
 .playwright-mcp/
+worktrees/
