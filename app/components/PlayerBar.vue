@@ -24,7 +24,7 @@
           <FontAwesomeIcon :icon="['fas', 'backward-step']" class="h-5 w-5" />
         </button>
         <button
-          class="text-gray-400 hover:text-white"
+          class="flex h-8 w-8 items-center justify-center bg-action-primary text-white hover:bg-action-primary-hover"
           :title="player.isBlocked ? '再生がブロックされました。タップして再試行' : undefined"
           @click="handleMobilePlay"
         >
@@ -32,11 +32,11 @@
           <FontAwesomeIcon
             v-if="player.isBlocked"
             :icon="['fas', 'arrow-rotate-right']"
-            class="h-8 w-8 text-selected-text"
+            class="h-5 w-5"
           />
           <template v-else>
-            <FontAwesomeIcon v-if="player.isPlaying" :icon="['fas', 'pause']" class="h-8 w-8" />
-            <FontAwesomeIcon v-else :icon="['fas', 'play']" class="h-8 w-8" />
+            <FontAwesomeIcon v-if="player.isPlaying" :icon="['fas', 'pause']" class="h-5 w-5" />
+            <FontAwesomeIcon v-else :icon="['fas', 'play']" class="h-5 w-5" />
           </template>
         </button>
         <button

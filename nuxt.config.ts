@@ -8,6 +8,12 @@ export default defineNuxtConfig({
 
   ssr: true,
 
+  app: {
+    head: {
+      viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
+    },
+  },
+
   css: ['~/assets/css/main.css', '@fortawesome/fontawesome-svg-core/styles.css'],
 
   build: {

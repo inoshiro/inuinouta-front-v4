@@ -1,6 +1,6 @@
 import type { VideoList } from '~/types'
 
-export function useVideos(options?: { perPage?: number }) {
+export function useVideos(options?: { perPage?: number; streamOnly?: boolean }) {
   const library = useLibraryStore()
   const route = useRoute()
   const page = ref(1)
@@ -13,8 +13,10 @@ export function useVideos(options?: { perPage?: number }) {
   const error = computed(() => library.videosError)
 
   const filtered = computed<VideoList[]>(() => {
-    const all = library.allVideos
-    if (!search.value) return all
+    const base = options?.streamOnly
+      ? library.allVideos.filter((v) => v.is_stream)
+      : library.allVideos
+    if (!search.value) return base
     const q = search.value.toLowerCase()
 
     // Collect video IDs where any contained song matches by title or artist
@@ -28,7 +30,7 @@ export function useVideos(options?: { perPage?: number }) {
         .map((s) => s.video.id),
     )
 
-    return all.filter((v) => v.title.toLowerCase().includes(q) || matchedByContent.has(v.id))
+    return base.filter((v) => v.title.toLowerCase().includes(q) || matchedByContent.has(v.id))
   })
 
   const totalItems = computed(() => filtered.value.length)
