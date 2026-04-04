@@ -33,3 +33,26 @@
   --color-playing-glow: #ecfccb;
   --color-playing-glow-muted: #a3e635;
 }
+
+/* Scrollbar styling — Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #5a5a5a transparent;
+}
+
+/* Scrollbar styling — Chromium / WebKit */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #5a5a5a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-selected-text);
+}
