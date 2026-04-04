@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { reactive } from 'vue'
 import { mockNuxtImport } from '@nuxt/test-utils/runtime'
-import type { VideoList } from '~/types'
+import type { VideoList, Song } from '~/types'
 
 // --- テスト用データ生成ヘルパー ---
 
@@ -18,6 +18,26 @@ const makeVideo = (id: string, title: string): VideoList => ({
   songs_count: 5,
 })
 
+const makeSong = (id: number, title: string, artist: string | null, videoId: string): Song => ({
+  id,
+  title,
+  artist,
+  is_original: false,
+  start_at: 0,
+  end_at: 180,
+  video: {
+    id: videoId,
+    title: '',
+    url: `https://youtube.com/watch?v=${videoId}`,
+    thumbnail_path: '',
+    is_open: true,
+    is_member_only: false,
+    is_stream: false,
+    unplayable: false,
+    published_at: '2024-01-01T00:00:00Z',
+  },
+})
+
 // --- モック ---
 // Pinia の Setup store はアクセス時に ref をアンラップするため、
 // モックも同様に plain array / plain value を持つ reactive オブジェクトで返す
@@ -26,6 +46,7 @@ type VideosFetchStatus = 'idle' | 'pending' | 'ready' | 'error'
 
 const mockStore = reactive({
   allVideos: [] as VideoList[],
+  allSongs: [] as Song[],
   videosStatus: 'ready' as VideosFetchStatus,
   videosError: null as Error | null,
   fetchVideos: vi.fn(),
@@ -44,6 +65,7 @@ mockNuxtImport('callOnce', () => {
 describe('useVideos', () => {
   beforeEach(() => {
     mockStore.allVideos = []
+    mockStore.allSongs = []
     mockStore.videosStatus = 'ready'
     mockStore.videosError = null
     mockStore.fetchVideos.mockReset()
@@ -83,6 +105,35 @@ describe('useVideos', () => {
       mockStore.allVideos = [makeVideo('v1', '歌ってみた')]
       const { videos, search } = useVideos({ perPage: 10 })
       search.value = '存在しないタイトル'
+
+      expect(videos.value).toHaveLength(0)
+    })
+
+    it('楽曲タイトルで一致した動画がヒットする', () => {
+      mockStore.allVideos = [makeVideo('v1', '歌ってみた'), makeVideo('v2', '別の動画')]
+      mockStore.allSongs = [makeSong(1, 'ピアノ曲', null, 'v2')]
+      const { videos, search } = useVideos({ perPage: 10 })
+      search.value = 'ピアノ'
+
+      expect(videos.value).toHaveLength(1)
+      expect(videos.value[0].id).toBe('v2')
+    })
+
+    it('アーティスト名で一致した動画がヒットする', () => {
+      mockStore.allVideos = [makeVideo('v1', '歌ってみた'), makeVideo('v2', '別の動画')]
+      mockStore.allSongs = [makeSong(1, 'ある曲', 'いぬいの歌', 'v1')]
+      const { videos, search } = useVideos({ perPage: 10 })
+      search.value = 'いぬい'
+
+      expect(videos.value).toHaveLength(1)
+      expect(videos.value[0].id).toBe('v1')
+    })
+
+    it('楽曲タイトル・アーティスト名ともに不一致のとき空配列を返す', () => {
+      mockStore.allVideos = [makeVideo('v1', '歌ってみた')]
+      mockStore.allSongs = [makeSong(1, 'ある曲', 'ある歌手', 'v1')]
+      const { videos, search } = useVideos({ perPage: 10 })
+      search.value = '存在しない'
 
       expect(videos.value).toHaveLength(0)
     })
