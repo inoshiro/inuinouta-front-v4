@@ -5,6 +5,9 @@
       <NuxtLink to="/" class="text-lg font-bold">inuinouta</NuxtLink>
       <div class="flex-1" />
       <SearchBar />
+      <NuxtLink to="/about" class="shrink-0 text-gray-400 hover:text-white">
+        <FontAwesomeIcon :icon="['fas', 'circle-info']" class="!h-5 !w-5" />
+      </NuxtLink>
     </header>
 
     <div class="flex flex-1 overflow-hidden">
