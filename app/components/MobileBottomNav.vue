@@ -10,7 +10,7 @@
       class="flex flex-1 flex-col items-center justify-center gap-1 py-2 text-xs font-medium text-gray-400 transition-colors hover:text-white"
       active-class="!text-selected-text"
     >
-      <FontAwesomeIcon :icon="item.icon" class="h-5 w-5 shrink-0" />
+      <FontAwesomeIcon :icon="item.icon" class="!h-4 !w-4 shrink-0" />
       <span>{{ item.label }}</span>
     </NuxtLink>
   </nav>
