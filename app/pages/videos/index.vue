@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="mb-6 text-xl font-bold text-gray-50">動画一覧</h1>
+    <h1 class="mb-6 text-xl font-bold text-gray-50">歌枠一覧</h1>
 
     <!-- Result count -->
     <p class="mb-4 text-sm text-gray-400">{{ totalItems }} 件見つかりました</p>
@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-useHead({ title: '動画一覧 | inuinouta' })
+useHead({ title: '歌枠一覧 | inuinouta' })
 
-const { videos, totalItems, page, perPage, status } = useVideos({ perPage: 30 })
+const { videos, totalItems, page, perPage, status } = useVideos({ perPage: 30, streamOnly: true })
 </script>
