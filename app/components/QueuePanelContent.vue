@@ -47,9 +47,9 @@
               : 'border-l-transparent'
           "
         >
-          <!-- Drag handle -->
+          <!-- Drag handle + index / playing icon -->
           <div
-            class="drag-handle flex shrink-0 cursor-grab items-center justify-center active:cursor-grabbing text-gray-600 hover:text-gray-400"
+            class="drag-handle flex shrink-0 cursor-grab items-center gap-1 active:cursor-grabbing text-gray-600 hover:text-gray-400"
             title="ドラッグで並び替え"
           >
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -60,23 +60,21 @@
                 d="M4 8h16M4 16h16"
               />
             </svg>
-          </div>
-
-          <!-- Index / playing icon -->
-          <span
-            class="w-5 shrink-0 text-center text-xs"
-            :class="index === queue.currentIndex ? 'text-selected-text' : 'text-gray-500'"
-          >
-            <svg
-              v-if="index === queue.currentIndex && player.isPlaying"
-              class="mx-auto h-3 w-3"
-              fill="currentColor"
-              viewBox="0 0 24 24"
+            <span
+              class="w-5 text-center text-xs"
+              :class="index === queue.currentIndex ? 'text-selected-text' : 'text-gray-500'"
             >
-              <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
-            </svg>
-            <template v-else>{{ index + 1 }}</template>
-          </span>
+              <svg
+                v-if="index === queue.currentIndex && player.isPlaying"
+                class="mx-auto h-3 w-3"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M3 22V2l7 4v12l-7 4zm8 0V6l7 4v8l-7 4zm8 0V10l5 3v6l-5 3z" />
+              </svg>
+              <template v-else>{{ index + 1 }}</template>
+            </span>
+          </div>
 
           <!-- Song info -->
           <button class="min-w-0 flex-1 text-left" @click="jumpTo(index)">
