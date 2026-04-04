@@ -49,7 +49,7 @@
         >
           <!-- Drag handle + index / playing icon -->
           <div
-            class="drag-handle flex shrink-0 cursor-grab items-center gap-1 active:cursor-grabbing text-gray-600 hover:text-gray-400"
+            class="drag-handle flex self-stretch shrink-0 cursor-grab items-center gap-1 active:cursor-grabbing text-gray-600 hover:text-gray-400"
             title="ドラッグで並び替え"
           >
             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
