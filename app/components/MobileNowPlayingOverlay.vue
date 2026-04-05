@@ -187,22 +187,103 @@
           @close="showPlaylistSheet = false"
         />
 
-        <!-- Related songs (scrollable) -->
-        <div class="flex-1 overflow-y-auto border-t border-border-default">
-          <p class="px-4 pt-3 pb-2 text-xs font-medium text-gray-400">同じアーティストの曲</p>
+        <!-- Tab: Queue / Related songs -->
+        <div class="flex flex-1 flex-col overflow-hidden border-t border-border-default">
+          <!-- Tab bar -->
+          <div class="flex shrink-0 border-b border-border-default">
+            <button
+              class="flex-1 -mb-px py-3 text-xs font-medium transition-colors"
+              :class="
+                activeTab === 'queue'
+                  ? 'border-b-2 border-selected-border text-selected-text'
+                  : 'text-gray-400 hover:text-gray-200'
+              "
+              @click="activeTab = 'queue'"
+            >
+              再生キュー
+            </button>
+            <button
+              class="flex-1 -mb-px py-3 text-xs font-medium transition-colors"
+              :class="
+                activeTab === 'related'
+                  ? 'border-b-2 border-selected-border text-selected-text'
+                  : 'text-gray-400 hover:text-gray-200'
+              "
+              @click="activeTab = 'related'"
+            >
+              同じアーティスト
+            </button>
+          </div>
 
-          <SongListItem
-            v-for="(s, i) in relatedSongs"
-            :key="s.id"
-            :song="s"
-            :index="i"
-            :show-index="false"
-            :show-add-to-playlist="false"
-          />
+          <!-- Queue tab -->
+          <div v-if="activeTab === 'queue'" class="flex-1 overflow-y-auto">
+            <!-- Previous song -->
+            <p class="px-4 pt-3 pb-1 text-xs font-medium text-gray-400">直前に再生した曲</p>
+            <template v-if="queueWindow.prev.length > 0">
+              <div
+                v-for="item in queueWindow.prev"
+                :key="item.song.id"
+                class="flex cursor-pointer items-center gap-3 border-b border-border-default px-3 py-2 transition-colors hover:bg-surface-overlay"
+                @click="jumpToQueueItem(item.index)"
+              >
+                <div class="relative shrink-0">
+                  <img
+                    :src="item.song.video.thumbnail_path"
+                    :alt="item.song.title"
+                    class="h-10 object-cover"
+                    style="aspect-ratio: 16/9"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-sm">{{ item.song.title }}</p>
+                  <p class="truncate text-xs text-gray-500">{{ item.song.artist ?? '不明' }}</p>
+                </div>
+              </div>
+            </template>
+            <p v-else class="px-4 pb-2 text-xs text-gray-500">前の曲はありません</p>
 
-          <p v-if="relatedSongs.length === 0" class="px-4 py-6 text-center text-sm text-gray-500">
-            関連する曲が見つかりませんでした
-          </p>
+            <!-- Next songs (up to 5) -->
+            <p class="px-4 pt-2 pb-1 text-xs font-medium text-gray-400">次に再生</p>
+            <template v-if="queueWindow.next.length > 0">
+              <div
+                v-for="item in queueWindow.next"
+                :key="item.song.id"
+                class="flex cursor-pointer items-center gap-3 border-b border-border-default px-3 py-2 transition-colors hover:bg-surface-overlay"
+                @click="jumpToQueueItem(item.index)"
+              >
+                <div class="relative shrink-0">
+                  <img
+                    :src="item.song.video.thumbnail_path"
+                    :alt="item.song.title"
+                    class="h-10 object-cover"
+                    style="aspect-ratio: 16/9"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-sm">{{ item.song.title }}</p>
+                  <p class="truncate text-xs text-gray-500">{{ item.song.artist ?? '不明' }}</p>
+                </div>
+              </div>
+            </template>
+            <p v-else class="px-4 pb-2 text-xs text-gray-500">次の曲はありません</p>
+          </div>
+
+          <!-- Related songs tab -->
+          <div v-else class="flex-1 overflow-y-auto">
+            <SongListItem
+              v-for="(s, i) in relatedSongs"
+              :key="s.id"
+              :song="s"
+              :index="i"
+              :show-index="false"
+              :show-add-to-playlist="false"
+            />
+            <p v-if="relatedSongs.length === 0" class="px-4 py-6 text-center text-sm text-gray-500">
+              関連する曲が見つかりませんでした
+            </p>
+          </div>
         </div>
       </div>
     </Transition>
@@ -227,6 +308,27 @@ const song = computed(() => player.currentSong!)
 const showPlaylistSheet = ref(false)
 
 const { relatedSongs } = useRelatedSongs(computed(() => player.currentSong))
+
+// --- Tab state ---
+const activeTab = ref<'queue' | 'related'>('queue')
+
+// --- Queue window: prev 1 + next up to 5 ---
+const queueWindow = computed(() => {
+  const idx = queue.currentIndex
+  const songs = queue.songs
+  const prev = idx > 0 ? [{ song: songs[idx - 1], index: idx - 1 }] : []
+  const next = songs.slice(idx + 1, idx + 6).map((s, i) => ({ song: s, index: idx + 1 + i }))
+  return { prev, next }
+})
+
+// --- Jump to queue item (user-gesture chain safe) ---
+function jumpToQueueItem(index: number) {
+  queue.currentIndex = index
+  const s = queue.currentSong
+  if (!s) return
+  player.play(s)
+  requestPlay(s)
+}
 
 // --- Progress ---
 const progressPercent = computed(() => {
