@@ -13,10 +13,13 @@
             キューに追加
           </button>
           <button
-            class="text-sm text-gray-400 transition-colors hover:text-selected-text"
+            class="flex items-center gap-1.5 text-sm text-gray-400 transition-colors hover:text-selected-text"
+            title="ピックアップを更新"
+            aria-label="ピックアップを更新"
             @click="randomRefresh()"
           >
-            シャッフル
+            <FontAwesomeIcon :icon="['fas', 'arrow-rotate-right']" class="h-3.5 w-3.5" />
+            更新
           </button>
         </div>
       </div>
