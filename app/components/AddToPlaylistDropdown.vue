@@ -10,7 +10,7 @@
 
     <div
       v-if="open"
-      class="absolute right-0 top-full z-50 mt-1 w-52 border border-border-default bg-surface-raised shadow-lg"
+      class="absolute top-full right-0 z-50 mt-1 w-52 border border-border-default bg-surface-raised shadow-lg"
       @click.stop
     >
       <!-- Create mode: inline name input -->
