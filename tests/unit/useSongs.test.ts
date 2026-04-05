@@ -164,4 +164,36 @@ describe('useSongs', () => {
       expect(mockStore.fetchSongs).toHaveBeenCalledWith(true)
     })
   })
+
+  describe('filteredSongs と songs の分離', () => {
+    it('filteredSongs は絞り込み全件、songs は perPage 件のスライスを返す', () => {
+      mockStore.allSongs = Array.from({ length: 60 }, (_, i) => makeSong(i + 1, `曲${i + 1}`))
+      const { filteredSongs, songs } = useSongs({ perPage: 10 })
+
+      expect(filteredSongs.value).toHaveLength(60)
+      expect(songs.value).toHaveLength(10)
+    })
+
+    it('2 ページ目を表示中でも filteredSongs は全件を保持する', () => {
+      mockStore.allSongs = Array.from({ length: 60 }, (_, i) => makeSong(i + 1, `曲${i + 1}`))
+      const { filteredSongs, songs, page } = useSongs({ perPage: 10 })
+      page.value = 2
+
+      expect(filteredSongs.value).toHaveLength(60)
+      expect(songs.value[0].id).toBe(11)
+    })
+
+    it('search 絞り込み後、filteredSongs は絞り込み全件、songs はそのスライスを返す', () => {
+      mockStore.allSongs = [
+        ...Array.from({ length: 55 }, (_, i) => makeSong(i + 1, `Ado - 曲${i + 1}`)),
+        makeSong(56, 'YOASOBI - 夜に駆ける'),
+      ]
+      const { filteredSongs, songs, search } = useSongs({ perPage: 10 })
+      search.value = 'ado'
+
+      expect(filteredSongs.value).toHaveLength(55)
+      expect(songs.value).toHaveLength(10)
+      expect(songs.value[0].title).toContain('Ado')
+    })
+  })
 })

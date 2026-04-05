@@ -4,9 +4,9 @@
     <div class="mb-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <h1 class="text-xl font-bold text-gray-50">楽曲一覧</h1>
       <button
-        v-if="songs.length > 0"
+        v-if="filteredSongs.length > 0"
         class="self-start bg-action-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-action-primary-hover"
-        @click="queueActions.playAll(songs)"
+        @click="queueActions.playAll(filteredSongs)"
       >
         すべて再生
       </button>
@@ -115,6 +115,7 @@ import type { SongTypeFilter, VideoTypeFilter } from '~/composables/useSongs'
 useHead({ title: '楽曲一覧 | inuinouta' })
 
 const {
+  filteredSongs,
   songs,
   totalItems,
   page,
