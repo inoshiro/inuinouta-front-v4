@@ -1,21 +1,22 @@
 <template>
   <!-- Panel header -->
   <div class="shrink-0 flex items-center justify-between border-b border-border-default px-4 py-3">
-    <div class="flex items-center gap-2">
-      <h2 class="text-sm font-bold text-gray-50">再生キュー</h2>
-      <span v-if="queue.songs.length > 0" class="text-xs text-gray-400">
-        {{ queue.songs.length }}曲 &middot; {{ queue.totalDuration }}
-      </span>
-    </div>
+    <span v-if="queue.songs.length > 0" class="text-xs text-gray-400">
+      {{ queue.songs.length }}曲 &middot; {{ queue.totalDuration }}
+    </span>
+    <span v-else class="text-xs text-gray-500">キューは空です</span>
     <div class="flex items-center gap-2">
       <button
         v-if="queue.songs.length > 0"
-        class="text-xs text-gray-400 hover:text-white"
+        class="bg-action-primary px-3 py-1 text-xs text-white hover:bg-action-primary-hover"
         @click="isSaving = true"
       >
         保存
       </button>
-      <button class="text-xs text-gray-400 hover:text-white" @click="playback.clearQueue()">
+      <button
+        class="border border-border-default px-3 py-1 text-xs text-gray-300 hover:text-white"
+        @click="playback.clearQueue()"
+      >
         クリア
       </button>
     </div>
