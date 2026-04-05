@@ -68,8 +68,9 @@
         <div class="flex items-center justify-center gap-6 py-3">
           <!-- Shuffle -->
           <button
-            :class="queue.shuffleMode ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
-            @click="queue.toggleShuffle()"
+            class="text-gray-400 hover:text-white disabled:opacity-30"
+            :disabled="queue.songs.length <= 1"
+            @click="handleShuffle()"
           >
             <FontAwesomeIcon :icon="['fas', 'shuffle']" class="h-4 w-4" />
           </button>
@@ -212,6 +213,12 @@
 const player = usePlayerStore()
 const queue = useQueueStore()
 const overlay = useMobileNowPlayingOverlay()
+const { success } = useNotifications()
+
+function handleShuffle() {
+  queue.shuffleQueue()
+  success('キューをシャッフルしました')
+}
 const playback = usePlayback()
 const { formatTime, songDuration } = useFormatTime()
 const { seekTo, retryPlay, requestPlay, loadedVideoId } = useYouTubePlayer()

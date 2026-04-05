@@ -5,7 +5,6 @@ export type RepeatMode = 'off' | 'all' | 'one'
 export const useQueueStore = defineStore('queue', () => {
   const songs = ref<Song[]>([])
   const currentIndex = ref(-1)
-  const shuffleMode = ref(false)
   const repeatMode = ref<RepeatMode>('off')
   const isOpen = ref(false)
 
@@ -64,9 +63,7 @@ export const useQueueStore = defineStore('queue', () => {
   function next(): Song | null {
     if (songs.value.length === 0) return null
     if (repeatMode.value === 'one') return currentSong.value
-    if (shuffleMode.value) {
-      currentIndex.value = Math.floor(Math.random() * songs.value.length)
-    } else if (currentIndex.value < songs.value.length - 1) {
+    if (currentIndex.value < songs.value.length - 1) {
       currentIndex.value++
     } else if (repeatMode.value === 'all') {
       currentIndex.value = 0
@@ -86,8 +83,17 @@ export const useQueueStore = defineStore('queue', () => {
     return currentSong.value
   }
 
-  function toggleShuffle() {
-    shuffleMode.value = !shuffleMode.value
+  function shuffleQueue() {
+    if (songs.value.length <= 1) return
+    const current = songs.value[currentIndex.value]
+    const rest = songs.value.filter((_, i) => i !== currentIndex.value)
+    // Fisher-Yates shuffle
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[rest[i], rest[j]] = [rest[j], rest[i]]
+    }
+    songs.value = [current, ...rest]
+    currentIndex.value = 0
   }
 
   function cycleRepeatMode() {
@@ -125,7 +131,6 @@ export const useQueueStore = defineStore('queue', () => {
   return {
     songs,
     currentIndex,
-    shuffleMode,
     repeatMode,
     isOpen,
     currentSong,
@@ -140,7 +145,7 @@ export const useQueueStore = defineStore('queue', () => {
     clear,
     next,
     previous,
-    toggleShuffle,
+    shuffleQueue,
     cycleRepeatMode,
     toggleOpen,
   }
