@@ -90,6 +90,8 @@
         </div>
       </VueDraggableNext>
     </ClientOnly>
+    <!-- Sentinel for lazy-load: becomes visible when user scrolls near bottom -->
+    <div v-if="hasMore" ref="sentinelEl" class="h-4" aria-hidden="true" />
   </div>
 
   <!-- Footer: close button -->
@@ -112,15 +114,42 @@ const player = usePlayerStore()
 const playback = usePlayback()
 
 const isSaving = ref(false)
+
+const { visibleSongs, hasMore, loadMore } = useVirtualizedQueue(() => queue.songs)
+
 const draggableQueue = ref<Song[]>([])
 
 watch(
-  () => queue.songs,
+  visibleSongs,
   (newSongs) => {
     draggableQueue.value = [...newSongs]
   },
-  { immediate: true, deep: true },
+  { immediate: true },
 )
+
+// IntersectionObserver to trigger loadMore when sentinel scrolls into view
+const sentinelEl = ref<HTMLElement | null>(null)
+let observer: IntersectionObserver | null = null
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0]?.isIntersecting) loadMore()
+    },
+    { threshold: 0 },
+  )
+  if (sentinelEl.value) observer.observe(sentinelEl.value)
+})
+
+watch(sentinelEl, (el, prevEl) => {
+  if (prevEl) observer?.unobserve(prevEl)
+  if (el) observer?.observe(el)
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
+  observer = null
+})
 
 function handleDragEnd(event: { oldIndex: number; newIndex: number }) {
   queue.moveSong(event.oldIndex, event.newIndex)
