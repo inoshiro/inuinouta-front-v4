@@ -79,7 +79,7 @@
           <button
             class="text-gray-400 hover:text-white disabled:opacity-30"
             :disabled="!queue.hasPrevious"
-            @click="playback.previousSong()"
+            @click="handlePreviousSong()"
           >
             <FontAwesomeIcon :icon="['fas', 'backward-step']" class="h-5 w-5" />
           </button>
@@ -105,7 +105,7 @@
           <button
             class="text-gray-400 hover:text-white disabled:opacity-30"
             :disabled="!queue.hasNext"
-            @click="playback.nextSong()"
+            @click="handleNextSong()"
           >
             <FontAwesomeIcon :icon="['fas', 'forward-step']" class="h-5 w-5" />
           </button>
@@ -187,22 +187,133 @@
           @close="showPlaylistSheet = false"
         />
 
-        <!-- Related songs (scrollable) -->
-        <div class="flex-1 overflow-y-auto border-t border-border-default">
-          <p class="px-4 pt-3 pb-2 text-xs font-medium text-gray-400">同じアーティストの曲</p>
+        <!-- Tab: Queue / Related songs -->
+        <div class="flex flex-1 flex-col overflow-hidden border-t border-border-default">
+          <!-- Tab bar -->
+          <div class="flex shrink-0 border-b border-border-default">
+            <button
+              class="flex-1 -mb-px py-3 text-xs font-medium transition-colors"
+              :class="
+                activeTab === 'queue'
+                  ? 'border-b-2 border-selected-border text-selected-text'
+                  : 'text-gray-400 hover:text-gray-200'
+              "
+              @click="activeTab = 'queue'"
+            >
+              再生キュー
+            </button>
+            <button
+              class="flex-1 -mb-px py-3 text-xs font-medium transition-colors"
+              :class="
+                activeTab === 'related'
+                  ? 'border-b-2 border-selected-border text-selected-text'
+                  : 'text-gray-400 hover:text-gray-200'
+              "
+              @click="activeTab = 'related'"
+            >
+              同じアーティスト
+            </button>
+          </div>
 
-          <SongListItem
-            v-for="(s, i) in relatedSongs"
-            :key="s.id"
-            :song="s"
-            :index="i"
-            :show-index="false"
-            :show-add-to-playlist="false"
-          />
+          <!-- Queue tab -->
+          <div v-if="activeTab === 'queue'" class="relative flex-1 overflow-hidden">
+            <Transition :name="queueSlideTransition" mode="out-in">
+              <div :key="queue.currentIndex" class="absolute inset-0 overflow-y-auto">
+                <!-- Previous song -->
+                <p class="px-4 pt-3 pb-1 text-xs font-medium text-gray-400">直前に再生した曲</p>
+                <template v-if="queueWindow.prev.length > 0">
+                  <div
+                    v-for="item in queueWindow.prev"
+                    :key="item.song.id"
+                    class="flex cursor-pointer items-center gap-3 border-b border-border-default px-3 py-2 transition-colors hover:bg-surface-overlay"
+                    @click="jumpToQueueItem(item.index)"
+                  >
+                    <div class="relative shrink-0">
+                      <img
+                        :src="item.song.video.thumbnail_path"
+                        :alt="item.song.title"
+                        class="h-10 object-cover"
+                        style="aspect-ratio: 16/9"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <p class="truncate text-sm">{{ item.song.title }}</p>
+                      <p class="truncate text-xs text-gray-500">{{ item.song.artist ?? '不明' }}</p>
+                    </div>
+                  </div>
+                </template>
+                <p v-else class="px-4 pb-2 text-xs text-gray-500">前の曲はありません</p>
 
-          <p v-if="relatedSongs.length === 0" class="px-4 py-6 text-center text-sm text-gray-500">
-            関連する曲が見つかりませんでした
-          </p>
+                <!-- Now playing (read-only) -->
+                <p class="px-4 pt-2 pb-1 text-xs font-medium text-gray-400">再生中</p>
+                <div
+                  class="flex items-center gap-3 border-b border-border-default bg-surface-overlay px-3 py-2"
+                >
+                  <div class="relative shrink-0">
+                    <img
+                      :src="song.video.thumbnail_path"
+                      :alt="song.title"
+                      class="h-10 object-cover"
+                      style="aspect-ratio: 16/9"
+                      loading="lazy"
+                    />
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/60">
+                      <FontAwesomeIcon
+                        :icon="['fas', 'volume-high']"
+                        class="h-4 w-4 text-selected-text"
+                      />
+                    </div>
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <p class="truncate text-sm font-medium text-selected-text">{{ song.title }}</p>
+                    <p class="truncate text-xs text-gray-500">{{ song.artist ?? '不明' }}</p>
+                  </div>
+                </div>
+
+                <!-- Next songs (up to 5) -->
+                <p class="px-4 pt-2 pb-1 text-xs font-medium text-gray-400">次に再生</p>
+                <template v-if="queueWindow.next.length > 0">
+                  <div
+                    v-for="item in queueWindow.next"
+                    :key="item.song.id"
+                    class="flex cursor-pointer items-center gap-3 border-b border-border-default px-3 py-2 transition-colors hover:bg-surface-overlay"
+                    @click="jumpToQueueItem(item.index)"
+                  >
+                    <div class="relative shrink-0">
+                      <img
+                        :src="item.song.video.thumbnail_path"
+                        :alt="item.song.title"
+                        class="h-10 object-cover"
+                        style="aspect-ratio: 16/9"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <p class="truncate text-sm">{{ item.song.title }}</p>
+                      <p class="truncate text-xs text-gray-500">{{ item.song.artist ?? '不明' }}</p>
+                    </div>
+                  </div>
+                </template>
+                <p v-else class="px-4 pb-2 text-xs text-gray-500">次の曲はありません</p>
+              </div>
+            </Transition>
+          </div>
+
+          <!-- Related songs tab -->
+          <div v-else class="flex-1 overflow-y-auto">
+            <SongListItem
+              v-for="(s, i) in relatedSongs"
+              :key="s.id"
+              :song="s"
+              :index="i"
+              :show-index="false"
+              :show-add-to-playlist="false"
+            />
+            <p v-if="relatedSongs.length === 0" class="px-4 py-6 text-center text-sm text-gray-500">
+              関連する曲が見つかりませんでした
+            </p>
+          </div>
         </div>
       </div>
     </Transition>
@@ -227,6 +338,44 @@ const song = computed(() => player.currentSong!)
 const showPlaylistSheet = ref(false)
 
 const { relatedSongs } = useRelatedSongs(computed(() => player.currentSong))
+
+// --- Tab state ---
+const activeTab = ref<'queue' | 'related'>('queue')
+
+// --- Queue window: prev 1 + next up to 5 ---
+const queueWindow = computed(() => {
+  const idx = queue.currentIndex
+  const songs = queue.songs
+  const prev = idx > 0 ? [{ song: songs[idx - 1], index: idx - 1 }] : []
+  const next = songs.slice(idx + 1, idx + 6).map((s, i) => ({ song: s, index: idx + 1 + i }))
+  return { prev, next }
+})
+
+// --- Queue slide direction ---
+const queueSlideDirection = ref<'forward' | 'backward'>('forward')
+const queueSlideTransition = computed(() =>
+  queueSlideDirection.value === 'forward' ? 'queue-slide-forward' : 'queue-slide-backward',
+)
+
+// --- Jump to queue item (user-gesture chain safe) ---
+function jumpToQueueItem(index: number) {
+  queueSlideDirection.value = index > queue.currentIndex ? 'forward' : 'backward'
+  queue.currentIndex = index
+  const s = queue.currentSong
+  if (!s) return
+  player.play(s)
+  requestPlay(s)
+}
+
+function handleNextSong() {
+  queueSlideDirection.value = 'forward'
+  playback.nextSong()
+}
+
+function handlePreviousSong() {
+  queueSlideDirection.value = 'backward'
+  playback.previousSong()
+}
 
 // --- Progress ---
 const progressPercent = computed(() => {
@@ -368,6 +517,34 @@ watch(
   100% {
     transform: translateX(0);
   }
+}
+
+/* Queue slide animation on currentIndex change */
+.queue-slide-forward-enter-active,
+.queue-slide-forward-leave-active,
+.queue-slide-backward-enter-active,
+.queue-slide-backward-leave-active {
+  transition:
+    transform 150ms ease,
+    opacity 150ms ease;
+}
+/* Forward (next song): old slides up, new comes from below */
+.queue-slide-forward-enter-from {
+  transform: translateY(12px);
+  opacity: 0;
+}
+.queue-slide-forward-leave-to {
+  transform: translateY(-12px);
+  opacity: 0;
+}
+/* Backward (prev song): old slides down, new comes from above */
+.queue-slide-backward-enter-from {
+  transform: translateY(-12px);
+  opacity: 0;
+}
+.queue-slide-backward-leave-to {
+  transform: translateY(12px);
+  opacity: 0;
 }
 
 .overlay-slide-enter-active,
