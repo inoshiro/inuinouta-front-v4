@@ -54,14 +54,15 @@
         class="group flex cursor-pointer items-center gap-3 border-b border-border-default px-3 py-2 transition-colors hover:bg-surface-overlay"
         @click="playSongFromVideo(index)"
       >
-        <span class="w-8 text-center text-xs text-gray-500">{{ index + 1 }}</span>
+        <span class="w-8 shrink-0 text-center text-xs text-gray-500">{{ index + 1 }}</span>
         <div class="min-w-0 flex-1">
           <p class="truncate text-sm font-medium">{{ s.title }}</p>
           <p class="truncate text-xs text-gray-500">{{ s.artist ?? '不明' }}</p>
         </div>
-        <span class="shrink-0 text-xs text-gray-500">
+        <span class="hidden shrink-0 text-xs text-gray-500 sm:inline">
           {{ songDuration(s.start_at, s.end_at) }}
         </span>
+        <SongRowActions :song="songs[index]" />
       </div>
     </section>
   </div>
@@ -84,7 +85,7 @@ useHead({
 })
 
 /** Convert video's SongBasic[] to Song[] by injecting the video reference */
-function toSongs(): Song[] {
+const songs = computed<Song[]>(() => {
   if (!video.value) return []
   const v = video.value
   return v.songs.map((s) => ({
@@ -101,13 +102,13 @@ function toSongs(): Song[] {
       published_at: v.published_at,
     },
   }))
-}
+})
 
 function playVideoSongs() {
-  queueActions.playAll(toSongs())
+  queueActions.playAll(songs.value)
 }
 
 function playSongFromVideo(index: number) {
-  queueActions.playAll(toSongs(), index)
+  queueActions.playAll(songs.value, index)
 }
 </script>
