@@ -114,4 +114,50 @@ describe('useQueueStore', () => {
       expect(queue.totalDuration).toBe('1時間1分')
     })
   })
+
+  // --- shuffleQueue ---
+
+  describe('shuffleQueue', () => {
+    it('現在再生中の曲が index 0 へ移動する', () => {
+      const queue = useQueueStore()
+      queue.setSongs([makeSong(1), makeSong(2), makeSong(3), makeSong(4)], 2)
+      const currentId = queue.currentSong?.id
+      queue.shuffleQueue()
+      expect(queue.currentIndex).toBe(0)
+      expect(queue.currentSong?.id).toBe(currentId)
+    })
+
+    it('曲数と内容が欠けない', () => {
+      const queue = useQueueStore()
+      queue.setSongs([makeSong(1), makeSong(2), makeSong(3), makeSong(4), makeSong(5)], 0)
+      queue.shuffleQueue()
+      expect(queue.songs).toHaveLength(5)
+      const sortedIds = queue.songs.map((s) => s.id).sort((a, b) => a - b)
+      expect(sortedIds).toEqual([1, 2, 3, 4, 5])
+    })
+
+    it('シャッフル後の next() がキュー順と一致する', () => {
+      const queue = useQueueStore()
+      queue.setSongs([makeSong(1), makeSong(2), makeSong(3)], 1)
+      queue.shuffleQueue()
+      const secondId = queue.songs[1]?.id
+      queue.next()
+      expect(queue.currentSong?.id).toBe(secondId)
+    })
+
+    it('曲が 1 曲のときは no-op', () => {
+      const queue = useQueueStore()
+      queue.setSongs([makeSong(1)], 0)
+      queue.shuffleQueue()
+      expect(queue.songs).toHaveLength(1)
+      expect(queue.currentIndex).toBe(0)
+    })
+
+    it('曲が 0 曲のときは no-op', () => {
+      const queue = useQueueStore()
+      queue.shuffleQueue()
+      expect(queue.songs).toHaveLength(0)
+      expect(queue.currentIndex).toBe(-1)
+    })
+  })
 })

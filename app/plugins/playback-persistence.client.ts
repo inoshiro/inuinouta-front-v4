@@ -7,7 +7,6 @@ const SETTINGS_STORAGE_KEY = 'playback:settings'
 interface PersistedQueue {
   songs: Song[]
   currentIndex: number
-  shuffleMode: boolean
   repeatMode: RepeatMode
 }
 
@@ -48,7 +47,7 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  // Restore queue state (songs, index, shuffle, repeat)
+  // Restore queue state (songs, currentIndex, repeat)
   const persistedQueue = loadJson<PersistedQueue>(QUEUE_STORAGE_KEY)
   if (persistedQueue && Array.isArray(persistedQueue.songs) && persistedQueue.songs.length > 0) {
     const validIndex =
@@ -61,9 +60,6 @@ export default defineNuxtPlugin(() => {
     queue.setSongs(persistedQueue.songs, validIndex)
 
     const validRepeatModes: RepeatMode[] = ['off', 'all', 'one']
-    if (typeof persistedQueue.shuffleMode === 'boolean') {
-      queue.shuffleMode = persistedQueue.shuffleMode
-    }
     if (validRepeatModes.includes(persistedQueue.repeatMode)) {
       queue.repeatMode = persistedQueue.repeatMode
     }
@@ -81,7 +77,6 @@ export default defineNuxtPlugin(() => {
     () => ({
       songs: queue.songs,
       currentIndex: queue.currentIndex,
-      shuffleMode: queue.shuffleMode,
       repeatMode: queue.repeatMode,
     }),
     (state) => {

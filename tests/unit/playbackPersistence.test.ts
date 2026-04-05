@@ -67,7 +67,6 @@ function simulateRestore(
 
         queue.setSongs(persisted.songs, validIndex)
 
-        if (typeof persisted.shuffleMode === 'boolean') queue.shuffleMode = persisted.shuffleMode
         const validModes = ['off', 'all', 'one']
         if (validModes.includes(persisted.repeatMode)) queue.repeatMode = persisted.repeatMode
 
@@ -107,27 +106,20 @@ describe('playback persistence (Issue #18)', () => {
       expect(queue.currentIndex).toBe(1)
     })
 
-    it('repeatMode と shuffleMode が復元される', () => {
+    it('repeatMode が復元される', () => {
       const songs = [makeSong(1)]
-      localStorage.setItem(
-        QUEUE_KEY,
-        JSON.stringify({ songs, currentIndex: 0, shuffleMode: true, repeatMode: 'all' }),
-      )
+      localStorage.setItem(QUEUE_KEY, JSON.stringify({ songs, currentIndex: 0, repeatMode: 'all' }))
 
       const queue = useQueueStore()
       const player = usePlayerStore()
       simulateRestore(queue, player)
 
-      expect(queue.shuffleMode).toBe(true)
       expect(queue.repeatMode).toBe('all')
     })
 
     it('復元後に player.currentSong が queue.currentSong と一致する（PlayerBar 表示可）', () => {
       const songs = [makeSong(10), makeSong(20)]
-      localStorage.setItem(
-        QUEUE_KEY,
-        JSON.stringify({ songs, currentIndex: 1, shuffleMode: false, repeatMode: 'off' }),
-      )
+      localStorage.setItem(QUEUE_KEY, JSON.stringify({ songs, currentIndex: 1, repeatMode: 'off' }))
 
       const queue = useQueueStore()
       const player = usePlayerStore()
@@ -139,10 +131,7 @@ describe('playback persistence (Issue #18)', () => {
 
     it('自動再生されない（isPlaying が false のまま）', () => {
       const songs = [makeSong(1)]
-      localStorage.setItem(
-        QUEUE_KEY,
-        JSON.stringify({ songs, currentIndex: 0, shuffleMode: false, repeatMode: 'off' }),
-      )
+      localStorage.setItem(QUEUE_KEY, JSON.stringify({ songs, currentIndex: 0, repeatMode: 'off' }))
 
       const queue = useQueueStore()
       const player = usePlayerStore()
@@ -206,7 +195,7 @@ describe('playback persistence (Issue #18)', () => {
       const songs = [makeSong(1), makeSong(2)]
       localStorage.setItem(
         QUEUE_KEY,
-        JSON.stringify({ songs, currentIndex: 99, shuffleMode: false, repeatMode: 'off' }),
+        JSON.stringify({ songs, currentIndex: 99, repeatMode: 'off' }),
       )
 
       const queue = useQueueStore()
@@ -220,7 +209,7 @@ describe('playback persistence (Issue #18)', () => {
       const songs = [makeSong(1)]
       localStorage.setItem(
         QUEUE_KEY,
-        JSON.stringify({ songs, currentIndex: 0, shuffleMode: false, repeatMode: 'invalid' }),
+        JSON.stringify({ songs, currentIndex: 0, repeatMode: 'invalid' }),
       )
 
       const queue = useQueueStore()
@@ -229,6 +218,20 @@ describe('playback persistence (Issue #18)', () => {
 
       // repeatMode should remain the default 'off'
       expect(queue.repeatMode).toBe('off')
+    })
+
+    it('旧 shuffleMode データが残っていても璴命的に壊れない', () => {
+      const songs = [makeSong(1), makeSong(2), makeSong(3)]
+      localStorage.setItem(
+        QUEUE_KEY,
+        JSON.stringify({ songs, currentIndex: 0, shuffleMode: true, repeatMode: 'off' }),
+      )
+
+      const queue = useQueueStore()
+      const player = usePlayerStore()
+      expect(() => simulateRestore(queue, player)).not.toThrow()
+      expect(queue.songs).toHaveLength(3)
+      expect(queue.currentIndex).toBe(0)
     })
   })
 })
