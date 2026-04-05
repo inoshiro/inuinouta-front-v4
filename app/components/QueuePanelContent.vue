@@ -10,12 +10,15 @@
     <div class="flex items-center gap-2">
       <button
         v-if="queue.songs.length > 0"
-        class="text-xs text-gray-400 hover:text-white"
+        class="bg-action-primary px-3 py-1 text-xs text-white hover:bg-action-primary-hover"
         @click="isSaving = true"
       >
         保存
       </button>
-      <button class="text-xs text-gray-400 hover:text-white" @click="playback.clearQueue()">
+      <button
+        class="border border-border-default px-3 py-1 text-xs text-gray-300 hover:text-white"
+        @click="playback.clearQueue()"
+      >
         クリア
       </button>
     </div>

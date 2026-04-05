@@ -3,28 +3,37 @@
     <!-- Tab header -->
     <div class="flex items-center gap-4 border-b border-border-default px-4 py-2">
       <button
-        class="text-xs"
-        :class="saveMode === 'new' ? 'font-medium text-gray-50' : 'text-gray-400 hover:text-white'"
+        class="pb-1 text-xs"
+        :class="
+          saveMode === 'new'
+            ? 'border-b-2 border-selected-border text-selected-text'
+            : 'border-b-2 border-transparent text-gray-400 hover:text-white'
+        "
         @click="saveMode = 'new'"
       >
         新規作成
       </button>
       <button
-        class="text-xs"
+        class="pb-1 text-xs"
         :class="
-          saveMode === 'existing' ? 'font-medium text-gray-50' : 'text-gray-400 hover:text-white'
+          saveMode === 'existing'
+            ? 'border-b-2 border-selected-border text-selected-text'
+            : 'border-b-2 border-transparent text-gray-400 hover:text-white'
         "
         @click="saveMode = 'existing'"
       >
         既存に追加
       </button>
-      <button class="ml-auto text-xs text-gray-400 hover:text-white" @click="handleCancel">
-        ✕
+      <button
+        class="ml-auto px-2 py-1 text-xs text-gray-400 hover:text-white"
+        @click="handleCancel"
+      >
+        キャンセル
       </button>
     </div>
 
     <!-- New: name input -->
-    <div v-if="saveMode === 'new'" class="flex items-center gap-2 px-4 py-2">
+    <div v-if="saveMode === 'new'" class="flex flex-col gap-2 px-4 py-3">
       <input
         ref="saveInput"
         v-model="saveName"
@@ -32,18 +41,18 @@
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
-        class="flex-1 border border-border-default bg-surface-overlay px-2 py-1 text-sm text-gray-50 focus:border-accent focus:outline-none"
+        class="w-full border border-border-default bg-surface-overlay px-2 py-1.5 text-sm text-gray-50 focus:border-selected-border focus:outline-none"
         placeholder="プレイリスト名"
         maxlength="100"
         @keydown.enter="handleSaveAsNew"
         @keydown.escape="handleCancel"
       />
       <button
-        class="text-xs text-selected-text hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+        class="w-full bg-action-primary py-1.5 text-sm text-white hover:bg-action-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
         :disabled="!saveName.trim()"
         @click="handleSaveAsNew"
       >
-        保存
+        作成する
       </button>
     </div>
 
