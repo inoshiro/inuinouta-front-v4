@@ -46,6 +46,11 @@
 
     <!-- Toast notifications (Teleport to body is handled inside) -->
     <AppToastRegion />
+
+    <!-- Mobile now-playing overlay (Teleport to body is handled inside) -->
+    <ClientOnly>
+      <MobileNowPlayingOverlay />
+    </ClientOnly>
   </div>
 </template>
 

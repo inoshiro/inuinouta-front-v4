@@ -217,6 +217,15 @@ export function useYouTubePlayer() {
     pendingRequest = null
   }
 
+  /**
+   * Switch playback quality.
+   * 'tiny' / 'small' when the player is hidden to save bandwidth.
+   * 'hd720' when the player is visible in the overlay.
+   */
+  function setQuality(quality: YT.SuggestedVideoQuality) {
+    ytPlayer?.setPlaybackQuality(quality)
+  }
+
   // --- Passive watchers (volume / mute) -------------------------------------
   // These do not affect the user-gesture chain so watch-based is fine.
 
@@ -244,6 +253,7 @@ export function useYouTubePlayer() {
     pausePlay,
     retryPlay,
     seekTo,
+    setQuality,
     destroy,
   }
 }

@@ -7,14 +7,20 @@
     <!-- Mobile: compact player -->
     <div class="lg:hidden">
       <div class="flex items-center gap-3 px-3 py-2">
-        <img
-          :src="player.currentSong.video.thumbnail_path"
-          :alt="player.currentSong.title"
-          class="h-10 w-10 object-cover"
-        />
-        <div class="min-w-0 flex-1">
-          <p class="truncate text-sm font-medium">{{ player.currentSong.title }}</p>
-          <p class="truncate text-xs text-gray-400">{{ player.currentSong.artist }}</p>
+        <!-- Tappable song info area: opens mobile now-playing overlay -->
+        <div
+          class="flex min-w-0 flex-1 cursor-pointer items-center gap-3"
+          @click="mobileOverlay.open()"
+        >
+          <img
+            :src="player.currentSong.video.thumbnail_path"
+            :alt="player.currentSong.title"
+            class="h-10 w-10 object-cover"
+          />
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-sm font-medium">{{ player.currentSong.title }}</p>
+            <p class="truncate text-xs text-gray-400">{{ player.currentSong.artist }}</p>
+          </div>
         </div>
         <button
           class="text-gray-400 hover:text-white disabled:opacity-30"
@@ -226,6 +232,7 @@ const queue = useQueueStore()
 const playback = usePlayback()
 const { formatTime, songDuration } = useFormatTime()
 const { seekTo, retryPlay, requestPlay, loadedVideoId } = useYouTubePlayer()
+const mobileOverlay = useMobileNowPlayingOverlay()
 
 const progressPercent = computed(() => {
   const song = player.currentSong
