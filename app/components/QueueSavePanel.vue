@@ -61,15 +61,20 @@
       <div v-if="playlistsStore.playlists.length === 0" class="px-4 py-3 text-xs text-gray-400">
         まだプレイリストがありません
       </div>
-      <button
+      <div
         v-for="pl in playlistsStore.playlists"
         :key="pl.id"
-        class="flex w-full items-center gap-2 px-4 py-2 text-left text-xs hover:bg-surface-overlay"
-        @click="handleAddToExisting(pl)"
+        class="flex w-full items-center gap-3 px-4 py-2 hover:bg-surface-overlay"
       >
-        <span class="flex-1 truncate text-gray-50">{{ pl.name }}</span>
-        <span class="text-gray-500">{{ pl.items.length }}曲</span>
-      </button>
+        <span class="min-w-0 flex-1 truncate text-sm text-gray-50">{{ pl.name }}</span>
+        <span class="shrink-0 text-xs text-gray-500">{{ pl.items.length }}曲</span>
+        <button
+          class="shrink-0 bg-action-primary px-3 py-1 text-xs text-white hover:bg-action-primary-hover"
+          @click="handleAddToExisting(pl)"
+        >
+          追加
+        </button>
+      </div>
     </div>
   </div>
 </template>

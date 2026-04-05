@@ -1,12 +1,10 @@
 <template>
   <!-- Panel header -->
   <div class="shrink-0 flex items-center justify-between border-b border-border-default px-4 py-3">
-    <div class="flex items-center gap-2">
-      <h2 class="text-sm font-bold text-gray-50">再生キュー</h2>
-      <span v-if="queue.songs.length > 0" class="text-xs text-gray-400">
-        {{ queue.songs.length }}曲 &middot; {{ queue.totalDuration }}
-      </span>
-    </div>
+    <span v-if="queue.songs.length > 0" class="text-xs text-gray-400">
+      {{ queue.songs.length }}曲 &middot; {{ queue.totalDuration }}
+    </span>
+    <span v-else class="text-xs text-gray-500">キューは空です</span>
     <div class="flex items-center gap-2">
       <button
         v-if="queue.songs.length > 0"
