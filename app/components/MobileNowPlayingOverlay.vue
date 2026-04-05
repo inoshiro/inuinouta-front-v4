@@ -6,7 +6,7 @@
         class="fixed inset-0 z-50 flex flex-col bg-surface-base text-gray-50 lg:hidden"
       >
         <!-- Header: full-row tap to close -->
-        <div class="flex h-12 cursor-pointer items-center justify-center" @click="overlay.close()">
+        <div class="flex h-10 cursor-pointer items-center justify-center" @click="overlay.close()">
           <FontAwesomeIcon :icon="['fas', 'chevron-down']" class="h-6 w-6 text-gray-400" />
         </div>
 
@@ -14,51 +14,64 @@
         <div class="aspect-video w-full bg-black" />
 
         <!-- Song info -->
-        <div class="px-4 pt-4 pb-2">
+        <div class="px-4 pt-3 pb-1">
           <!-- Title: marquee scroll when text overflows -->
           <div ref="titleContainerRef" class="overflow-hidden">
             <p
               ref="titleTextRef"
-              class="whitespace-nowrap text-lg font-medium"
+              class="whitespace-nowrap text-base font-medium"
               :class="titleScrollPx > 0 ? 'title-marquee' : 'truncate'"
               :style="titleScrollPx > 0 ? { '--scroll-dist': `-${titleScrollPx}px` } : {}"
             >
               {{ song.title }}
             </p>
           </div>
-          <p class="text-sm text-gray-400">{{ song.artist ?? '不明' }}</p>
-          <p class="mt-1 truncate text-[11px] text-gray-600">{{ song.video.title }}</p>
+          <p class="text-xs text-gray-400">{{ song.artist ?? '不明' }}</p>
+          <div ref="videoTitleContainerRef" class="mt-0.5 overflow-hidden">
+            <p
+              ref="videoTitleTextRef"
+              class="whitespace-nowrap text-[10px] text-gray-600"
+              :class="videoTitleScrollPx > 0 ? 'video-title-marquee' : 'truncate'"
+              :style="videoTitleScrollPx > 0 ? { '--scroll-dist': `-${videoTitleScrollPx}px` } : {}"
+            >
+              {{ song.video.title }}
+            </p>
+          </div>
         </div>
 
-        <!-- Seek bar -->
+        <!-- Seek bar with inline times -->
         <div class="px-4">
-          <div class="relative flex h-10 cursor-pointer items-center" @click="handleSeek">
-            <div class="relative h-1 w-full bg-gray-700">
+          <div class="flex items-center gap-3">
+            <span class="w-9 shrink-0 text-right text-[11px] text-gray-400">{{
+              formatTime(elapsed)
+            }}</span>
+            <div class="relative flex h-8 flex-1 cursor-pointer items-center" @click="handleSeek">
+              <div class="relative h-1 w-full bg-gray-700">
+                <div
+                  class="absolute inset-y-0 left-0 bg-progress"
+                  :style="{ width: progressPercent + '%' }"
+                />
+              </div>
+              <!-- Seek thumb -->
               <div
-                class="absolute inset-y-0 left-0 bg-progress"
-                :style="{ width: progressPercent + '%' }"
+                class="absolute top-1/2 h-4 w-4 -translate-y-1/2 bg-white"
+                :style="{ left: `calc(${progressPercent}% - 8px)` }"
               />
             </div>
-            <!-- Seek thumb -->
-            <div
-              class="absolute top-1/2 h-4 w-4 -translate-y-1/2 bg-white"
-              :style="{ left: `calc(${progressPercent}% - 8px)` }"
-            />
-          </div>
-          <div class="-mt-1 flex justify-between text-xs text-gray-400">
-            <span>{{ formatTime(elapsed) }}</span>
-            <span>{{ songDuration(song.start_at, song.end_at) }}</span>
+            <span class="w-9 shrink-0 text-[11px] text-gray-400">{{
+              songDuration(song.start_at, song.end_at)
+            }}</span>
           </div>
         </div>
 
         <!-- Playback controls -->
-        <div class="flex items-center justify-center gap-8 py-4">
+        <div class="flex items-center justify-center gap-6 py-3">
           <!-- Shuffle -->
           <button
             :class="queue.shuffleMode ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
             @click="queue.toggleShuffle()"
           >
-            <FontAwesomeIcon :icon="['fas', 'shuffle']" class="h-5 w-5" />
+            <FontAwesomeIcon :icon="['fas', 'shuffle']" class="h-4 w-4" />
           </button>
 
           <!-- Previous -->
@@ -67,23 +80,23 @@
             :disabled="!queue.hasPrevious"
             @click="playback.previousSong()"
           >
-            <FontAwesomeIcon :icon="['fas', 'backward-step']" class="h-6 w-6" />
+            <FontAwesomeIcon :icon="['fas', 'backward-step']" class="h-5 w-5" />
           </button>
 
           <!-- Play / Pause -->
           <button
-            class="flex h-14 w-14 items-center justify-center bg-action-primary text-white hover:bg-action-primary-hover"
+            class="flex h-12 w-12 items-center justify-center bg-action-primary text-white hover:bg-action-primary-hover"
             :title="player.isBlocked ? '再生がブロックされました。タップして再試行' : undefined"
             @click="handlePlay"
           >
             <FontAwesomeIcon
               v-if="player.isBlocked"
               :icon="['fas', 'arrow-rotate-right']"
-              class="h-7 w-7"
+              class="h-6 w-6"
             />
             <template v-else>
-              <FontAwesomeIcon v-if="player.isPlaying" :icon="['fas', 'pause']" class="h-7 w-7" />
-              <FontAwesomeIcon v-else :icon="['fas', 'play']" class="h-7 w-7" />
+              <FontAwesomeIcon v-if="player.isPlaying" :icon="['fas', 'pause']" class="h-6 w-6" />
+              <FontAwesomeIcon v-else :icon="['fas', 'play']" class="h-6 w-6" />
             </template>
           </button>
 
@@ -93,7 +106,7 @@
             :disabled="!queue.hasNext"
             @click="playback.nextSong()"
           >
-            <FontAwesomeIcon :icon="['fas', 'forward-step']" class="h-6 w-6" />
+            <FontAwesomeIcon :icon="['fas', 'forward-step']" class="h-5 w-5" />
           </button>
 
           <!-- Repeat -->
@@ -104,7 +117,7 @@
             "
             @click="queue.cycleRepeatMode()"
           >
-            <FontAwesomeIcon :icon="['fas', 'repeat']" class="h-5 w-5" />
+            <FontAwesomeIcon :icon="['fas', 'repeat']" class="h-4 w-4" />
             <span
               v-if="queue.repeatMode === 'one'"
               class="absolute -top-1 -right-1 text-[10px] font-bold"
@@ -115,7 +128,7 @@
         </div>
 
         <!-- Sub-actions row -->
-        <div class="flex items-center justify-around border-t border-border-default px-6 py-3">
+        <div class="flex items-center justify-around border-t border-border-default px-6 py-2">
           <!-- Add to playlist -->
           <button
             class="flex flex-col items-center gap-1 text-gray-400 hover:text-white"
@@ -285,6 +298,23 @@ watch(
   { immediate: true },
 )
 
+const videoTitleContainerRef = ref<HTMLElement | null>(null)
+const videoTitleTextRef = ref<HTMLElement | null>(null)
+const videoTitleScrollPx = ref(0)
+
+watch(
+  [() => overlay.isOpen.value, () => song.value?.video.title],
+  async () => {
+    videoTitleScrollPx.value = 0
+    if (!overlay.isOpen.value) return
+    await nextTick()
+    if (!videoTitleTextRef.value || !videoTitleContainerRef.value) return
+    const overflow = videoTitleTextRef.value.scrollWidth - videoTitleContainerRef.value.clientWidth
+    videoTitleScrollPx.value = Math.max(0, overflow)
+  },
+  { immediate: true },
+)
+
 // --- Lock body scroll when overlay is open ---
 watch(
   () => overlay.isOpen.value,
@@ -310,6 +340,10 @@ watch(
 /* Marquee scroll: pause → slide to end → pause → snap back */
 .title-marquee {
   animation: title-marquee 10s linear infinite;
+}
+
+.video-title-marquee {
+  animation: title-marquee 12s linear infinite;
 }
 
 @keyframes title-marquee {
