@@ -40,10 +40,14 @@ export function useRelatedSongs(currentSong: Ref<Song | null>, limit = 5) {
   const cachedSongs = ref<Song[]>([])
 
   watch(
-    () => currentSong.value?.id,
+    [() => currentSong.value?.id, () => library.allSongs.length],
     () => {
       const songId = currentSong.value?.id ?? null
-      if (songId !== cachedSongId.value) {
+      // Re-evaluate when: song changes, OR library finished loading while cache was empty
+      if (
+        songId !== cachedSongId.value ||
+        (cachedSongs.value.length === 0 && relatedSongs.value.length > 0)
+      ) {
         cachedSongId.value = songId
         cachedSongs.value = relatedSongs.value
       }

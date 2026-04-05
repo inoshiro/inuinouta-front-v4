@@ -17,3 +17,33 @@ applyTo: '**/*.vue'
   - 通常テキスト: `text-gray-50`
   - 補助テキスト: `text-gray-400`
   - アクセント: `text-emerald-400`
+
+## Composable が返す plain object 内の ComputedRef
+
+composable が `return { isOpen, open, close }` のように plain object で返した `ComputedRef` は、テンプレートで **auto-unwrap されない**。
+`ref` は auto-unwrap されるが `computed` は対象外（Vue の auto-unwrap は `reactive()` / Pinia store 内のみ有効）。
+
+```html
+<!-- ❌ isOpen が ComputedRef オブジェクトとして truthy になり常に表示される -->
+<div v-if="overlay.isOpen">
+  <!-- ✅ .value を明示する -->
+  <div v-if="overlay.isOpen.value"></div>
+</div>
+```
+
+## モバイル全画面オーバーレイ内でのドロップダウンメニューは使えない
+
+`position:absolute; w-52`（208px fixed）は 375px 幅のモバイル画面で必ず overflow する。
+モバイルオーバーレイ内のアクション（プレイリスト保存など）には**ボトムシート**を使う:
+
+```html
+<!-- ボトムシートの基本構造 -->
+<div class="fixed inset-x-0 bottom-0 z-60 flex max-h-[60vh] flex-col bg-surface-raised">
+  <!-- ヘッダー + コンテンツ（overflow-y-auto） + フッターアクション -->
+</div>
+<!-- バックドロップ -->
+<div class="fixed inset-0 z-60 bg-black/50" @click="close" />
+```
+
+- z-index はオーバーレイ（z-50）より上（z-60）
+- `max-h-[60vh]` + `overflow-y-auto` でコンテンツが多い場合もスクロール対応

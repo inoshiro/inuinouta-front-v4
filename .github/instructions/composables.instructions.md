@@ -48,3 +48,32 @@ watch(
 - [ ] `player.play(song)` と `requestPlay(song)` を両方、同期的に呼んでいるか
 - [ ] `watch` 起動・非同期処理越しに `requestPlay` を呼んでいないか
 - [ ] `useYouTubePlayer()` が返す関数はモジュールレベルシングルトンを共有するため、複数コンポーネントから呼んでも安全
+
+## YouTube IFrame API を扱う composable のルール
+
+### プレイヤー DOM は移動させない
+
+`Teleport` で `#yt-player` の DOM ノードを別ツリーに移動すると、YouTube IFrame API のイベントリスナーやプレイヤー状態が壊れるリスクがある。
+表示・非表示の切替は **CSS positioning のみ**で行う:
+
+```ts
+// ✅ CSS でオフスクリーン / 表示を切替（DOM は移動しない）
+// .player-offscreen { position:fixed; top:-9999px; left:-9999px; width:1px; height:1px; overflow:hidden }
+// .player-overlay   { position:fixed; top:48px; left:0; width:100vw; aspect-ratio:16/9; z-index:51 }
+```
+
+- `display:none` や `width:0/height:0` は iOS WKWebView で再生がブロックされるため使わない
+- オフスクリーン（`top:-9999px; 1×1px`）が iOS 安全な非表示方法
+
+### 帯域節約: 非表示時は低解像度に切替
+
+```ts
+watch(
+  () => overlay.isOpen.value,
+  (open) => {
+    setQuality(open ? 'hd720' : 'tiny')
+  },
+)
+```
+
+`setPlaybackQuality()` は `useYouTubePlayer` の `setQuality()` 経由で呼ぶ。
