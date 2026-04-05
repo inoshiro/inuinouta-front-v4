@@ -101,6 +101,7 @@ export function useSongs(options?: { perPage?: number }) {
   }
 
   return {
+    filteredSongs: filtered,
     songs,
     totalItems,
     page,
