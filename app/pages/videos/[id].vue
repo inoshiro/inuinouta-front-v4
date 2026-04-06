@@ -79,9 +79,20 @@ const videoId = route.params.id as string
 const { video, status } = useVideo(videoId)
 const queueActions = useQueueActions()
 const { songDuration } = useFormatTime()
+const { siteUrl } = useRuntimeConfig().public
 
-useHead({
-  title: computed(() => (video.value ? `${video.value.title} | inuinouta` : 'inuinouta')),
+useSeoMeta({
+  title: computed(() => video.value?.title ?? '動画詳細'),
+  ogTitle: computed(() => (video.value ? `${video.value.title} | いぬいのうた` : 'いぬいのうた')),
+  description: computed(() =>
+    video.value ? `「${video.value.title}」の歌動画・收録楽曲の一覧。` : null,
+  ),
+  ogDescription: computed(() =>
+    video.value ? `「${video.value.title}」の歌動画・收録楽曲の一覧。` : null,
+  ),
+  ogImage: computed(() => video.value?.thumbnail_path || `${siteUrl}/og-image.png`),
+  ogUrl: computed(() => (video.value ? `${siteUrl}/videos/${video.value.id}` : siteUrl)),
+  twitterImage: computed(() => video.value?.thumbnail_path || `${siteUrl}/og-image.png`),
 })
 
 /** Convert video's SongBasic[] to Song[] by injecting the video reference */

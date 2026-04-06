@@ -41,7 +41,11 @@
 </template>
 
 <script setup lang="ts">
-useHead({ title: '歌枠一覧 | inuinouta' })
+useSeoMeta({
+  title: '歌枠一覧',
+  description: '戌亥とこさんの歌動画・歌配信の一覧。',
+  ogDescription: '戌亥とこさんの歌動画・歌配信の一覧。',
+})
 
 const { videos, totalItems, page, perPage, status } = useVideos({ perPage: 30, streamOnly: true })
 </script>

@@ -169,7 +169,7 @@ onMounted(() => {
 
 const { playlist, songs, status, totalDuration, fetchSongs } = usePlaylistDetail(playlistId)
 
-useHead({ title: computed(() => `${playlist.value?.name ?? 'プレイリスト'} | inuinouta`) })
+useHead({ title: computed(() => playlist.value?.name ?? 'プレイリスト') })
 
 // Fetch songs once store is loaded
 watch(
