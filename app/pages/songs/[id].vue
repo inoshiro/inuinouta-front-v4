@@ -66,8 +66,23 @@ const songId = route.params.id as string
 const { song, status } = useSong(songId)
 const queueActions = useQueueActions()
 const { songDuration } = useFormatTime()
+const { siteUrl } = useRuntimeConfig().public
 
-useHead({
-  title: computed(() => (song.value ? `${song.value.title} | inuinouta` : 'inuinouta')),
+useSeoMeta({
+  title: computed(() => song.value?.title ?? '楽曲詳細'),
+  ogTitle: computed(() => (song.value ? `${song.value.title} | いぬいのうた` : 'いぬいのうた')),
+  description: computed(() =>
+    song.value
+      ? `「${song.value.title}」${song.value.artist ? ` / ${song.value.artist}` : ''}の詳細ページ。`
+      : null,
+  ),
+  ogDescription: computed(() =>
+    song.value
+      ? `「${song.value.title}」${song.value.artist ? ` / ${song.value.artist}` : ''}の詳細ページ。`
+      : null,
+  ),
+  ogImage: computed(() => song.value?.video.thumbnail_path || `${siteUrl}/og-image.png`),
+  ogUrl: computed(() => (song.value ? `${siteUrl}/songs/${song.value.id}` : siteUrl)),
+  twitterImage: computed(() => song.value?.video.thumbnail_path || `${siteUrl}/og-image.png`),
 })
 </script>

@@ -169,5 +169,10 @@
 </template>
 
 <script setup lang="ts">
-useHead({ title: 'サイト情報 | いぬいのうた' })
+useSeoMeta({
+  title: 'サイト情報',
+  description: 'いぬいのうたのサイト情報・技術スタック・関連リンクなど。',
+  ogTitle: 'サイト情報 | いぬいのうた',
+  ogDescription: 'いぬいのうたのサイト情報・技術スタック・関連リンクなど。',
+})
 </script>

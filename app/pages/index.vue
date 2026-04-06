@@ -70,7 +70,16 @@
 <script setup lang="ts">
 import type { Song, SongsResponse } from '~/types'
 
-useHead({ title: 'inuinouta' })
+useSeoMeta({
+  titleTemplate: '%s',
+  title: 'いぬいのうた | 戌亥とこ非公式ファンサイト',
+  ogTitle: 'いぬいのうた | 戌亥とこ非公式ファンサイト',
+  description:
+    'いぬいのうたは、にじさんじ所属のバーチャルライバーである戌亥とこさんを応援するファンサイトです。戌亥とこさんが歌った楽曲を探しやすく、再生しやすいようにまとめています。',
+  ogDescription:
+    'いぬいのうたは、にじさんじ所属のバーチャルライバーである戌亥とこさんを応援するファンサイトです。戌亥とこさんが歌った楽曲を探しやすく、再生しやすいようにまとめています。',
+  ogUrl: useRuntimeConfig().public.siteUrl,
+})
 
 const queue = useQueueStore()
 const notify = useNotifications()

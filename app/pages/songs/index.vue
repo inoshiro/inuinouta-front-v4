@@ -112,7 +112,11 @@
 <script setup lang="ts">
 import type { SongTypeFilter, VideoTypeFilter } from '~/composables/useSongs'
 
-useHead({ title: '楽曲一覧 | inuinouta' })
+useSeoMeta({
+  title: '楽曲一覧',
+  description: '戌亥とこさんが歌った楽曲一覧。タイトルやアーティストで絞り込んで検索できます。',
+  ogDescription: '戌亥とこさんが歌った楽曲一覧。タイトルやアーティストで絞り込んで検索できます。',
+})
 
 const {
   songs,

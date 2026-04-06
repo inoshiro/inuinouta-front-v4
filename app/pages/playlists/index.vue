@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-useHead({ title: 'プレイリスト | inuinouta' })
+useHead({ title: 'プレイリスト' })
 
 const playlistsStore = usePlaylistsStore()
 const { success } = useNotifications()

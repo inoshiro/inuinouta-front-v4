@@ -97,5 +97,8 @@ const {
 
 useSeoMeta({
   title: computed(() => (q.value ? `「${q.value}」の検索結果` : '検索')),
+  description: computed(() =>
+    q.value ? `「${q.value}」に関連する楽曲・動画の検索結果です。` : '楽曲・動画を検索できます。',
+  ),
 })
 </script>
