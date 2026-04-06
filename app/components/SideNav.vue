@@ -28,6 +28,7 @@ const navItems: { to: string; label: string; icon: [string, string] }[] = [
   { to: '/songs', label: '楽曲', icon: ['fas', 'music'] },
   { to: '/videos', label: '歌枠', icon: ['fas', 'video'] },
   { to: '/playlists', label: 'プレイリスト', icon: ['fas', 'list'] },
+  { to: '/discover', label: '探索', icon: ['fas', 'compass'] },
   { to: '/about', label: 'このサイトについて', icon: ['fas', 'circle-info'] },
 ]
 </script>
