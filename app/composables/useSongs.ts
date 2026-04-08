@@ -63,6 +63,18 @@ export function useSongs(options?: { perPage?: number }) {
     page.value = 1
   })
 
+  // Track filter_apply events with debounce to avoid firing during rapid changes
+  const { trackFilterApply } = useAnalytics()
+  let filterTrackTimer: ReturnType<typeof setTimeout> | null = null
+  function scheduleFilterTrack(type: string, value: string) {
+    if (!value) return
+    if (filterTrackTimer) clearTimeout(filterTrackTimer)
+    filterTrackTimer = setTimeout(() => trackFilterApply(type, value), 300)
+  }
+  watch(songType, (v) => scheduleFilterTrack('song_type', v))
+  watch(videoType, (v) => scheduleFilterTrack('video_type', v))
+  watch(selectedArtist, (v) => scheduleFilterTrack('artist', v))
+
   // Sync search from URL query ?q=
   watch(
     () => route.query.q,

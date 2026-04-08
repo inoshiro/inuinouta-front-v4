@@ -37,6 +37,7 @@
             target="_blank"
             rel="noopener noreferrer"
             class="border border-border-default px-5 py-2 text-sm text-gray-300 transition-colors hover:bg-surface-overlay hover:text-white"
+            @click="onYouTubeClick"
           >
             YouTubeで見る
             <FontAwesomeIcon :icon="['fas', 'arrow-up-right-from-square']" class="ml-1 h-3 w-3" />
@@ -121,5 +122,10 @@ function playVideoSongs() {
 
 function playSongFromVideo(index: number) {
   queueActions.playAll(songs.value, index)
+}
+
+const { trackYouTubeClick } = useAnalytics()
+function onYouTubeClick() {
+  if (video.value) trackYouTubeClick('video_detail', video.value.id)
 }
 </script>

@@ -131,8 +131,7 @@
       </div>
     </section>
 
-    <!-- Analytics (commented out: not yet implemented) -->
-    <!--
+    <!-- Analytics -->
     <section class="mb-8">
       <h2 class="mb-3 border-b border-border-default pb-2 text-base font-bold text-gray-50">
         📊 アクセス解析について
@@ -156,7 +155,6 @@
         </p>
       </div>
     </section>
-    -->
 
     <!-- Footer note -->
     <section class="border-t border-border-default pt-4">
