@@ -76,7 +76,7 @@
 const props = defineProps<{ songId: number; songTitle: string }>()
 
 const playlistsStore = usePlaylistsStore()
-const { success } = useNotifications()
+const { addSongToPlaylist, createPlaylistWithSong } = usePlaylistActions()
 const open = ref(false)
 const isCreating = ref(false)
 const newName = ref('')
@@ -93,18 +93,14 @@ function toggle() {
 }
 
 function addTo(playlistId: string) {
-  const pl = playlistsStore.getById(playlistId)
-  if (!pl) return
-  playlistsStore.addSong(playlistId, props.songId)
-  success(`「${props.songTitle}」を「${pl.name}」に追加しました`, `/playlists/${playlistId}`)
+  addSongToPlaylist(playlistId, props.songId, props.songTitle)
   open.value = false
 }
 
 function handleCreate() {
   const name = newName.value.trim()
   if (!name) return
-  const created = playlistsStore.createPlaylist(name, '', [props.songId])
-  success(`プレイリスト「${name}」を作成して追加しました`, `/playlists/${created.id}`)
+  createPlaylistWithSong(name, props.songId)
   isCreating.value = false
   newName.value = ''
   open.value = false

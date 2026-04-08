@@ -95,7 +95,7 @@
 useHead({ title: 'プレイリスト' })
 
 const playlistsStore = usePlaylistsStore()
-const { success } = useNotifications()
+const { createPlaylist } = usePlaylistActions()
 
 onMounted(() => {
   playlistsStore.loadFromStorage()
@@ -114,8 +114,7 @@ watch(isCreating, (val) => {
 function handleCreate() {
   const name = newName.value.trim()
   if (!name) return
-  const created = playlistsStore.createPlaylist(name)
-  success(`プレイリスト「${name}」を作成しました`, `/playlists/${created.id}`)
+  createPlaylist(name)
   newName.value = ''
   isCreating.value = false
 }
