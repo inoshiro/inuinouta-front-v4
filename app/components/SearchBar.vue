@@ -46,6 +46,7 @@ const inputRef = ref<HTMLInputElement | null>(null)
 
 const { query, search, submit, clear } = useSearch()
 const {
+  isSearchActive,
   isDropdownVisible,
   dropdownSongs,
   dropdownVideos,
@@ -57,9 +58,22 @@ const {
   close,
 } = useSearchDropdown(query)
 
+const emit = defineEmits<{
+  'update:searchActive': [value: boolean]
+}>()
+
+watch(
+  () => isSearchActive.value,
+  (val) => {
+    emit('update:searchActive', val)
+  },
+)
+
 function handleEnter() {
   close()
   submit()
   inputRef.value?.blur()
 }
+
+defineExpose({ close })
 </script>

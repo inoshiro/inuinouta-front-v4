@@ -9,7 +9,7 @@ export function useSearchDropdown(query: Ref<string>) {
   const isFocused = ref(false)
 
   const isDropdownVisible = computed(
-    () => import.meta.client && isFocused.value && query.value.trim().length >= 2,
+    () => import.meta.client && isFocused.value && query.value.trim().length >= 1,
   )
 
   const dropdownSongs = computed<Song[]>(() => {
@@ -63,6 +63,7 @@ export function useSearchDropdown(query: Ref<string>) {
   }
 
   return {
+    isSearchActive: isFocused,
     isDropdownVisible,
     dropdownSongs,
     dropdownVideos,
