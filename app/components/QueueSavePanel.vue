@@ -84,7 +84,7 @@ const emit = defineEmits<{ close: [] }>()
 
 const queue = useQueueStore()
 const playlistsStore = usePlaylistsStore()
-const { success } = useNotifications()
+const { createPlaylistWithSongs, addSongsToPlaylist } = usePlaylistActions()
 
 const saveMode = ref<'new' | 'existing'>('new')
 const saveName = ref('')
@@ -105,20 +105,15 @@ function handleSaveAsNew() {
   const name = saveName.value.trim()
   if (!name || queue.songs.length === 0) return
   const songIds = queue.songs.map((s) => s.id)
-  const created = playlistsStore.createPlaylist(name, '', songIds)
+  createPlaylistWithSongs(name, songIds)
   saveName.value = ''
   emit('close')
-  success(
-    `プレイリスト「${name}」を作成しました（${songIds.length}曲）`,
-    `/playlists/${created.id}`,
-  )
 }
 
 function handleAddToExisting(pl: { id: string; name: string }) {
   const songIds = queue.songs.map((s) => s.id)
-  playlistsStore.addSongs(pl.id, songIds)
+  addSongsToPlaylist(pl.id, songIds)
   emit('close')
-  success(`「${pl.name}」に${songIds.length}曲を追加しました`, `/playlists/${pl.id}`)
 }
 
 function handleCancel() {

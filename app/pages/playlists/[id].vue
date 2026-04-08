@@ -161,7 +161,7 @@ const playlistId = route.params.id as string
 
 const playlistsStore = usePlaylistsStore()
 const queueActions = useQueueActions()
-const { success } = useNotifications()
+const { renamePlaylist, removeSongFromPlaylist, deletePlaylist } = usePlaylistActions()
 
 onMounted(() => {
   playlistsStore.loadFromStorage()
@@ -210,7 +210,7 @@ function handleRemoveSong(index: number) {
   if (!pl) return
   const item = pl.items[index]
   if (!item) return
-  playlistsStore.removeSong(playlistId, item.id)
+  removeSongFromPlaylist(playlistId, item.id)
   draggableSongs.value.splice(index, 1)
 }
 
@@ -229,7 +229,7 @@ function startEdit() {
 function saveEdit() {
   const name = editName.value.trim()
   if (!name) return
-  playlistsStore.updatePlaylist(playlistId, { name })
+  renamePlaylist(playlistId, name)
   isEditing.value = false
 }
 
@@ -241,8 +241,6 @@ function cancelEdit() {
 function handleDelete() {
   if (!confirm(`「${playlist.value?.name}」を削除しますか？`)) return
   const name = playlist.value?.name ?? 'プレイリスト'
-  playlistsStore.deletePlaylist(playlistId)
-  success(`「${name}」を削除しました`)
-  navigateTo('/playlists')
+  deletePlaylist(playlistId, name)
 }
 </script>
