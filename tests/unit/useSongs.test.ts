@@ -91,6 +91,36 @@ describe('useSongs', () => {
 
       expect(songs.value).toHaveLength(0)
     })
+
+    it('ひらがなクエリでカタカナタイトルをヒットさせる', () => {
+      mockStore.allSongs = [makeSong(1, 'スイカの歌'), makeSong(2, 'ひまわり')]
+      const { songs, search } = useSongs({ perPage: 10 })
+      search.value = 'すいか'
+
+      expect(songs.value).toHaveLength(1)
+      expect(songs.value[0].title).toBe('スイカの歌')
+    })
+
+    it('カタカナクエリでひらがなタイトルをヒットさせる', () => {
+      mockStore.allSongs = [makeSong(1, 'すいかの歌'), makeSong(2, 'ひまわり')]
+      const { songs, search } = useSongs({ perPage: 10 })
+      search.value = 'スイカ'
+
+      expect(songs.value).toHaveLength(1)
+      expect(songs.value[0].title).toBe('すいかの歌')
+    })
+
+    it('ひらがなクエリでカタカナアーティスト名をヒットさせる', () => {
+      mockStore.allSongs = [
+        { ...makeSong(1, 'ある曲'), artist: 'ピアノコード' },
+        makeSong(2, '別の曲'),
+      ]
+      const { songs, search } = useSongs({ perPage: 10 })
+      search.value = 'ぴあの'
+
+      expect(songs.value).toHaveLength(1)
+      expect(songs.value[0].title).toBe('ある曲')
+    })
   })
 
   describe('ページング', () => {

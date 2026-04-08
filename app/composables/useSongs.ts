@@ -24,15 +24,15 @@ export function useSongs(options?: { perPage?: number }) {
 
   const filtered = computed<Song[]>(() => {
     const all = library.allSongs
-    const q = search.value.toLowerCase()
+    const q = normalizeSearch(search.value)
     const st = songType.value
     const vt = videoType.value
     const artist = selectedArtist.value
     return all.filter((s) => {
       const matchText =
         !q ||
-        s.title.toLowerCase().includes(q) ||
-        (s.artist != null && s.artist.toLowerCase().includes(q))
+        normalizeSearch(s.title).includes(q) ||
+        (s.artist != null && normalizeSearch(s.artist).includes(q))
       const matchSongType = st === '' || (st === 'original' ? s.is_original : !s.is_original)
       const matchVideoType = vt === '' || (vt === 'stream' ? s.video.is_stream : !s.video.is_stream)
       const matchArtist = !artist || s.artist === artist

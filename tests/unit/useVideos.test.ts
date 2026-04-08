@@ -137,6 +137,36 @@ describe('useVideos', () => {
 
       expect(videos.value).toHaveLength(0)
     })
+
+    it('ひらがなクエリでカタカナ動画タイトルをヒットさせる', () => {
+      mockStore.allVideos = [makeVideo('v1', 'ピアノメドレー'), makeVideo('v2', '歌ってみた')]
+      mockStore.allSongs = []
+      const { videos, search } = useVideos({ perPage: 10 })
+      search.value = 'ぴあの'
+
+      expect(videos.value).toHaveLength(1)
+      expect(videos.value[0].id).toBe('v1')
+    })
+
+    it('カタカナクエリでひらがな動画タイトルをヒットさせる', () => {
+      mockStore.allVideos = [makeVideo('v1', 'ぴあのめどれー'), makeVideo('v2', '歌ってみた')]
+      mockStore.allSongs = []
+      const { videos, search } = useVideos({ perPage: 10 })
+      search.value = 'ピアノ'
+
+      expect(videos.value).toHaveLength(1)
+      expect(videos.value[0].id).toBe('v1')
+    })
+
+    it('ひらがなクエリでカタカナ楽曲タイトル経由の動画をヒットさせる', () => {
+      mockStore.allVideos = [makeVideo('v1', '歌ってみた'), makeVideo('v2', '別の動画')]
+      mockStore.allSongs = [makeSong(1, 'スイカの歌', null, 'v1')]
+      const { videos, search } = useVideos({ perPage: 10 })
+      search.value = 'すいか'
+
+      expect(videos.value).toHaveLength(1)
+      expect(videos.value[0].id).toBe('v1')
+    })
   })
 
   describe('ページング', () => {
