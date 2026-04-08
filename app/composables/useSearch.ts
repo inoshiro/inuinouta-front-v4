@@ -2,6 +2,7 @@ export function useSearch() {
   const query = ref('')
   const route = useRoute()
   const router = useRouter()
+  const { trackSearch } = useAnalytics()
 
   // Sync from URL on init
   if (route.query.q) {
@@ -16,6 +17,7 @@ export function useSearch() {
 
   function submit() {
     if (!query.value.trim()) return
+    trackSearch(query.value, deriveSearchSource(route.path))
     router.push({ path: '/search', query: { q: query.value } })
   }
 
@@ -24,4 +26,11 @@ export function useSearch() {
   }
 
   return { query, search, clear, submit }
+}
+
+function deriveSearchSource(path: string): string {
+  if (path === '/search') return 'search_page'
+  if (path === '/songs') return 'songs_page'
+  if (path === '/videos' || path.startsWith('/videos/')) return 'videos_page'
+  return 'header'
 }

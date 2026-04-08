@@ -146,6 +146,7 @@
             rel="noopener noreferrer"
             class="flex flex-col items-center gap-1 text-gray-400 hover:text-white"
             title="元動画を開く（再生位置から）"
+            @click="onYouTubeClick"
           >
             <FontAwesomeIcon :icon="['fas', 'arrow-up-right-from-square']" class="h-5 w-5" />
             <span class="text-[10px]">元動画</span>
@@ -424,6 +425,12 @@ const youtubeTimestampUrl = computed(() => {
   const t = Math.floor(player.currentTime)
   return `https://www.youtube.com/watch?v=${s.video.id}&t=${t}s`
 })
+
+const { trackYouTubeClick } = useAnalytics()
+function onYouTubeClick() {
+  const s = song.value
+  if (s) trackYouTubeClick('mobile_overlay', s.video.id, s.id)
+}
 
 // --- X share URL ---
 const xShareUrl = computed(() => {

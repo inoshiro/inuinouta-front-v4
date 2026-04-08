@@ -5,6 +5,7 @@ export function useQueueActions() {
   const queue = useQueueStore()
   const { requestPlay } = useYouTubePlayer()
   const { success } = useNotifications()
+  const { trackAddToQueue, trackAddAllToQueue } = useAnalytics()
 
   /** Replace queue and play from a specific index */
   function playAll(songs: Song[], startIndex = 0) {
@@ -14,6 +15,7 @@ export function useQueueActions() {
     player.play(current)
     // Call requestPlay synchronously within the user-gesture chain.
     requestPlay(current)
+    trackAddAllToQueue(songs.length, 'play_all')
   }
 
   /** Replace queue with a single song and play it */
@@ -22,12 +24,14 @@ export function useQueueActions() {
     player.play(song)
     // Call requestPlay synchronously within the user-gesture chain.
     requestPlay(song)
+    trackAddToQueue(song, 'play_single')
   }
 
   /** Insert as next in queue */
   function playNext(song: Song) {
     queue.addSongNext(song)
     success(`「${song.title}」を次に再生します`)
+    trackAddToQueue(song, 'next')
   }
 
   /** Add to end of queue. If the queue was empty, start playback immediately. */
@@ -41,6 +45,7 @@ export function useQueueActions() {
     } else {
       success(`「${song.title}」をキューに追加しました`)
     }
+    trackAddToQueue(song, 'append')
   }
 
   /** Add multiple songs to end of queue with a single toast */
@@ -58,6 +63,7 @@ export function useQueueActions() {
     } else {
       success(`${songs.length}曲をキューに追加しました`)
     }
+    trackAddAllToQueue(songs.length, 'bulk')
   }
 
   return { playAll, playSong, playNext, addToQueue, addAllToQueue }
