@@ -8,14 +8,10 @@ export function useSearch() {
     query.value = route.query.q as string
   }
 
-  let debounceTimer: ReturnType<typeof setTimeout> | null = null
-
   function search(value: string) {
+    // Update the local ref only — the dropdown reads this directly.
+    // URL is updated only on submit (Enter).
     query.value = value
-    if (debounceTimer) clearTimeout(debounceTimer)
-    debounceTimer = setTimeout(() => {
-      router.replace({ query: { ...route.query, q: value || undefined } })
-    }, 300)
   }
 
   function submit() {
@@ -25,12 +21,6 @@ export function useSearch() {
 
   function clear() {
     query.value = ''
-    router.replace({ query: { ...route.query, q: undefined } })
-  }
-
-  function submit() {
-    if (!query.value.trim()) return
-    router.push({ path: '/search', query: { q: query.value } })
   }
 
   return { query, search, clear, submit }
