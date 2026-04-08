@@ -1,6 +1,7 @@
 <template>
   <div
-    class="fixed inset-x-0 top-14 z-30 border-b border-border-default bg-surface-raised shadow-lg lg:absolute lg:inset-x-auto lg:left-0 lg:right-0 lg:top-full lg:mt-1 lg:border"
+    class="fixed inset-x-0 top-14 z-30 max-h-[calc(100dvh-12rem)] overflow-y-auto overscroll-contain border-b border-border-default bg-surface-raised shadow-lg lg:absolute lg:inset-x-auto lg:left-0 lg:right-0 lg:top-full lg:mt-1 lg:max-h-none lg:overflow-visible lg:border"
+    @mousedown.prevent
   >
     <!-- 楽曲候補 -->
     <div v-if="hasSongs">
@@ -120,7 +121,7 @@ function handleSongClick(song: Song) {
 /** 再生ボタン: iOS user-gesture chain 内で player.play + requestPlay を同期呼び出し */
 function handlePlaySong(song: Song) {
   queueActions.playSong(song)
-  emit('close')
+  // Do not close: user may want to queue more songs after playing
 }
 
 function handleVideoClick(video: VideoList) {
