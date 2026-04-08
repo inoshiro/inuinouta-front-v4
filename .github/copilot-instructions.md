@@ -128,7 +128,10 @@ function playSong(song: Song) {
    - **Playwright は使わない**: コードレビューのみの簡易確認とし、ブラウザ起動・スクリーンショットは不要。エージェント呼び出し時に「Playwright を使わずコードベースのみで確認してください」と明示すること
 5. **レビュー依頼**: 実装完了後、commit & push の前にユーザーに変更内容を提示してレビュー・目視確認を求める
 6. **commit & push**: ユーザーの確認が取れてから作業ブランチに commit & push を行う
+   - コミット前に `git diff --stat` で staging を確認し、worktrees/ や \*.png 等の意図しないファイルが混入していないかチェックする
+   - 対象ファイルを明示的に `git add <file>...` で追加する（`git add -A` や `git add .` は使わない）
 7. **PR 作成**: push 後に PR を作成し、Issue を参照してクローズする
+8. **振り返り（任意）**: PR 作成後、`issue-retrospective` スキルを使って実装中の踏んだ罠や気づきを整理し、instructions.md / SKILL.md の改善案を出す
 
 ## API プロキシ
 
