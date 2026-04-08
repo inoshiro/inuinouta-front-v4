@@ -22,7 +22,7 @@
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
-        class="flex-1 border border-border-default bg-surface-overlay px-3 py-2 text-sm text-gray-50 focus:border-accent focus:outline-none"
+        class="flex-1 border border-border-default bg-surface-overlay px-3 py-2 text-base sm:text-sm text-gray-50 focus:border-accent focus:outline-none"
         placeholder="プレイリスト名"
         maxlength="100"
         @keydown.enter="handleCreate"

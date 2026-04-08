@@ -50,7 +50,7 @@
                 autocomplete="off"
                 autocorrect="off"
                 autocapitalize="off"
-                class="w-full border border-border-default bg-surface-overlay px-3 py-2 text-sm text-gray-50 focus:border-accent focus:outline-none"
+                class="w-full border border-border-default bg-surface-overlay px-3 py-2 text-base sm:text-sm text-gray-50 focus:border-accent focus:outline-none"
                 placeholder="名前を入力"
                 maxlength="100"
                 @keydown.enter="handleCreate"

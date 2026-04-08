@@ -41,7 +41,7 @@
         autocomplete="off"
         autocorrect="off"
         autocapitalize="off"
-        class="w-full border border-border-default bg-surface-overlay px-2 py-1.5 text-sm text-gray-50 focus:border-selected-border focus:outline-none"
+        class="w-full border border-border-default bg-surface-overlay px-2 py-1.5 text-base sm:text-sm text-gray-50 focus:border-selected-border focus:outline-none"
         placeholder="プレイリスト名"
         maxlength="100"
         @keydown.enter="handleSaveAsNew"
