@@ -17,20 +17,20 @@ export function useVideos(options?: { perPage?: number; streamOnly?: boolean }) 
       ? library.allVideos.filter((v) => v.is_stream)
       : library.allVideos
     if (!search.value) return base
-    const q = search.value.toLowerCase()
+    const q = normalizeSearch(search.value)
 
     // Collect video IDs where any contained song matches by title or artist
     const matchedByContent = new Set(
       library.allSongs
         .filter(
           (s) =>
-            s.title.toLowerCase().includes(q) ||
-            (s.artist != null && s.artist.toLowerCase().includes(q)),
+            normalizeSearch(s.title).includes(q) ||
+            (s.artist != null && normalizeSearch(s.artist).includes(q)),
         )
         .map((s) => s.video.id),
     )
 
-    return base.filter((v) => v.title.toLowerCase().includes(q) || matchedByContent.has(v.id))
+    return base.filter((v) => normalizeSearch(v.title).includes(q) || matchedByContent.has(v.id))
   })
 
   const totalItems = computed(() => filtered.value.length)
