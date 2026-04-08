@@ -1,5 +1,21 @@
 <template>
-  <div class="relative">
+  <div class="relative z-30 lg:z-auto">
+    <!-- Mobile search backdrop: covers page content behind the dropdown -->
+    <Teleport to="body">
+      <Transition
+        enter-from-class="opacity-0"
+        enter-active-class="transition-opacity duration-200"
+        leave-to-class="opacity-0"
+        leave-active-class="transition-opacity duration-150"
+      >
+        <div
+          v-if="isSearchActive"
+          class="fixed inset-0 z-20 bg-black/50 lg:hidden"
+          @click="close"
+          @touchmove.prevent
+        />
+      </Transition>
+    </Teleport>
     <FontAwesomeIcon
       :icon="['fas', 'magnifying-glass']"
       class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
