@@ -47,6 +47,31 @@ export function useSearchDropdown(query: Ref<string>) {
   const hasVideos = computed(() => dropdownVideos.value.length > 0)
   const isEmpty = computed(() => isDropdownVisible.value && !hasSongs.value && !hasVideos.value)
 
+  // Lock page scroll on mobile when search is focused to prevent background scrolling
+  watch(isFocused, (focused) => {
+    if (!import.meta.client) return
+    if (window.innerWidth >= 1024) return
+    document.body.style.overflow = focused ? 'hidden' : ''
+  })
+
+  // Release scroll lock when viewport grows to desktop width (e.g. device rotation)
+  function onWindowResize() {
+    if (window.innerWidth >= 1024 && document.body.style.overflow === 'hidden') {
+      document.body.style.overflow = ''
+    }
+  }
+
+  onMounted(() => {
+    window.addEventListener('resize', onWindowResize)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', onWindowResize)
+    if (import.meta.client) {
+      document.body.style.overflow = ''
+    }
+  })
+
   function onFocus() {
     isFocused.value = true
   }
