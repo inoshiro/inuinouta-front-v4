@@ -12,7 +12,7 @@
       autocapitalize="off"
       spellcheck="false"
       placeholder="楽曲・動画を検索…"
-      class="w-full border border-border-default bg-surface-raised py-2 pl-9 pr-8 text-sm text-gray-50 placeholder-gray-500 transition-colors focus:border-selected-border focus:outline-none"
+      class="w-full border border-border-default bg-surface-raised py-2 pl-9 pr-8 text-base sm:text-sm text-gray-50 placeholder-gray-500 transition-colors focus:border-selected-border focus:outline-none"
       @input="search(($event.target as HTMLInputElement).value)"
       @keydown.enter="handleEnter"
       @keydown.escape="close"
@@ -22,6 +22,7 @@
     <button
       v-if="query"
       class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+      @mousedown.prevent
       @click="clear"
     >
       <FontAwesomeIcon :icon="['fas', 'xmark']" class="h-4 w-4" />

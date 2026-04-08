@@ -36,7 +36,7 @@
               autocapitalize="off"
               spellcheck="false"
               placeholder="アーティスト名で絞り込む"
-              class="w-full bg-transparent text-sm text-gray-50 placeholder-gray-500 outline-none"
+              class="w-full bg-transparent text-base sm:text-sm text-gray-50 placeholder-gray-500 outline-none"
             />
           </div>
 
