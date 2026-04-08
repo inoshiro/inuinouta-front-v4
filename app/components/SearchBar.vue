@@ -22,6 +22,7 @@
     <button
       v-if="query"
       class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+      @mousedown.prevent
       @click="clear"
     >
       <FontAwesomeIcon :icon="['fas', 'xmark']" class="h-4 w-4" />
