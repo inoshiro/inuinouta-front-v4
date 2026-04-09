@@ -35,6 +35,13 @@ export interface Song extends SongBasic {
   video: VideoBasic
 }
 
+// --- Play History ---
+
+export interface PlayEvent {
+  songId: number
+  playedAt: number // Unix timestamp (ms)
+}
+
 // --- Playlist (API) ---
 
 export interface PlaylistItem {
