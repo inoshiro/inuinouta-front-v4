@@ -1,5 +1,23 @@
 <template>
   <div class="space-y-10">
+    <!-- Frequently played (client-only: reads localStorage, hidden when history is empty) -->
+    <ClientOnly>
+      <section v-if="frequentSongs.length">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="text-lg font-bold">最近よく聞く曲</h2>
+          <button
+            class="text-sm text-gray-400 transition-colors hover:text-selected-text"
+            @click="addAllToQueue(frequentSongs, '最近よく聞く曲')"
+          >
+            キューに追加
+          </button>
+        </div>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <SongCard v-for="song in frequentSongs" :key="song.id" :song="song" />
+        </div>
+      </section>
+    </ClientOnly>
+
     <!-- Random picks -->
     <section>
       <div class="mb-4 flex items-center justify-between">
@@ -93,6 +111,12 @@ function addAllToQueue(songs: Song[], label: string) {
 }
 
 const { songs: randomSongs, status: randomStatus, refresh: randomRefresh } = useRandomSongs(10)
+
+const frequentSongs = ref<Song[]>([])
+onMounted(() => {
+  const { getFrequentlyPlayed } = usePlayHistory()
+  frequentSongs.value = getFrequentlyPlayed()
+})
 
 const { useApiFetch } = useApi()
 const { data: recentResponse, status: recentStatus } = await useApiFetch<SongsResponse>(
