@@ -17,9 +17,7 @@ function calcThreshold(song: Song): number {
 }
 
 export default defineNuxtPlugin(() => {
-  const { loadedVideoId } = useYouTubePlayer()
   const player = usePlayerStore()
-  const queue = useQueueStore()
   const { recordPlay } = usePlayHistory()
 
   let prevSong: Song | null = null
@@ -30,14 +28,16 @@ export default defineNuxtPlugin(() => {
     if (player.isPlaying) accSeconds++
   }, 1000)
 
-  // When the video changes, flush the previous song's accumulated time and
-  // start tracking the new song. This fires for both manual plays and
-  // auto-advance to the next song.
-  watch(loadedVideoId, () => {
-    if (prevSong && accSeconds >= calcThreshold(prevSong)) {
-      recordPlay(prevSong)
-    }
-    prevSong = queue.currentSong ?? null
-    accSeconds = 0
-  })
+  // Watch currentSong ID instead of loadedVideoId so that consecutive songs
+  // from the same video (same videoId, different start_at) are each tracked.
+  watch(
+    () => player.currentSong?.id,
+    () => {
+      if (prevSong && accSeconds >= calcThreshold(prevSong)) {
+        recordPlay(prevSong)
+      }
+      prevSong = player.currentSong ?? null
+      accSeconds = 0
+    },
+  )
 })
