@@ -53,13 +53,16 @@ export function useYouTubePlayer() {
     await loadApi()
     const origin = window.location.origin
     ytPlayer = new window.YT.Player(elementId, {
-      height: '1',
-      width: '1',
+      height: '360',
+      width: '640',
       playerVars: {
         autoplay: 0,
-        controls: 0,
-        disablekb: 1,
-        fs: 0,
+        // Enable native controls so that the YouTube UI is accessible when the
+        // player is visible (mobile overlay). playerVars cannot be changed after
+        // init, so we always set controls=1; the player is offscreen when the
+        // overlay is closed, making the controls functionally unavailable then.
+        controls: 1,
+        fs: 1,
         rel: 0,
         // Required for inline playback on iOS (prevents fullscreen takeover).
         playsinline: 1,
