@@ -3,7 +3,7 @@
   <aside class="hidden w-56 flex-col border-r border-border-default bg-surface-base lg:flex">
     <!-- Logo -->
     <div class="flex h-14 items-center border-b border-border-default px-4">
-      <NuxtLink to="/" class="text-lg font-bold tracking-tight">inuinouta</NuxtLink>
+      <NuxtLink to="/" class="text-lg font-bold tracking-tight">いぬいのうた</NuxtLink>
     </div>
 
     <!-- Nav links -->

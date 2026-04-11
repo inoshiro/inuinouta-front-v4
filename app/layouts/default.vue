@@ -13,7 +13,7 @@
 
       <!-- Title + spacer: hidden while search is active -->
       <template v-if="!isSearchActive">
-        <NuxtLink to="/" class="shrink-0 text-lg font-bold">inuinouta</NuxtLink>
+        <NuxtLink to="/" class="shrink-0 text-lg font-bold">いぬいのうた</NuxtLink>
         <div class="flex-1" />
       </template>
 
