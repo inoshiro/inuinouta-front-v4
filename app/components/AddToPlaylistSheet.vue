@@ -12,6 +12,7 @@
       <div
         v-if="open"
         class="fixed inset-x-0 bottom-0 z-60 flex max-h-[60vh] flex-col border-t border-border-default bg-surface-raised lg:hidden"
+        @click.stop
       >
         <!-- Header -->
         <div class="flex items-center justify-between px-4 py-3">

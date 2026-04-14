@@ -8,9 +8,10 @@
       <FontAwesomeIcon :icon="['fas', 'bookmark']" class="h-4 w-4" />
     </button>
 
+    <!-- Desktop dropdown panel (hidden on mobile) -->
     <div
       v-if="open"
-      class="absolute top-full right-0 z-50 mt-1 w-52 border border-border-default bg-surface-raised shadow-lg"
+      class="absolute top-full right-0 z-50 mt-1 w-52 border border-border-default bg-surface-raised shadow-lg hidden lg:block"
       @click.stop
     >
       <!-- Create mode: inline name input -->
@@ -69,6 +70,14 @@
         </div>
       </template>
     </div>
+
+    <!-- Mobile bottom sheet (hidden on desktop via lg:hidden inside AddToPlaylistSheet) -->
+    <AddToPlaylistSheet
+      :open="open"
+      :song-id="songId"
+      :song-title="songTitle"
+      @close="open = false"
+    />
   </div>
 </template>
 
