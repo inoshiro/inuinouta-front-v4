@@ -92,7 +92,7 @@ mcp_playwright_browser_snapshot()
 
 - 最低でも 1 つは主要 CTA または主要導線を操作し、操作前後の状態を確認する
 - overlay / drawer / modal がある場合は、開閉後のスクリーンショットを残す
-- モバイル幅で CTA が隠れる、テキストが切れる、固定要素が操作を邪魔する場合は fail 寄りの finding として扱う
+- モバイル幅で CTA が隠れる、テキストが切れる、固定要素が操作を邪魔する場合は Fail 寄りの finding として扱う
 
 ## Step 6: 片付け
 
