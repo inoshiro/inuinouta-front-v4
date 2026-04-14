@@ -1,10 +1,10 @@
 <template>
-  <!-- Toast container: fixed top-right, above all panels.
-       To swap the rendering to a library, replace this component only. -->
+  <!-- Toast container: bottom-center on mobile (above PlayerBar + MobileBottomNav),
+       top-right on desktop. To swap the rendering to a library, replace this component only. -->
   <Teleport to="body">
     <div
       v-if="store.items.length > 0"
-      class="fixed right-4 top-16 z-200 flex w-80 flex-col gap-2 lg:top-4"
+      class="fixed bottom-[calc(env(safe-area-inset-bottom)+8rem)] left-1/2 z-200 flex w-[calc(100vw-2rem)] max-w-xs -translate-x-1/2 flex-col gap-2 lg:bottom-auto lg:left-auto lg:right-4 lg:top-4 lg:w-80 lg:translate-x-0"
       role="status"
       aria-live="polite"
       aria-atomic="false"
@@ -47,7 +47,7 @@
 
           <!-- Dismiss -->
           <button
-            class="ml-auto shrink-0 p-1 text-gray-400 hover:text-white"
+            class="ml-auto shrink-0 p-2 text-gray-400 hover:text-white"
             aria-label="閉じる"
             @click="store.dismiss(item.id)"
           >
@@ -68,17 +68,23 @@ const store = useNotificationsStore()
 .toast-leave-active {
   transition:
     opacity 0.2s ease,
-    transform 0.2s ease;
+    translate 0.2s ease;
 }
 .toast-move {
   transition: transform 0.2s ease;
 }
-.toast-enter-from {
-  opacity: 0;
-  transform: translateX(1rem);
-}
+/* Mobile default: slide up from below */
+.toast-enter-from,
 .toast-leave-to {
   opacity: 0;
-  transform: translateX(1rem);
+  translate: 0 1rem;
+}
+/* Desktop: slide in from the right */
+@media (min-width: 1024px) {
+  .toast-enter-from,
+  .toast-leave-to {
+    opacity: 0;
+    translate: 1rem 0;
+  }
 }
 </style>
