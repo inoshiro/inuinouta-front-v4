@@ -5,6 +5,12 @@
 YouTube の歌動画を管理・再生する Web アプリケーションのフロントエンド。
 バックエンドは Django REST Framework + dynamic-rest による API サーバー（別リポジトリ `inuinouta`）。
 
+## このファイルの役割
+
+- このファイルには、常時読む価値が高い横断ルールだけを書く
+- ファイル種別ごとの詳細ルールは `.github/instructions/*.md` を正本として参照する
+- API / composable / testing / Vue の細かな実装規約は、対象ファイルに応じた instructions 側を優先する
+
 ## 技術スタック
 
 - **フレームワーク**: Nuxt 4 + Vue 3
@@ -122,10 +128,17 @@ function playSong(song: Song) {
    - 例: `feature/issue-5-data-loading`
    - 実装はすべて作業ブランチ上で行い、`main` へは直接 commit しない
 3. **実装**: 作業ブランチ上で実装する
-4. **UI プレビュー確認（UI 影響がある場合）**: コンポーネントや画面レイアウトに変更を加えた場合は、実装後に **UX Review エージェント** を呼び出し、簡単なアドバイスを求める
-   - 対象の目安: Vue コンポーネント（`.vue`）の変更、CSS / Tailwind クラスの追加・変更、レイアウト構造・表示ロジックの変更
-   - 求めるアドバイスの例: 色・スペーシングの整合性、アフォーダンスの明確さ、デザイン原則との整合
-   - **Playwright は使わない**: コードレビューのみの簡易確認とし、ブラウザ起動・スクリーンショットは不要。エージェント呼び出し時に「Playwright を使わずコードベースのみで確認してください」と明示すること
+4. **UI プレビュー確認（重めの UI 変更のみ）**: 以下のいずれかに該当する「重めの UI 変更」を含む場合、**UX Review エージェント** を read-only の並走役として起動し、Playwright による最小限の画面確認を行わせる
+   - **対象となる変更（重めの UI 変更）**:
+     - レイアウト構造が変わる変更（ページ構成、ヘッダー、サイドバー、PlayerBar、QueueDrawer など）
+     - 表示状態の切り替えが増える変更（modal、drawer、bottom sheet、tab、accordion、filter panel の追加・再設計）
+     - レスポンシブ挙動に影響する変更（モバイル/デスクトップの見せ方、固定要素、スクロール挙動）
+     - 主要導線に触る変更（再生、キュー追加、保存、検索、絞り込み、遷移の入り口）
+   - **対象外**: 文言変更、色や余白の微調整、アイコン差し替え、単一コンポーネント内の軽微な Tailwind 修正
+   - **起動タイミング**: 画面の最低限の表示が成立し、主要導線が 1 本つながった段階で起動する
+   - **UX Review Agent の役割**: read-only。コード修正は行わず findings の提示のみ担当する
+   - **確認優先項目**: 初期表示、モバイル幅/デスクトップ幅での崩れ、主要 CTA、overlay / drawer / modal の開閉、固定要素とスクロールの干渉、テキストのはみ出し
+   - **最終判断**: Playwright 確認は補助であり、E2E の完全性保証や最終 UX 判定の代替ではない。最終判断は人間の目視レビュー（手順 5）で行う
 5. **レビュー依頼**: 実装完了後、commit & push の前にユーザーに変更内容を提示してレビュー・目視確認を求める
 6. **commit & push**: ユーザーの確認が取れてから作業ブランチに commit & push を行う
    - コミット前に `git diff --stat` で staging を確認し、worktrees/ や \*.png 等の意図しないファイルが混入していないかチェックする
@@ -133,43 +146,9 @@ function playSong(song: Song) {
 7. **PR 作成**: push 後に PR を作成し、Issue を参照してクローズする
 8. **振り返り（任意）**: PR 作成後、`issue-retrospective` スキルを使って実装中の踏んだ罠や気づきを整理し、instructions.md / SKILL.md の改善案を出す
 
-## API プロキシ
+## 詳細ルールへの入口
 
-- Nuxt サーバー側で `/api/*` へのリクエストを `runtimeConfig.apiBaseUrl` に設定された Django API にプロキシ
-- `server/api/[...].ts` で `proxyRequest` を使用
-- フロントエンドからの API 呼び出しは `/api/` パスに対して行う
-
-## バックエンド API 仕様（Django REST Framework + dynamic-rest）
-
-### 主要エンドポイント（参考）
-
-| メソッド       | パス                   | 説明                                 |
-| -------------- | ---------------------- | ------------------------------------ |
-| GET            | `/api/videos/`         | 動画一覧（公開・非メンバー限定のみ） |
-| GET            | `/api/videos/{id}/`    | 動画詳細（songs 埋め込み）           |
-| GET            | `/api/songs/`          | 楽曲一覧                             |
-| GET            | `/api/songs/{id}/`     | 楽曲詳細（video 埋め込み）           |
-| GET            | `/api/random/`         | ランダム楽曲                         |
-| GET/POST       | `/api/playlists/`      | プレイリスト一覧・作成               |
-| GET/PUT/DELETE | `/api/playlists/{id}/` | プレイリスト詳細・更新・削除         |
-
-### レスポンス形式（dynamic-rest）
-
-レスポンスはリソース名をキーとしたオブジェクト:
-
-```json
-{ "songs": [...], "meta": { "page": 1, "per_page": 20, "total_results": 100, "total_pages": 5 } }
-{ "song": { ... } }
-```
-
-### 主要な型定義（`app/types/index.ts`）
-
-- `VideoBasic` / `VideoList` / `VideoDetail` — 動画
-- `SongBasic` / `Song` — 楽曲（Song は video を埋め込み）
-- `Playlist` / `PlaylistItem` — プレイリスト
-- `SongsResponse` / `VideosResponse` 等 — API レスポンスラッパー（`meta` でページネーション）
-
-### クエリパラメータ
-
-- ページネーション: `?page=1&per_page=20`
-- dynamic-rest のフィールド選択: `?include[]=field_name`
+- API まわり: `.github/instructions/api.instructions.md`
+- composable まわり: `.github/instructions/composables.instructions.md`
+- Vue / UI 実装: `.github/instructions/vue.instructions.md`
+- テスト: `.github/instructions/testing.instructions.md`
