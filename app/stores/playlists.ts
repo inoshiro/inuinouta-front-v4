@@ -1,10 +1,39 @@
 import type { LocalPlaylist, LocalPlaylistItem } from '~/types'
 
 const STORAGE_KEY = 'local_playlists'
+export const FAVORITES_PLAYLIST_ID = 'favorites'
+
+function buildFavoritesPlaylist(): LocalPlaylist {
+  const now = new Date().toISOString()
+  return {
+    id: FAVORITES_PLAYLIST_ID,
+    name: 'お気に入り',
+    description: '',
+    items: [],
+    created_at: now,
+    updated_at: now,
+    kind: 'favorites',
+  }
+}
 
 export const usePlaylistsStore = defineStore('playlists', () => {
   const playlists = ref<LocalPlaylist[]>([])
   const loaded = ref(false)
+
+  /** Ensure the favorites playlist always exists at the front */
+  function ensureFavoritesPlaylist() {
+    const exists = playlists.value.some((p) => p.id === FAVORITES_PLAYLIST_ID)
+    if (!exists) {
+      playlists.value.unshift(buildFavoritesPlaylist())
+    } else {
+      // Move favorites to front if it isn't already
+      const idx = playlists.value.findIndex((p) => p.id === FAVORITES_PLAYLIST_ID)
+      if (idx > 0) {
+        const [fav] = playlists.value.splice(idx, 1)
+        playlists.value.unshift(fav!)
+      }
+    }
+  }
 
   function loadFromStorage() {
     if (loaded.value) return
@@ -16,6 +45,7 @@ export const usePlaylistsStore = defineStore('playlists', () => {
     } catch {
       playlists.value = []
     }
+    ensureFavoritesPlaylist()
     loaded.value = true
   }
 
@@ -54,6 +84,7 @@ export const usePlaylistsStore = defineStore('playlists', () => {
   function updatePlaylist(id: string, data: { name?: string; description?: string }) {
     const playlist = getById(id)
     if (!playlist) return
+    if (playlist.kind === 'favorites') return // system playlist: no-op
     if (data.name !== undefined) playlist.name = data.name
     if (data.description !== undefined) playlist.description = data.description
     playlist.updated_at = new Date().toISOString()
@@ -63,6 +94,7 @@ export const usePlaylistsStore = defineStore('playlists', () => {
   function deletePlaylist(id: string) {
     const index = playlists.value.findIndex((p) => p.id === id)
     if (index === -1) return
+    if (playlists.value[index]?.kind === 'favorites') return // system playlist: no-op
     playlists.value.splice(index, 1)
     saveToStorage()
   }
@@ -119,6 +151,48 @@ export const usePlaylistsStore = defineStore('playlists', () => {
     saveToStorage()
   }
 
+  // --- Favorites helpers ---
+
+  function isFavorite(songId: number): boolean {
+    const fav = getById(FAVORITES_PLAYLIST_ID)
+    return fav?.items.some((item) => item.song_id === songId) ?? false
+  }
+
+  function addFavorite(songId: number) {
+    ensureFavoritesPlaylist()
+    const fav = getById(FAVORITES_PLAYLIST_ID)
+    if (!fav) return
+    if (fav.items.some((item) => item.song_id === songId)) return // no duplicates
+    fav.items.push({
+      id: crypto.randomUUID(),
+      song_id: songId,
+      order: fav.items.length,
+    })
+    fav.updated_at = new Date().toISOString()
+    saveToStorage()
+  }
+
+  function removeFavorite(songId: number) {
+    const fav = getById(FAVORITES_PLAYLIST_ID)
+    if (!fav) return
+    const idx = fav.items.findIndex((item) => item.song_id === songId)
+    if (idx === -1) return
+    fav.items.splice(idx, 1)
+    fav.items.forEach((item, i) => {
+      item.order = i
+    })
+    fav.updated_at = new Date().toISOString()
+    saveToStorage()
+  }
+
+  function toggleFavorite(songId: number) {
+    if (isFavorite(songId)) {
+      removeFavorite(songId)
+    } else {
+      addFavorite(songId)
+    }
+  }
+
   return {
     playlists: readonly(playlists),
     loaded: readonly(loaded),
@@ -131,5 +205,9 @@ export const usePlaylistsStore = defineStore('playlists', () => {
     addSongs,
     removeSong,
     reorderItems,
+    isFavorite,
+    addFavorite,
+    removeFavorite,
+    toggleFavorite,
   }
 })

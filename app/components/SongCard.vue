@@ -27,9 +27,18 @@
     </div>
 
     <!-- Info -->
-    <div class="p-3">
-      <p class="truncate text-sm font-medium" :title="song.title">{{ song.title }}</p>
-      <p class="mt-0.5 truncate text-xs text-gray-400">{{ song.artist ?? '不明' }}</p>
+    <div class="flex items-start gap-1 p-3">
+      <div class="min-w-0 flex-1">
+        <p class="truncate text-sm font-medium" :title="song.title">{{ song.title }}</p>
+        <p class="mt-0.5 truncate text-xs text-gray-400">{{ song.artist ?? '不明' }}</p>
+      </div>
+      <FavoriteToggleButton
+        :song-id="song.id"
+        :song-title="song.title"
+        size="sm"
+        class="shrink-0 transition-opacity"
+        :class="isFavoriteSong ? '' : 'sm:opacity-0 sm:group-hover:opacity-100'"
+      />
     </div>
   </div>
 </template>
@@ -42,7 +51,10 @@ const queueActions = useQueueActions()
 const { songDuration } = useFormatTime()
 const player = usePlayerStore()
 
+const playlistsStore = usePlaylistsStore()
+
 const isCurrentlyPlaying = computed(
   () => player.currentSong?.id === props.song.id && player.isPlaying,
 )
+const isFavoriteSong = computed(() => playlistsStore.isFavorite(props.song.id))
 </script>

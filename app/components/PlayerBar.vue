@@ -89,7 +89,7 @@
           class="h-12 w-12 shrink-0 object-cover transition-shadow duration-500 ease-out"
           :style="player.isPlaying ? 'box-shadow: 0 0 8px var(--color-playing-glow)' : ''"
         />
-        <div class="min-w-0">
+        <div class="min-w-0 flex-1">
           <NuxtLink
             :to="`/songs/${player.currentSong.id}`"
             class="block truncate text-sm font-medium hover:text-selected-text"
@@ -98,6 +98,12 @@
           </NuxtLink>
           <p class="truncate text-xs text-gray-400">{{ player.currentSong.artist }}</p>
         </div>
+        <FavoriteToggleButton
+          :song-id="player.currentSong.id"
+          :song-title="player.currentSong.title"
+          size="sm"
+          class="shrink-0"
+        />
       </div>
 
       <!-- Playback controls -->

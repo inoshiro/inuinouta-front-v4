@@ -130,6 +130,25 @@
 
         <!-- Sub-actions row -->
         <div class="flex items-center justify-around border-t border-border-default px-6 py-2">
+          <!-- Favorite toggle -->
+          <button
+            class="flex flex-col items-center gap-1 transition-colors"
+            :class="
+              playlistsStore.isFavorite(song.id)
+                ? 'text-selected-text'
+                : 'text-gray-400 hover:text-white'
+            "
+            :aria-pressed="playlistsStore.isFavorite(song.id)"
+            :title="playlistsStore.isFavorite(song.id) ? 'お気に入りから削除' : 'お気に入りに追加'"
+            @click="toggleFavoriteSong(song.id, song.title)"
+          >
+            <FontAwesomeIcon
+              :icon="playlistsStore.isFavorite(song.id) ? ['fas', 'star'] : ['far', 'star']"
+              class="h-5 w-5"
+            />
+            <span class="text-[10px]">お気に入り</span>
+          </button>
+
           <!-- Add to playlist -->
           <button
             class="flex flex-col items-center gap-1 text-gray-400 hover:text-white"
@@ -326,6 +345,8 @@ const player = usePlayerStore()
 const queue = useQueueStore()
 const overlay = useMobileNowPlayingOverlay()
 const { success } = useNotifications()
+const playlistsStore = usePlaylistsStore()
+const { toggleFavoriteSong } = usePlaylistActions()
 
 function handleShuffle() {
   queue.shuffleQueue()

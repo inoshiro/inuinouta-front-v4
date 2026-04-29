@@ -1,4 +1,5 @@
 import type { LocalPlaylist } from '~/types'
+import { FAVORITES_PLAYLIST_ID } from '~/stores/playlists'
 
 export function usePlaylistActions() {
   const playlistsStore = usePlaylistsStore()
@@ -72,6 +73,20 @@ export function usePlaylistActions() {
     trackPlaylistAction('delete', { id: playlistId, name: playlistName })
   }
 
+  /** Toggle favorite status for a song */
+  function toggleFavoriteSong(songId: number, songTitle: string) {
+    const wasFavorite = playlistsStore.isFavorite(songId)
+    playlistsStore.toggleFavorite(songId)
+    const fav = playlistsStore.getById(FAVORITES_PLAYLIST_ID)
+    if (wasFavorite) {
+      success(`「${songTitle}」をお気に入りから削除しました`)
+      if (fav) trackPlaylistAction('remove_favorite', fav, { song_id: songId })
+    } else {
+      success(`「${songTitle}」をお気に入りに追加しました`, `/playlists/${FAVORITES_PLAYLIST_ID}`)
+      if (fav) trackPlaylistAction('add_favorite', fav, { song_id: songId })
+    }
+  }
+
   return {
     addSongToPlaylist,
     createPlaylistWithSong,
@@ -81,5 +96,6 @@ export function usePlaylistActions() {
     renamePlaylist,
     removeSongFromPlaylist,
     deletePlaylist,
+    toggleFavoriteSong,
   }
 }

@@ -37,6 +37,7 @@
           >
             キューに追加
           </button>
+          <FavoriteToggleButton :song-id="song.id" :song-title="song.title" size="md" />
         </div>
       </div>
     </div>
