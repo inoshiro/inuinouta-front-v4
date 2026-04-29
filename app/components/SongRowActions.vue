@@ -13,7 +13,7 @@
     >
       <AddToPlaylistDropdown :song-id="song.id" :song-title="song.title" />
       <button
-        class="p-1 text-gray-400 hover:text-white"
+        class="hidden p-1 text-gray-400 hover:text-white sm:block"
         title="次に再生"
         @click.stop="queueActions.playNext(song)"
       >
