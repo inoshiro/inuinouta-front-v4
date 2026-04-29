@@ -1,42 +1,30 @@
-import type { Song, SongsResponse } from '~/types'
+import type { Song } from '~/types'
 
 export function usePlaylistDetail(playlistId: string) {
   const playlistsStore = usePlaylistsStore()
-  const { $api } = useApi()
-
-  const songs = ref<Song[]>([])
-  const status = ref<'idle' | 'pending' | 'ready' | 'error'>('idle')
+  const library = useLibraryStore()
 
   const playlist = computed(() => playlistsStore.getById(playlistId))
 
-  async function fetchSongs() {
+  // Ensure library songs are available (no-op when already loaded or loading).
+  void callOnce('library-songs', () => library.fetchSongs())
+
+  const status = computed<'idle' | 'pending' | 'ready' | 'error'>(() => {
+    if (!playlistsStore.loaded) return 'pending'
     const pl = playlist.value
-    if (!pl || pl.items.length === 0) {
-      songs.value = []
-      status.value = 'ready'
-      return
-    }
+    // Empty playlist does not need library songs
+    if (!pl || pl.items.length === 0) return 'ready'
+    if (library.songsStatus === 'idle' || library.songsStatus === 'pending') return 'pending'
+    if (library.songsStatus === 'error') return 'error'
+    return 'ready'
+  })
 
-    status.value = 'pending'
-    try {
-      const songIds = pl.items.map((item) => item.song_id)
-      const params = new URLSearchParams()
-      songIds.forEach((id) => params.append('filter{id.in}', String(id)))
-      params.set('per_page', String(songIds.length))
-
-      const res = await $api<SongsResponse>(`/api/songs/?${params.toString()}`)
-      const fetchedSongs = res.songs
-
-      // Sort by playlist item order
-      songs.value = pl.items
-        .map((item) => fetchedSongs.find((s) => s.id === item.song_id))
-        .filter((s): s is Song => s !== undefined)
-
-      status.value = 'ready'
-    } catch {
-      status.value = 'error'
-    }
-  }
+  const songs = computed<Song[]>(() => {
+    const pl = playlist.value
+    if (!pl || library.songsStatus !== 'ready') return []
+    const map = new Map<number, Song>(library.allSongs.map((s) => [s.id, s]))
+    return pl.items.map((item) => map.get(item.song_id)).filter((s): s is Song => s !== undefined)
+  })
 
   const totalDuration = computed(() => {
     const totalSeconds = songs.value.reduce((sum, song) => {
@@ -53,6 +41,5 @@ export function usePlaylistDetail(playlistId: string) {
     songs: readonly(songs),
     status: readonly(status),
     totalDuration,
-    fetchSongs,
   }
 }
