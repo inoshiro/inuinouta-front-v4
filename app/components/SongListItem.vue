@@ -51,13 +51,22 @@
     </span>
 
     <!-- Actions -->
+    <!-- Favorite button: always visible for favorites, hover-only for non-favorites -->
+    <FavoriteToggleButton
+      v-if="showFavorite"
+      :song-id="song.id"
+      :song-title="song.title"
+      size="sm"
+      class="shrink-0 transition-opacity"
+      :class="isFavoriteSong ? '' : 'sm:opacity-0 sm:group-hover:opacity-100'"
+    />
     <div
       class="flex shrink-0 gap-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:[&:has(.dropdown-open)]:opacity-100"
     >
       <slot name="extra-actions" />
       <AddToPlaylistDropdown v-if="showAddToPlaylist" :song-id="song.id" :song-title="song.title" />
       <button
-        class="p-1 text-gray-400 hover:text-white"
+        class="hidden p-1 text-gray-400 hover:text-white sm:block"
         title="次に再生"
         @click.stop="queueActions.playNext(song)"
       >
@@ -83,13 +92,16 @@ const props = withDefaults(
     index: number
     showIndex?: boolean
     showAddToPlaylist?: boolean
+    showFavorite?: boolean
   }>(),
-  { showIndex: true, showAddToPlaylist: true },
+  { showIndex: true, showAddToPlaylist: true, showFavorite: true },
 )
 
 const player = usePlayerStore()
+const playlistsStore = usePlaylistsStore()
 const queueActions = useQueueActions()
 const { songDuration } = useFormatTime()
 
 const isActive = computed(() => player.currentSong?.id === props.song.id)
+const isFavoriteSong = computed(() => playlistsStore.isFavorite(props.song.id))
 </script>

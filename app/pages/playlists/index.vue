@@ -48,8 +48,12 @@
         :to="`/playlists/${pl.id}`"
         class="group flex items-center gap-4 border-b border-border-default px-3 py-3 transition-colors hover:bg-surface-overlay"
       >
-        <!-- List icon -->
-        <FontAwesomeIcon :icon="['fas', 'list']" class="h-5 w-5 shrink-0 text-gray-500" />
+        <!-- Icon: favorites uses star, others use list -->
+        <FontAwesomeIcon
+          :icon="pl.kind === 'favorites' ? ['fas', 'star'] : ['fas', 'list']"
+          class="h-5 w-5 shrink-0"
+          :class="pl.kind === 'favorites' ? 'text-selected-text' : 'text-gray-500'"
+        />
 
         <!-- Info -->
         <div class="min-w-0 flex-1">

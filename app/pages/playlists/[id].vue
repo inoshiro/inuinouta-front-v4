@@ -55,7 +55,7 @@
               {{ playlist.description }}
             </p>
           </div>
-          <div class="flex shrink-0 gap-2">
+          <div v-if="playlist.kind !== 'favorites'" class="flex shrink-0 gap-2">
             <button class="px-2 py-1 text-xs text-gray-400 hover:text-white" @click="startEdit">
               編集
             </button>
@@ -128,11 +128,14 @@
                 :index="index"
                 :show-index="false"
                 :show-add-to-playlist="false"
+                :show-favorite="false"
               >
                 <template #extra-actions>
                   <button
                     class="p-1 text-red-400/60 hover:text-red-400"
-                    title="プレイリストから削除"
+                    :title="
+                      playlist.kind === 'favorites' ? 'お気に入りから削除' : 'プレイリストから削除'
+                    "
                     @click.stop="handleRemoveSong(index)"
                   >
                     <FontAwesomeIcon :icon="['fas', 'trash']" class="h-4 w-4" />

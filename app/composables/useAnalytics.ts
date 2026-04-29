@@ -8,6 +8,8 @@ export type PlaylistAction =
   | 'rename'
   | 'remove_song'
   | 'delete'
+  | 'add_favorite'
+  | 'remove_favorite'
 export type YouTubeClickSource = 'video_detail' | 'mobile_overlay'
 
 export function useAnalytics() {

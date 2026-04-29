@@ -37,6 +37,7 @@ import {
   faArrowLeft,
 } from '@fortawesome/free-solid-svg-icons'
 import { faYoutube, faXTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons'
 
 // Prevent double CSS loading — managed via nuxt.config.ts css[]
 config.autoAddCss = false
@@ -76,6 +77,8 @@ library.add(
   faArrowUpRightFromSquare,
   faGear,
   faArrowLeft,
+  // Regular
+  faStarRegular,
   // Brands
   faYoutube,
   faXTwitter,

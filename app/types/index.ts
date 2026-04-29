@@ -67,12 +67,13 @@ export interface LocalPlaylistItem {
 }
 
 export interface LocalPlaylist {
-  id: string // UUID
+  id: string // UUID or 'favorites'
   name: string
   description: string
   items: LocalPlaylistItem[]
   created_at: string // ISO 8601
   updated_at: string // ISO 8601
+  kind?: 'user' | 'favorites' // undefined means 'user' for backward compat
 }
 
 // --- API Response Wrappers (dynamic-rest format) ---
