@@ -145,6 +145,8 @@
             </div>
           </div>
         </VueDraggableNext>
+        <!-- Sentinel for lazy load -->
+        <div v-if="hasMore" ref="sentinelEl" class="h-4" aria-hidden="true" />
       </ClientOnly>
 
       <!-- Empty playlist -->
@@ -170,29 +172,46 @@ onMounted(() => {
   playlistsStore.loadFromStorage()
 })
 
-const { playlist, songs, status, totalDuration, fetchSongs } = usePlaylistDetail(playlistId)
+const { playlist, songs, status, totalDuration } = usePlaylistDetail(playlistId)
 
 useHead({ title: computed(() => playlist.value?.name ?? 'プレイリスト') })
 
-// Fetch songs once store is loaded
-watch(
-  () => playlistsStore.loaded,
-  (isLoaded) => {
-    if (isLoaded) fetchSongs()
-  },
-  { immediate: true },
-)
+const { visibleSongs, hasMore, loadMore } = useVirtualizedQueue(() => songs.value)
 
-// Draggable songs mirror
+// Draggable songs mirror (visible chunk only)
 const draggableSongs = ref<Song[]>([])
 
 watch(
-  songs,
+  visibleSongs,
   (newSongs) => {
     draggableSongs.value = [...newSongs]
   },
   { immediate: true },
 )
+
+// IntersectionObserver sentinel to trigger lazy load
+const sentinelEl = ref<HTMLElement | null>(null)
+let observer: IntersectionObserver | null = null
+
+onMounted(() => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0]?.isIntersecting) loadMore()
+    },
+    { threshold: 0 },
+  )
+  if (sentinelEl.value) observer.observe(sentinelEl.value)
+})
+
+watch(sentinelEl, (el, prevEl) => {
+  if (prevEl) observer?.unobserve(prevEl)
+  if (el) observer?.observe(el)
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
+  observer = null
+})
 
 function handleDragEnd(event: { oldIndex: number; newIndex: number }) {
   // vue-draggable-next has already updated draggableSongs via v-model; just persist to store
