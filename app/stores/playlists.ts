@@ -51,7 +51,11 @@ export const usePlaylistsStore = defineStore('playlists', () => {
 
   function saveToStorage() {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(playlists.value))
+      const data = playlists.value.map((pl) => ({
+        ...pl,
+        items: pl.items.map((item, i) => ({ ...item, order: i })),
+      }))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
     } catch {
       // Ignore storage errors (quota exceeded, private mode)
     }
@@ -131,9 +135,6 @@ export const usePlaylistsStore = defineStore('playlists', () => {
     const index = playlist.items.findIndex((item) => item.id === itemId)
     if (index === -1) return
     playlist.items.splice(index, 1)
-    playlist.items.forEach((item, i) => {
-      item.order = i
-    })
     playlist.updated_at = new Date().toISOString()
     saveToStorage()
   }
@@ -144,9 +145,6 @@ export const usePlaylistsStore = defineStore('playlists', () => {
     const [moved] = playlist.items.splice(from, 1)
     if (!moved) return
     playlist.items.splice(to, 0, moved)
-    playlist.items.forEach((item, i) => {
-      item.order = i
-    })
     playlist.updated_at = new Date().toISOString()
     saveToStorage()
   }
@@ -178,9 +176,6 @@ export const usePlaylistsStore = defineStore('playlists', () => {
     const idx = fav.items.findIndex((item) => item.song_id === songId)
     if (idx === -1) return
     fav.items.splice(idx, 1)
-    fav.items.forEach((item, i) => {
-      item.order = i
-    })
     fav.updated_at = new Date().toISOString()
     saveToStorage()
   }
