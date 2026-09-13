@@ -30,3 +30,6 @@ logs
 playwright-report/
 test-results/
 .playwright-mcp/
+
+# git worktrees for parallel in-progress issues (each is a separate checkout)
+worktrees/

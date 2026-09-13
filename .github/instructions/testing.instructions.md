@@ -46,3 +46,12 @@ const ids = (arr: Song[]) => arr.map((s) => s.id)
 // ...
 expect(ids(queue.songs)).toEqual([2, 3, 1, 4])
 ```
+
+### store を `mockNuxtImport` で mock するときは client plugin から呼ばれるメソッドも含める
+
+`environment: 'nuxt'` は実際に Nuxt アプリを起動するため、`app/plugins/*.client.ts` はテスト実行時にも本当に発火する
+（発火するフックはプラグインごとに異なる。例: `app:suspense:resolve` は発火するが `app:mounted` は発火しない）。
+`mockNuxtImport('useXxxStore', () => () => partialMock)` で store を部分的な mock に差し替えている場合、
+client plugin がその mock に対して呼ぶメソッド（例: `loadFromStorage()`）が無いと、一見無関係なテストファイルの
+実行時に `TypeError: ... is not a function` の `Unhandled Rejection` が発生する。呼ばれる可能性のあるメソッドは
+`vi.fn()` の no-op として含めておく。

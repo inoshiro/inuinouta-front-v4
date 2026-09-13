@@ -56,9 +56,12 @@ mockNuxtImport('callOnce', () => {
 })
 
 // playlistsStore mock - will be replaced per test via setActivePinia
+// loadFromStorage is a no-op here because playlists.client.ts calls it for real
+// on app:suspense:resolve inside the Nuxt test environment.
 const mockPlaylistsStore = reactive({
   loaded: true,
   getById: vi.fn(),
+  loadFromStorage: vi.fn(),
 })
 
 mockNuxtImport('usePlaylistsStore', () => {
