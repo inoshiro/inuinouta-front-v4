@@ -117,4 +117,44 @@ describe('usePlaylistsStore - favorites', () => {
     const favCount = store.playlists.filter((p) => p.id === FAVORITES_PLAYLIST_ID).length
     expect(favCount).toBe(1)
   })
+
+  it('localStorage に favorites item がある状態で loadFromStorage() 後に isFavorite() が true になる', () => {
+    const favoritesPlaylist = {
+      id: FAVORITES_PLAYLIST_ID,
+      name: 'お気に入り',
+      description: '',
+      kind: 'favorites',
+      items: [{ id: 'item-1', song_id: 100, order: 0 }],
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+    }
+    localStorageMock.setItem('local_playlists', JSON.stringify([favoritesPlaylist]))
+    const store = usePlaylistsStore()
+    store.loadFromStorage()
+    expect(store.isFavorite(100)).toBe(true)
+    expect(store.isFavorite(999)).toBe(false)
+  })
+
+  it('未ロード状態で toggleFavorite を呼んでも、loadFromStorage 後は既存 favorites が保持される', () => {
+    const favoritesPlaylist = {
+      id: FAVORITES_PLAYLIST_ID,
+      name: 'お気に入り',
+      description: '',
+      kind: 'favorites',
+      items: [{ id: 'item-1', song_id: 100, order: 0 }],
+      created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
+    }
+    localStorageMock.setItem('local_playlists', JSON.stringify([favoritesPlaylist]))
+
+    const store = usePlaylistsStore()
+    // loaded = false の状態で loadFromStorage() を呼んでから toggleFavorite する
+    store.loadFromStorage()
+    // song_id=100 が favorites に既存、song_id=200 は新規
+    store.toggleFavorite(200)
+    // 既存 favorites (100) が消えていないこと
+    expect(store.isFavorite(100)).toBe(true)
+    // 新規追加 (200) が追加されていること
+    expect(store.isFavorite(200)).toBe(true)
+  })
 })

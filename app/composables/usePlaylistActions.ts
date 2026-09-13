@@ -75,6 +75,10 @@ export function usePlaylistActions() {
 
   /** Toggle favorite status for a song */
   function toggleFavoriteSong(songId: number, songTitle: string) {
+    // Ensure storage is loaded before toggling to avoid overwriting existing favorites
+    if (!playlistsStore.loaded) {
+      playlistsStore.loadFromStorage()
+    }
     const wasFavorite = playlistsStore.isFavorite(songId)
     playlistsStore.toggleFavorite(songId)
     const fav = playlistsStore.getById(FAVORITES_PLAYLIST_ID)
