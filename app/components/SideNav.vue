@@ -19,6 +19,9 @@
         {{ item.label }}
       </NuxtLink>
     </nav>
+
+    <!-- Decorative accent: purely visual, must not affect nav interaction -->
+    <SideNavCoffeeAccent class="pointer-events-none" />
   </aside>
 </template>
 
