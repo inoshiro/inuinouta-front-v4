@@ -22,15 +22,11 @@
             <p class="truncate text-xs text-gray-400">{{ player.currentSong.artist }}</p>
           </div>
         </div>
-        <button
-          class="text-gray-400 hover:text-white disabled:opacity-30"
-          :disabled="!queue.hasPrevious"
-          @click="playback.previousSong()"
-        >
+        <AppIconButton :disabled="!queue.hasPrevious" @click="playback.previousSong()">
           <FontAwesomeIcon :icon="['fas', 'backward-step']" class="h-5 w-5" />
-        </button>
+        </AppIconButton>
         <button
-          class="flex h-8 w-8 items-center justify-center bg-action-primary text-white hover:bg-action-primary-hover"
+          class="flex h-8 w-8 items-center justify-center bg-action-primary text-white transition-transform duration-150 ease-out hover:bg-action-primary-hover active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
           :title="player.isBlocked ? '再生がブロックされました。タップして再試行' : undefined"
           @click="handleMobilePlay"
         >
@@ -45,23 +41,15 @@
             <FontAwesomeIcon v-else :icon="['fas', 'play']" class="h-5 w-5" />
           </template>
         </button>
-        <button
-          class="text-gray-400 hover:text-white disabled:opacity-30"
-          :disabled="!queue.hasNext"
-          @click="playback.nextSong()"
-        >
+        <AppIconButton :disabled="!queue.hasNext" @click="playback.nextSong()">
           <FontAwesomeIcon :icon="['fas', 'forward-step']" class="h-5 w-5" />
-        </button>
+        </AppIconButton>
 
         <!-- Queue toggle -->
         <div class="relative flex items-center">
-          <button
-            class="p-1"
-            :class="queue.isOpen ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
-            @click="queue.toggleOpen()"
-          >
+          <AppIconButton :pressed="queue.isOpen" @click="queue.toggleOpen()">
             <FontAwesomeIcon :icon="['fas', 'bars']" class="h-5 w-5" />
-          </button>
+          </AppIconButton>
           <span
             v-if="queue.songs.length > 0"
             class="pointer-events-none absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center bg-emphasis px-1 text-[10px] font-bold leading-none text-white"
@@ -110,26 +98,18 @@
       <div class="flex flex-1 flex-col items-center gap-1">
         <div class="flex items-center gap-4">
           <!-- Shuffle -->
-          <button
-            class="text-gray-400 hover:text-white disabled:opacity-30"
-            :disabled="queue.songs.length <= 1"
-            @click="handleShuffle()"
-          >
+          <AppIconButton :disabled="queue.songs.length <= 1" @click="handleShuffle()">
             <FontAwesomeIcon :icon="['fas', 'shuffle']" class="h-4 w-4" />
-          </button>
+          </AppIconButton>
 
           <!-- Previous -->
-          <button
-            class="text-gray-400 hover:text-white disabled:opacity-30"
-            :disabled="!queue.hasPrevious"
-            @click="playback.previousSong()"
-          >
+          <AppIconButton :disabled="!queue.hasPrevious" @click="playback.previousSong()">
             <FontAwesomeIcon :icon="['fas', 'backward-step']" class="h-5 w-5" />
-          </button>
+          </AppIconButton>
 
           <!-- Play/Pause -->
           <button
-            class="flex h-9 w-9 items-center justify-center bg-action-primary text-white hover:bg-action-primary-hover"
+            class="flex h-9 w-9 items-center justify-center bg-action-primary text-white transition-transform duration-150 ease-out hover:bg-action-primary-hover active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
             :title="player.isBlocked ? '再生がブロックされました。タップして再試行' : undefined"
             @click="handleDesktopPlay"
           >
@@ -146,20 +126,14 @@
           </button>
 
           <!-- Next -->
-          <button
-            class="text-gray-400 hover:text-white disabled:opacity-30"
-            :disabled="!queue.hasNext"
-            @click="playback.nextSong()"
-          >
+          <AppIconButton :disabled="!queue.hasNext" @click="playback.nextSong()">
             <FontAwesomeIcon :icon="['fas', 'forward-step']" class="h-5 w-5" />
-          </button>
+          </AppIconButton>
 
           <!-- Repeat -->
-          <button
+          <AppIconButton
+            :pressed="queue.repeatMode !== 'off'"
             class="relative"
-            :class="
-              queue.repeatMode !== 'off' ? 'text-selected-text' : 'text-gray-400 hover:text-white'
-            "
             @click="queue.cycleRepeatMode()"
           >
             <FontAwesomeIcon :icon="['fas', 'repeat']" class="h-4 w-4" />
@@ -169,7 +143,7 @@
             >
               1
             </span>
-          </button>
+          </AppIconButton>
         </div>
 
         <!-- Progress bar -->
@@ -196,14 +170,17 @@
       <!-- Right controls: volume + queue -->
       <div class="flex items-center gap-3" style="width: 200px; justify-content: flex-end">
         <!-- Volume -->
-        <button class="text-gray-400 hover:text-white" @click="player.toggleMute()">
+        <AppIconButton
+          :pressed="player.isMuted || player.volume === 0"
+          @click="player.toggleMute()"
+        >
           <FontAwesomeIcon
             v-if="player.isMuted || player.volume === 0"
             :icon="['fas', 'volume-xmark']"
             class="h-5 w-5"
           />
           <FontAwesomeIcon v-else :icon="['fas', 'volume-high']" class="h-5 w-5" />
-        </button>
+        </AppIconButton>
         <input
           type="range"
           min="0"
@@ -215,12 +192,9 @@
 
         <!-- Queue toggle -->
         <div class="relative">
-          <button
-            :class="queue.isOpen ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
-            @click="queue.toggleOpen()"
-          >
+          <AppIconButton :pressed="queue.isOpen" @click="queue.toggleOpen()">
             <FontAwesomeIcon :icon="['fas', 'bars']" class="h-5 w-5" />
-          </button>
+          </AppIconButton>
           <span
             v-if="queue.songs.length > 0"
             class="pointer-events-none absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center bg-emphasis px-1 text-[10px] font-bold leading-none text-white"

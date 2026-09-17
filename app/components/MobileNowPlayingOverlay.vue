@@ -67,26 +67,18 @@
         <!-- Playback controls -->
         <div class="flex items-center justify-center gap-6 py-3">
           <!-- Shuffle -->
-          <button
-            class="text-gray-400 hover:text-white disabled:opacity-30"
-            :disabled="queue.songs.length <= 1"
-            @click="handleShuffle()"
-          >
+          <AppIconButton :disabled="queue.songs.length <= 1" @click="handleShuffle()">
             <FontAwesomeIcon :icon="['fas', 'shuffle']" class="h-4 w-4" />
-          </button>
+          </AppIconButton>
 
           <!-- Previous -->
-          <button
-            class="text-gray-400 hover:text-white disabled:opacity-30"
-            :disabled="!queue.hasPrevious"
-            @click="handlePreviousSong()"
-          >
+          <AppIconButton :disabled="!queue.hasPrevious" @click="handlePreviousSong()">
             <FontAwesomeIcon :icon="['fas', 'backward-step']" class="h-5 w-5" />
-          </button>
+          </AppIconButton>
 
           <!-- Play / Pause -->
           <button
-            class="flex h-12 w-12 items-center justify-center bg-action-primary text-white hover:bg-action-primary-hover"
+            class="flex h-12 w-12 items-center justify-center bg-action-primary text-white transition-transform duration-150 ease-out hover:bg-action-primary-hover active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
             :title="player.isBlocked ? '再生がブロックされました。タップして再試行' : undefined"
             @click="handlePlay"
           >
@@ -102,20 +94,14 @@
           </button>
 
           <!-- Next -->
-          <button
-            class="text-gray-400 hover:text-white disabled:opacity-30"
-            :disabled="!queue.hasNext"
-            @click="handleNextSong()"
-          >
+          <AppIconButton :disabled="!queue.hasNext" @click="handleNextSong()">
             <FontAwesomeIcon :icon="['fas', 'forward-step']" class="h-5 w-5" />
-          </button>
+          </AppIconButton>
 
           <!-- Repeat -->
-          <button
+          <AppIconButton
+            :pressed="queue.repeatMode !== 'off'"
             class="relative"
-            :class="
-              queue.repeatMode !== 'off' ? 'text-selected-text' : 'text-gray-400 hover:text-white'
-            "
             @click="queue.cycleRepeatMode()"
           >
             <FontAwesomeIcon :icon="['fas', 'repeat']" class="h-4 w-4" />
@@ -125,14 +111,14 @@
             >
               1
             </span>
-          </button>
+          </AppIconButton>
         </div>
 
         <!-- Sub-actions row -->
         <div class="flex items-center justify-around border-t border-border-default px-6 py-2">
           <!-- Favorite toggle -->
           <button
-            class="flex flex-col items-center gap-1 transition-colors"
+            class="flex flex-col items-center gap-1 p-1 transition-transform duration-150 ease-out active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
             :class="
               playlistsStore.isFavorite(song.id)
                 ? 'text-selected-text'
@@ -151,7 +137,7 @@
 
           <!-- Add to playlist -->
           <button
-            class="flex flex-col items-center gap-1 text-gray-400 hover:text-white"
+            class="flex flex-col items-center gap-1 p-1 text-gray-400 transition-transform duration-150 ease-out hover:text-white active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
             @click="showPlaylistSheet = true"
           >
             <FontAwesomeIcon :icon="['fas', 'bookmark']" class="h-5 w-5" />
@@ -163,7 +149,7 @@
             :href="youtubeTimestampUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex flex-col items-center gap-1 text-gray-400 hover:text-white"
+            class="flex flex-col items-center gap-1 p-1 text-gray-400 transition-transform duration-150 ease-out hover:text-white active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
             title="元動画を開く（再生位置から）"
             @click="onYouTubeClick"
           >
@@ -173,8 +159,9 @@
 
           <!-- Mute toggle -->
           <button
-            class="flex flex-col items-center gap-1 hover:text-white"
+            class="flex flex-col items-center gap-1 p-1 transition-transform duration-150 ease-out hover:text-white active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
             :class="player.isMuted ? 'text-selected-text' : 'text-gray-400'"
+            :aria-pressed="player.isMuted"
             title="ミュート"
             @click="player.toggleMute()"
           >
@@ -190,7 +177,7 @@
             :href="xShareUrl"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex flex-col items-center gap-1 text-gray-400 hover:text-white"
+            class="flex flex-col items-center gap-1 p-1 text-gray-400 transition-transform duration-150 ease-out hover:text-white active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
             title="Xでシェア"
           >
             <FontAwesomeIcon :icon="['fab', 'x-twitter']" class="h-5 w-5" />

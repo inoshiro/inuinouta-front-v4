@@ -42,27 +42,19 @@
           </div>
           <!-- アクションボタン -->
           <div class="flex shrink-0 gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
-            <button
-              class="p-1.5 text-gray-400 hover:text-white"
-              title="再生"
-              @click.stop="handlePlaySong(song)"
-            >
+            <AppIconButton size="sm" title="再生" @click.stop="handlePlaySong(song)">
               <FontAwesomeIcon :icon="['fas', 'play']" class="h-3.5 w-3.5" />
-            </button>
-            <button
-              class="p-1.5 text-gray-400 hover:text-white"
-              title="次に再生"
-              @click.stop="queueActions.playNext(song)"
-            >
+            </AppIconButton>
+            <AppIconButton size="sm" title="次に再生" @click.stop="queueActions.playNext(song)">
               <FontAwesomeIcon :icon="['fas', 'angles-right']" class="h-3.5 w-3.5" />
-            </button>
-            <button
-              class="p-1.5 text-gray-400 hover:text-white"
+            </AppIconButton>
+            <AppIconButton
+              size="sm"
               title="キューに追加"
               @click.stop="queueActions.addToQueue(song)"
             >
               <FontAwesomeIcon :icon="['fas', 'plus']" class="h-3.5 w-3.5" />
-            </button>
+            </AppIconButton>
           </div>
         </div>
       </div>

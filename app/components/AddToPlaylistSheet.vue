@@ -17,9 +17,9 @@
         <!-- Header -->
         <div class="flex items-center justify-between px-4 py-3">
           <p class="text-sm font-medium text-gray-50">プレイリストに追加</p>
-          <button class="p-1 text-gray-400 hover:text-white" @click="$emit('close')">
+          <AppIconButton title="閉じる" @click="$emit('close')">
             <FontAwesomeIcon :icon="['fas', 'xmark']" class="h-5 w-5" />
-          </button>
+          </AppIconButton>
         </div>
 
         <!-- Playlist list (scrollable) -->
