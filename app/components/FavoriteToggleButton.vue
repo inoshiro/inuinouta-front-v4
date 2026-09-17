@@ -1,8 +1,7 @@
 <template>
-  <button
-    class="p-1 transition-colors"
-    :class="isFav ? 'text-selected-text' : 'text-gray-400 hover:text-white'"
-    :aria-pressed="isFav"
+  <AppIconButton
+    :pressed="isFav"
+    :size="size"
     :title="isFav ? 'お気に入りから削除' : 'お気に入りに追加'"
     @click.stop="handleToggle"
   >
@@ -10,7 +9,7 @@
       :icon="isFav ? ['fas', 'star'] : ['far', 'star']"
       :class="size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4'"
     />
-  </button>
+  </AppIconButton>
 </template>
 
 <script setup lang="ts">

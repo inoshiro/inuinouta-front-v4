@@ -1,12 +1,8 @@
 <template>
   <div class="relative" :class="{ 'dropdown-open': open }">
-    <button
-      class="p-1 text-gray-400 hover:text-white"
-      title="プレイリストに追加"
-      @click.stop="toggle"
-    >
+    <AppIconButton :pressed="open" title="プレイリストに追加" @click.stop="toggle">
       <FontAwesomeIcon :icon="['fas', 'bookmark']" class="h-4 w-4" />
-    </button>
+    </AppIconButton>
 
     <!-- Desktop dropdown panel (hidden on mobile) -->
     <div

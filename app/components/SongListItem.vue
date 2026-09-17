@@ -65,20 +65,14 @@
     >
       <slot name="extra-actions" />
       <AddToPlaylistDropdown v-if="showAddToPlaylist" :song-id="song.id" :song-title="song.title" />
-      <button
-        class="hidden p-1 text-gray-400 hover:text-white sm:block"
-        title="次に再生"
-        @click.stop="queueActions.playNext(song)"
-      >
-        <FontAwesomeIcon :icon="['fas', 'angles-right']" class="h-4 w-4" />
-      </button>
-      <button
-        class="p-1 text-gray-400 hover:text-white"
-        title="キューに追加"
-        @click.stop="queueActions.addToQueue(song)"
-      >
+      <div class="hidden sm:block">
+        <AppIconButton title="次に再生" @click.stop="queueActions.playNext(song)">
+          <FontAwesomeIcon :icon="['fas', 'angles-right']" class="h-4 w-4" />
+        </AppIconButton>
+      </div>
+      <AppIconButton title="キューに追加" @click.stop="queueActions.addToQueue(song)">
         <FontAwesomeIcon :icon="['fas', 'plus']" class="h-4 w-4" />
-      </button>
+      </AppIconButton>
     </div>
   </div>
 </template>
