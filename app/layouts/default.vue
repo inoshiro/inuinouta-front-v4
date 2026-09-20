@@ -64,7 +64,7 @@
           <!-- Scroll to top -->
           <button
             v-if="showScrollTopButton && !isSearchActive"
-            class="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center border border-selected-border bg-surface-overlay text-gray-400 shadow-lg transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
+            class="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center border border-action-primary bg-surface-overlay text-gray-400 shadow-lg transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
             aria-label="最上部へ戻る"
             @click="scrollToTop('smooth')"
           >
