@@ -41,7 +41,7 @@
       <!-- Main area + Queue panel -->
       <div class="flex flex-1 overflow-hidden">
         <!-- Main content -->
-        <div class="flex flex-1 flex-col overflow-hidden">
+        <div class="relative flex flex-1 flex-col overflow-hidden">
           <!-- Desktop header -->
           <header
             class="hidden h-14 items-center gap-4 border-b border-border-default px-6 lg:flex"
@@ -51,13 +51,25 @@
 
           <!-- Page content -->
           <main
+            ref="mainEl"
             :class="[
               'flex-1 px-4 py-6 lg:px-6',
               isSearchActive ? 'overflow-hidden' : 'overflow-y-auto',
             ]"
+            @scroll.passive="onMainScroll"
           >
             <slot />
           </main>
+
+          <!-- Scroll to top -->
+          <button
+            v-if="showScrollTopButton && !isSearchActive"
+            class="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center border border-action-primary bg-surface-overlay text-gray-400 shadow-lg transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-selected-border"
+            aria-label="最上部へ戻る"
+            @click="scrollToTop('smooth')"
+          >
+            <FontAwesomeIcon :icon="['fas', 'arrow-up']" class="h-4! w-4!" />
+          </button>
         </div>
 
         <!-- Queue panel (lg+: inline right panel / mobile: Teleport overlay) -->
@@ -84,6 +96,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ScrollBehaviorOption } from '~/composables/useMainScroll'
+
 const isSearchActive = ref(false)
 const searchBarRef = ref<{ close: () => void } | null>(null)
 
@@ -98,4 +112,56 @@ if (import.meta.client) {
   void callOnce('library-songs', () => library.fetchSongs())
   void callOnce('library-videos', () => library.fetchVideos())
 }
+
+// Main scroll ownership: <main> here, not window, is the scrollable element.
+const mainEl = ref<HTMLElement | null>(null)
+const showScrollTopButton = ref(false)
+const SHOW_BUTTON_THRESHOLD = 300
+
+function onMainScroll() {
+  showScrollTopButton.value = (mainEl.value?.scrollTop ?? 0) >= SHOW_BUTTON_THRESHOLD
+}
+
+function prefersReducedMotion() {
+  return import.meta.client && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+// iOS Safari's native scrollTo({ behavior: 'smooth' }) on non-body overflow
+// elements is unreliable (jumps instantly or ignores the animation), so we
+// drive the animation manually with requestAnimationFrame instead.
+const SCROLL_ANIMATION_DURATION_MS = 300
+
+function animateScrollToTop(el: HTMLElement) {
+  const start = el.scrollTop
+  if (start <= 0) return
+  const startTime = performance.now()
+
+  function step(now: number) {
+    const progress = Math.min((now - startTime) / SCROLL_ANIMATION_DURATION_MS, 1)
+    const eased = 1 - (1 - progress) ** 3 // ease-out cubic
+    el.scrollTop = start * (1 - eased)
+    if (progress < 1) requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
+
+function scrollToTop(behavior: ScrollBehaviorOption = 'auto') {
+  const el = mainEl.value
+  if (!el) return
+  if (behavior === 'auto' || prefersReducedMotion()) {
+    el.scrollTop = 0
+    return
+  }
+  animateScrollToTop(el)
+}
+
+provideMainScroll({ scrollToTop })
+
+// Route changes (link navigation and browser back/forward) must not retain
+// the previous page's scroll position on the shared <main> element.
+const route = useRoute()
+watch(
+  () => route.fullPath,
+  () => scrollToTop('auto'),
+)
 </script>

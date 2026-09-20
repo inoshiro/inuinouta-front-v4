@@ -103,7 +103,7 @@
         :total-items="totalItems"
         :items-per-page="perPage"
         :current-page="page"
-        @update:page="page = $event"
+        @update:page="onPageChange"
       />
     </div>
   </div>
@@ -132,6 +132,12 @@ const {
   status,
 } = useSongs({ perPage: 50 })
 const queueActions = useQueueActions()
+const { scrollToTop } = useMainScroll()
+
+function onPageChange(newPage: number) {
+  page.value = newPage
+  scrollToTop('auto')
+}
 
 const artistModalOpen = ref(false)
 

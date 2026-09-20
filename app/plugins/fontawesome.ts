@@ -35,6 +35,7 @@ import {
   faArrowUpRightFromSquare,
   faGear,
   faArrowLeft,
+  faArrowUp,
 } from '@fortawesome/free-solid-svg-icons'
 import { faYoutube, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons'
@@ -77,6 +78,7 @@ library.add(
   faArrowUpRightFromSquare,
   faGear,
   faArrowLeft,
+  faArrowUp,
   // Regular
   faStarRegular,
   // Brands

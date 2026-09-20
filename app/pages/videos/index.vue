@@ -34,7 +34,7 @@
         :total-items="totalItems"
         :items-per-page="perPage"
         :current-page="page"
-        @update:page="page = $event"
+        @update:page="onPageChange"
       />
     </div>
   </div>
@@ -48,4 +48,10 @@ useSeoMeta({
 })
 
 const { videos, totalItems, page, perPage, status } = useVideos({ perPage: 30, streamOnly: true })
+const { scrollToTop } = useMainScroll()
+
+function onPageChange(newPage: number) {
+  page.value = newPage
+  scrollToTop('auto')
+}
 </script>
