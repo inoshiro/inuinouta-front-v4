@@ -70,6 +70,17 @@
           >
             <FontAwesomeIcon :icon="['fas', 'arrow-up']" class="h-4! w-4!" />
           </button>
+
+          <!--
+            YouTube player: mounted here (not app.vue) so its `absolute inset-0`
+            desktop-full CSS state covers only this center column (header + page
+            content), never the sidebar, queue panel or PlayerBar. This is a static
+            mount location, not a runtime Teleport, so the component instance is
+            not recreated on page navigation.
+          -->
+          <ClientOnly>
+            <YouTubeEmbed />
+          </ClientOnly>
         </div>
 
         <!-- Queue panel (lg+: inline right panel / mobile: Teleport overlay) -->

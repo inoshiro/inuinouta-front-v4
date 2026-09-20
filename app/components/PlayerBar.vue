@@ -167,8 +167,17 @@
         </div>
       </div>
 
-      <!-- Right controls: volume + queue -->
-      <div class="flex items-center gap-3" style="width: 200px; justify-content: flex-end">
+      <!-- Right controls: video + volume + queue -->
+      <div class="flex items-center gap-3" style="width: 240px; justify-content: flex-end">
+        <!-- Desktop video panel toggle -->
+        <AppIconButton
+          :pressed="desktopPanel.isOpen.value"
+          :title="desktopPanel.isOpen.value ? '動画を隠す' : '動画を表示'"
+          @click="desktopPanel.toggle()"
+        >
+          <FontAwesomeIcon :icon="['fas', 'video']" class="h-5 w-5" />
+        </AppIconButton>
+
         <!-- Volume -->
         <AppIconButton
           :pressed="player.isMuted || player.volume === 0"
@@ -220,6 +229,7 @@ function handleShuffle() {
 const { formatTime, songDuration } = useFormatTime()
 const { seekTo, retryPlay, requestPlay, loadedVideoId } = useYouTubePlayer()
 const mobileOverlay = useMobileNowPlayingOverlay()
+const desktopPanel = useDesktopPlayerPanel()
 
 const progressPercent = computed(() => {
   const song = player.currentSong
