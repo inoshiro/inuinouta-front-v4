@@ -126,10 +126,33 @@ function prefersReducedMotion() {
   return import.meta.client && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
+// iOS Safari's native scrollTo({ behavior: 'smooth' }) on non-body overflow
+// elements is unreliable (jumps instantly or ignores the animation), so we
+// drive the animation manually with requestAnimationFrame instead.
+const SCROLL_ANIMATION_DURATION_MS = 300
+
+function animateScrollToTop(el: HTMLElement) {
+  const start = el.scrollTop
+  if (start <= 0) return
+  const startTime = performance.now()
+
+  function step(now: number) {
+    const progress = Math.min((now - startTime) / SCROLL_ANIMATION_DURATION_MS, 1)
+    const eased = 1 - (1 - progress) ** 3 // ease-out cubic
+    el.scrollTop = start * (1 - eased)
+    if (progress < 1) requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
+
 function scrollToTop(behavior: ScrollBehaviorOption = 'auto') {
   const el = mainEl.value
   if (!el) return
-  el.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : behavior })
+  if (behavior === 'auto' || prefersReducedMotion()) {
+    el.scrollTop = 0
+    return
+  }
+  animateScrollToTop(el)
 }
 
 provideMainScroll({ scrollToTop })
